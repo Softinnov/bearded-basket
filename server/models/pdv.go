@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/Softinnov/bearded-basket/database"
+	"github.com/Softinnov/bearded-basket/server/database"
 )
 
 type PDV struct {

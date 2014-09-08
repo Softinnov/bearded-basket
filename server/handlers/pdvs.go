@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Softinnov/bearded-basket/models"
-	"github.com/Softinnov/bearded-basket/utils"
+	"github.com/Softinnov/bearded-basket/server/models"
+	"github.com/Softinnov/bearded-basket/server/utils"
 	"github.com/gorilla/mux"
 )
 

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Softinnov/bearded-basket/database"
-	"github.com/Softinnov/bearded-basket/handlers"
+	"github.com/Softinnov/bearded-basket/server/database"
+	"github.com/Softinnov/bearded-basket/server/handlers"
 	"github.com/gorilla/mux"
 )
 
