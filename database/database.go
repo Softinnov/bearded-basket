@@ -12,7 +12,7 @@ var DB *sql.DB
 func Init(name string) {
 	var err error
 
-	DB, err = sql.Open("mysql", "root:@/"+name)
+	DB, err = sql.Open("mysql", "root:@/"+name+"?parseTime=true")
 	if err != nil {
 		log.Fatal(err)
 	}

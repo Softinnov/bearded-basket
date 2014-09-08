@@ -14,15 +14,15 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	database.Init("bearded")
+	database.Init("prod")
 	defer database.Close()
 
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", homeHandler)
 
-	r.HandleFunc("/users", handlers.UsersHandler)
-	r.HandleFunc("/users/{id:[0-9]+}", handlers.UserHandler)
+	r.HandleFunc("/pdv", handlers.PDVsHandler)
+	r.HandleFunc("/pdv/{id:[0-9]+}", handlers.PDVHandler)
 
 	http.Handle("/", r)
 
