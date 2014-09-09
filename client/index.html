@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html ng-app="app">
+	<head>
+		<title>Bearded Basket</title>
+	</head>
+	<body>
+
+		<div ng-controller="PDVsCtrl">
+			<table style="text-align: center;">
+				<tr>
+					<th>Id</th>
+					<th>Nom</th>
+					<th>Date Expiration</th>
+				</tr>
+				<tr ng-repeat="pdv in pdvs">
+					<td>{{pdv.pv_id}}</td>
+					<td>{{pdv.pv_nom}}</td>
+					<td>{{pdv.pv_abo_expire}}</td>
+				</tr>
+			</table>
+		</div>
+
+		<!-- ANGULARJS -->
+		<script type="text/javascript" src="libs/angular.min.js"></script>
+		<script type="text/javascript" src="libs/angular-route.min.js"></script>
+
+		<!-- WEBSITE -->
+		<script src="js/app.js" type="text/javascript"></script>
+		<script src="js/services/pdv.js" type="text/javascript"></script>
+		<script src="js/controllers/pdvs.js" type="text/javascript"></script>
+
+	</body>
+</html>
