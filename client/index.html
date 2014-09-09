@@ -5,9 +5,19 @@
 	</head>
 	<body>
 
-		<div ng-show="loading">Chargement...</div>
-		<div ng-hide="loading">
-			<div ng-view></div>
+		<div ng-controller="PDVsCtrl">
+			<table style="text-align: center;">
+				<tr>
+					<th>Id</th>
+					<th>Nom</th>
+					<th>Date Expiration</th>
+				</tr>
+				<tr ng-repeat="pdv in pdvs">
+					<td>{{pdv.pv_id}}</td>
+					<td>{{pdv.pv_nom}}</td>
+					<td>{{pdv.pv_abo_expire}}</td>
+				</tr>
+			</table>
 		</div>
 
 		<!-- ANGULARJS -->

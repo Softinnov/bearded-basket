@@ -1,21 +1,9 @@
-app.controller('PDVsCtrl', ['$scope', 'PDV', '$routeParams', '$rootScope', function($scope, PDV, $routeParams, $rootScope) {
+app.controller('PDVsCtrl', ['$scope', '$http', function($scope, $http) {
 
-	$rootScope.loading = true;
-
-	PDV.get($routeParams.id).then(function(pdv) {
-		$rootScope.loading = false;
-		$scope.id = pdv.pv_id;
-		$scope.name = pdv.pv_nom;
-		$scope.expire = pdv.pv_abo_expire;
-	}, function(msg) {
-		alert(msg);
+	$http({method: 'GET', url: 'api/pdv'}).success(function(data){
+		$scope.pdvs = data;
+	}).error(function(){
+		alert("Cannot load pdvs");
 	});
 
-	$scope.pdvs = PDV.find().then(function(pdvs) {
-		$rootScope.loading = false;
-		$scope.pdvs = pdvs;
-	}, function(msg) {
-		alert(msg);
-	});
-
-}])
+}]);
