@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html ng-app="app">
+	<head>
+		<title>Bearded Basket</title>
+	</head>
+	<body>
+
+		<div ng-show="loading">Chargement...</div>
+		<div ng-hide="loading">
+			<div ng-view></div>
+		</div>
+
+		<!-- ANGULARJS -->
+		<script type="text/javascript" src="libs/angular.min.js"></script>
+		<script type="text/javascript" src="libs/angular-route.min.js"></script>
+
+		<!-- WEBSITE -->
+		<script src="js/app.js" type="text/javascript"></script>
+		<script src="js/services/pdv.js" type="text/javascript"></script>
+		<script src="js/controllers/pdvs.js" type="text/javascript"></script>
+
+	</body>
+</html>

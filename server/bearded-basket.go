@@ -21,10 +21,10 @@ func main() {
 
 	r.HandleFunc("/", homeHandler)
 
-	r.HandleFunc("/pdv", handlers.PDVsHandler)
-	r.HandleFunc("/pdv/{id:[0-9]+}", handlers.PDVHandler)
+	r.HandleFunc("/api/pdv", handlers.PDVsHandler)
+	r.HandleFunc("/api/pdv/{id:[0-9]+}", handlers.PDVHandler)
 
 	http.Handle("/", r)
 
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":3000", nil)
 }
