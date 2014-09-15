@@ -6,5 +6,4 @@ ADD bearded-basket bearded-basket
  
 EXPOSE 8000
  
-ENTRYPOINT ["/bearded-basket"]
-# ENTRYPOINT ["/bearded-basket", "-db", "root:@192.168.0.65:3306/prod"]
+CMD /bearded-basket -db "root:@(db:$DB_PORT_3306_TCP_PORT)/prod"
