@@ -9,10 +9,10 @@ import (
 
 var DB *sql.DB
 
-func Init(name string) {
+func Init(addr string) {
 	var err error
 
-	DB, err = sql.Open("mysql", "root:@/"+name+"?parseTime=true")
+	DB, err = sql.Open("mysql", addr+"?parseTime=true")
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"net/http"
 
 	"github.com/Softinnov/bearded-basket/server/database"
@@ -8,8 +9,15 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var (
+	db = flag.String("db", "root:@/prod",
+		"database, usage: user:password@addr/dbname")
+)
+
 func main() {
-	database.Init("prod")
+	flag.Parse()
+
+	database.Init(*db)
 	defer database.Close()
 
 	r := mux.NewRouter()
