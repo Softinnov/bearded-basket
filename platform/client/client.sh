@@ -4,6 +4,7 @@
 function cp_dir() {
 rm -rf client && \
         cp -r ../../client client
+	chmod -R 755 client
 }
 
 # BUILD A DOCKER CONTAINER
