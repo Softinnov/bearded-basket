@@ -11,12 +11,6 @@ Database initialization (ONLY if not initalized before):
 $ docker run --rm --volumes-from dbdata -p 3306:3306 softinnov/db
 ```
 
-Then, you need to stop the last container (db):
-```bash
-$ docker stop db
-$ docker rm db
-```
-
 Create database `prod`:
 ```bash
 $ docker run --rm --volumes-from dbdata -P softinnov/db bash -c "/create_db.sh prod"
