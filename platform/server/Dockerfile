@@ -1,6 +1,6 @@
 
 FROM ubuntu:14.04
-MAINTAINER Ghislain Guiot <gt.ghislain@gmail.com>
+MAINTAINER Ghislain Guiot
 
 ADD bearded-basket bearded-basket
  

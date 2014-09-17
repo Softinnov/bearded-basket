@@ -1,33 +1,41 @@
-
 FROM ubuntu:14.04
-MAINTAINER Ghislain Guiot <gt.ghislain@gmail.com>
+MAINTAINER Ghislain Guiot
 
-# Install MySQL.
-RUN \
-  apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server && \
-  rm -rf /var/lib/apt/lists/* && \
-  sed -i 's/^\(bind-address\s.*\)/# \1/' /etc/mysql/my.cnf && \
-  sed -i 's/^\(log_error\s.*\)/# \1/' /etc/mysql/my.cnf && \
-  echo "mysqld_safe &" > /tmp/config && \
-  echo "mysqladmin --silent --wait=30 ping || exit 1" >> /tmp/config && \
-  echo "mysql -e 'GRANT ALL PRIVILEGES ON *.* TO \"root\"@\"%\" WITH GRANT OPTION;'" >> /tmp/config && \
-  bash /tmp/config && \
-  rm -f /tmp/config
+# From tutum-docker-mysql
+# Available at: https://github.com/tutumcloud/tutum-docker-mysql
 
-RUN mkdir data
-ADD pdv.sql    data/pdv.sql
-ADD pdv.txt.gz data/pdv.txt.gz
+# Install packages
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update && \
+  apt-get -yq install mysql-server pwgen && \
+  rm -rf /var/lib/apt/lists/*
 
-RUN /usr/sbin/mysqld & \
-  sleep 10s && \
-  mysql -uroot -e 'CREATE DATABASE prod' && \
-  gunzip -f data/*.gz && \
-  cat data/*.sql | mysql -u root prod && \
-  mysqlimport -u root --local prod data/*.txt
-  
-# Expose ports.
+# Remove pre-installed database
+RUN rm -rf /var/lib/mysql/*
+
+# Add MySQL configuration
+ADD my.cnf /etc/mysql/conf.d/my.cnf
+ADD mysqld_charset.cnf /etc/mysql/conf.d/mysqld_charset.cnf
+
+# Add MySQL scripts
+ADD create_mysql_admin_user.sh /create_mysql_admin_user.sh
+ADD import_sql.sh /import_sql.sh
+ADD create_db.sh /create_db.sh
+ADD run.sh /run.sh
+RUN chmod 755 /*.sh
+
+# Exposed ENV
+ENV MYSQL_USER admin
+ENV MYSQL_PASS **Random**
+
+# Replication ENV
+ENV REPLICATION_MASTER **False**
+ENV REPLICATION_SLAVE **False**
+ENV REPLICATION_USER replica
+ENV REPLICATION_PASS replica
+
+# Add VOLUMEs to allow backup of config and databases
+VOLUME  ["/etc/mysql", "/var/lib/mysql"]
+
 EXPOSE 3306
-
-# Define default command.
-CMD ["mysqld_safe"]
+CMD ["/run.sh"]
