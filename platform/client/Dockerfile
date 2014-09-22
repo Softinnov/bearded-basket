@@ -2,6 +2,7 @@
 FROM ubuntu:14.04
 MAINTAINER Ghislain Guiot
 
+ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -y
 RUN apt-get install -y nginx
 

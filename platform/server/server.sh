@@ -15,5 +15,5 @@ docker build -t softinnov/server .
 
 build_bin || exit $?
 docker_build || exit $?
-echo "\n>> Now you can run: $ docker run --name back -d --link db:db softinnov/server"
-
+echo 
+echo ">> Now you can run: $ docker run --name back -e DBUSER=$DBUSER -e DBPASS=$DBPASS -d --link db:db softinnov/server"
