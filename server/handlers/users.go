@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,14 +12,30 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func checkPdvId(c *utils.Context, id int, r *http.Request) (int, error) {
+	user, err := models.GetUser(c, id)
+	if err != nil {
+		return http.StatusInternalServerError, err
+	}
+	session, err := models.GetFromCookies(c.Store, r)
+	if err != nil {
+		return http.StatusInternalServerError, err
+	}
+	if session.PdvId != user.Pdv {
+		return http.StatusUnauthorized, errors.New("")
+	}
+	return 200, nil
+}
+
 func editUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
 	id, err := strconv.Atoi(mux.Vars(r)["id"])
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
+
 	role, err := strconv.Atoi(r.PostFormValue("u_role"))
 	if err != nil {
-		return http.StatusInternalServerError, err
+		return http.StatusBadRequest, err
 	}
 	user := &models.User{
 		Id:     id,
@@ -26,14 +43,15 @@ func editUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, er
 		Prenom: r.PostFormValue("u_prenom"),
 		Role:   int8(role),
 	}
-	fmt.Printf("%#v\n", user)
+
+	if s, err := checkPdvId(c, user.Id, r); err != nil {
+		return s, err
+	}
 	if err = models.UpdateUser(c, user); err != nil {
 		return http.StatusInternalServerError, err
 	}
 	fmt.Fprint(w, "Success")
-	u, _ := models.GetUser(c, id)
-	fmt.Printf("%#v\n", u)
-	return 0, nil
+	return 200, nil
 }
 
 func indexUsers(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
@@ -41,12 +59,11 @@ func indexUsers(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, 
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
-	//check if pdvid is same in session and user context session
 	users, err := models.GetUsersFromSession(c, session)
 	if err != nil {
 		log.Println("UsersHandler:", err)
 		return http.StatusInternalServerError, err
 	}
 	utils.WriteJSON(w, users)
-	return 0, nil
+	return 200, nil
 }
