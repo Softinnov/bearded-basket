@@ -7,21 +7,20 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var DB *sql.DB
-
-func Init(addr string) {
+func Open(addr string) *sql.DB {
 	var err error
 
-	DB, err = sql.Open("mysql", addr+"?parseTime=true")
+	db, err := sql.Open("mysql", addr+"?parseTime=true")
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = DB.Ping()
+	err = db.Ping()
 	if err != nil {
 		log.Fatal(err)
 	}
+	return db
 }
 
-func Close() {
-	DB.Close()
+func Close(db *sql.DB) {
+	db.Close()
 }
