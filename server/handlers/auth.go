@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/Softinnov/bearded-basket/server/models"
@@ -64,7 +63,6 @@ func cookieAuth(c *utils.Context, w http.ResponseWriter, r *http.Request) bool {
 
 func (ah authHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if !cookieAuth(ah.c, w, r) {
-		fmt.Println("dsf")
 		return
 	}
 	status, err := ah.fn(ah.c, w, r)
