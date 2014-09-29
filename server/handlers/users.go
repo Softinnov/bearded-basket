@@ -24,7 +24,7 @@ func checkPdvId(c *utils.Context, id int, r *http.Request) (int, error) {
 	if session.PdvId != user.Pdv {
 		return http.StatusUnauthorized, errors.New("")
 	}
-	return 200, nil
+	return http.StatusOK, nil
 }
 
 func editUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
@@ -51,7 +51,7 @@ func editUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, er
 		return http.StatusInternalServerError, err
 	}
 	fmt.Fprint(w, "Success")
-	return 200, nil
+	return http.StatusAccepted, nil
 }
 
 func indexUsers(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
@@ -65,5 +65,5 @@ func indexUsers(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, 
 		return http.StatusInternalServerError, err
 	}
 	utils.WriteJSON(w, users)
-	return 200, nil
+	return http.StatusOK, nil
 }
