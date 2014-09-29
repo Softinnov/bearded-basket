@@ -3,7 +3,7 @@ package models
 import (
 	"log"
 
-	"github.com/ghigt/ext_users/server/utils"
+	"github.com/Softinnov/bearded-basket/server/utils"
 )
 
 type User struct {

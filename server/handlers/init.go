@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/ghigt/ext_users/server/utils"
+	"github.com/Softinnov/bearded-basket/server/utils"
 	"github.com/gorilla/mux"
 )
 

@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/ghigt/ext_users/server/models"
-	"github.com/ghigt/ext_users/server/utils"
+	"github.com/Softinnov/bearded-basket/server/models"
+	"github.com/Softinnov/bearded-basket/server/utils"
 )
 
 var (

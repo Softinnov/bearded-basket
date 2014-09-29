@@ -4,9 +4,9 @@ import (
 	"flag"
 	"net/http"
 
-	"github.com/ghigt/ext_users/server/database"
-	"github.com/ghigt/ext_users/server/handlers"
-	"github.com/ghigt/ext_users/server/utils"
+	"github.com/Softinnov/bearded-basket/server/database"
+	"github.com/Softinnov/bearded-basket/server/handlers"
+	"github.com/Softinnov/bearded-basket/server/utils"
 	"github.com/gorilla/sessions"
 )
 

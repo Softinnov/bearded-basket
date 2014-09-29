@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/ghigt/ext_users/server/models"
-	"github.com/ghigt/ext_users/server/utils"
+	"github.com/Softinnov/bearded-basket/server/models"
+	"github.com/Softinnov/bearded-basket/server/utils"
 	"github.com/gorilla/mux"
 )
 
@@ -41,6 +41,7 @@ func indexUsers(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, 
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
+	//check if pdvid is same in session and user context session
 	users, err := models.GetUsersFromSession(c, session)
 	if err != nil {
 		log.Println("UsersHandler:", err)
