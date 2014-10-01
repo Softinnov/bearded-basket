@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/Softinnov/bearded-basket/server/models"
@@ -10,7 +11,7 @@ import (
 
 var (
 	COOKIE_NAME = "RSPSID"
-	URL         = "http://localhost:8000/pdv"
+	URL         = "/pdv"
 	URL_WS      = "/remote/ws.rsp"
 )
 
@@ -25,12 +26,13 @@ func cookieAuth(c *utils.Context, w http.ResponseWriter, r *http.Request) bool {
 		utils.LogHTTP(w, err, http.StatusUnauthorized, r)
 		return false
 	}
-	req, err := http.NewRequest("GET", URL+URL_WS, nil)
+	req, err := http.NewRequest("GET", *c.Chey+URL+URL_WS, nil)
 	if err != nil {
 		utils.LogHTTP(w, err, http.StatusInternalServerError, r)
 		return false
 	}
 	req.AddCookie(cookie)
+	log.Printf("%#v\n", cookie)
 	res, err := http.DefaultTransport.RoundTrip(req) // Avoid redirection
 	if err != nil {
 		utils.LogHTTP(w, err, http.StatusInternalServerError, r)

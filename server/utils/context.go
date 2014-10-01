@@ -9,4 +9,5 @@ import (
 type Context struct {
 	Store *sessions.CookieStore
 	DB    *sql.DB
+	Chey  *string
 }

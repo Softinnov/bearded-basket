@@ -11,6 +11,7 @@ import (
 )
 
 var dbf = flag.String("db", "root:@/prod", "database, usage: user:password@addr/dbname")
+var cheyf = flag.String("chey", "http://localhost:8002", "cheyenne, usage: http://host:port")
 
 func main() {
 	flag.Parse()
@@ -21,6 +22,7 @@ func main() {
 	context := &utils.Context{
 		Store: sessions.NewCookieStore([]byte("123456789")),
 		DB:    db,
+		Chey:  cheyf,
 	}
 
 	handlers.Init(context)

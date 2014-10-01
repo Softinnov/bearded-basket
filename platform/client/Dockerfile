@@ -14,6 +14,8 @@ RUN chmod +x run.sh
 
 RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf
 
+VOLUME /var/log/nginx
+
 EXPOSE 8000
 
 CMD ["/run.sh"]

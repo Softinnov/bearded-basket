@@ -4,7 +4,8 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
   $http({method: 'GET', url: 'api/users'}).success(function(data){
     $scope.users = data;
   }).error(function(){
-    $window.location.href = '../';
+	alert("error");
+    //$window.location.href = '../';
   });
 
   $scope.modifyUser = function(user) {

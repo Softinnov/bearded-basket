@@ -1,3 +1,5 @@
 server/server
-platform/client/client
-platform/server/bearded-basket
+platform/logs
+platform/*.sql
+platform/*.txt
+platform/*.txt.gz
