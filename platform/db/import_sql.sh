@@ -27,8 +27,8 @@ for ARG in ${*:4}
 do
     echo "  -> importing $ARG"
     gunzip -f "$DATA""$ARG".txt.gz
-    cat "$DATA""$ARG".sql | mysql -u"$1" -p"$2" "$3"
-    mysqlimport -u"$1" -p"$2" "$3" "$DATA""$ARG".txt
+    cat "$DATA""$ARG".sql | mysql -u"$1" -p"$2" "$3" || exit $?
+    mysqlimport -u"$1" -p"$2" "$3" "$DATA""$ARG".txt || exit $?
 done
 
 echo "=> Stopping MySQL Server"
