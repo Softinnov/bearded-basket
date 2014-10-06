@@ -67,13 +67,3 @@ func indexUsers(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, 
 	utils.WriteJSON(w, users)
 	return http.StatusOK, nil
 }
-
-func showUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
-	user, err := models.GetUser(c, 1)
-	if err != nil {
-		log.Println("UsersHandler:", err)
-		return http.StatusInternalServerError, err
-	}
-	utils.WriteJSON(w, user)
-	return http.StatusOK, nil
-}

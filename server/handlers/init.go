@@ -13,7 +13,6 @@ func Init(c *utils.Context) {
 
 	r.Handle("/api/users/{id:[0-9]+}", authHandler{c, editUser}).Methods("PUT")
 	r.Handle("/api/users", authHandler{c, indexUsers}).Methods("GET")
-	r.Handle("/api/user", authHandler{c, showUser}).Methods("GET")
 
 	http.Handle("/", r)
 }
