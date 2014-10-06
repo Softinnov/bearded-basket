@@ -3,7 +3,6 @@ package handlers
 import (
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -61,7 +60,6 @@ func indexUsers(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, 
 	}
 	users, err := models.GetUsersFromSession(c, session)
 	if err != nil {
-		log.Println("UsersHandler:", err)
 		return http.StatusInternalServerError, err
 	}
 	utils.WriteJSON(w, users)
