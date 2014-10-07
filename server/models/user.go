@@ -37,7 +37,7 @@ func GetUsersFromSession(c *utils.Context, s *Session) ([]*User, error) {
 	var users []*User
 
 	rows, err := c.DB.
-		Query("SELECT u_id, u_pdv, u_nom, u_prenom, u_role FROM utilisateur WHERE u_pdv=?", s.PdvId)
+		Query("SELECT u_id, u_pdv, u_nom, u_prenom, u_role FROM utilisateur WHERE u_pdv=? AND u_supprime=0", s.PdvId)
 	if err != nil {
 		log.Println("GetUsers:", err)
 		return nil, err
