@@ -2,6 +2,8 @@ package models
 
 import (
 	"bytes"
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -15,7 +17,7 @@ type User struct {
 	Nom      string `json:"u_nom,omitempty"`
 	Prenom   string `json:"u_prenom,omitempty"`
 	Role     int8   `json:"u_role,omitempty"`
-	Password string `json:"u_password,omitempty"`
+	Password string `json:"u_pass,omitempty"`
 }
 
 func GetUser(c *utils.Context, id int) (*User, error) {
@@ -77,7 +79,18 @@ func buildSqlSets(b []byte) (string, error) {
 	return buf.String(), nil
 }
 
+func hashPassword(p string) string {
+	hasher := md5.New()
+	hasher.Write([]byte(p))
+
+	return hex.EncodeToString(hasher.Sum(nil))
+}
+
 func UpdateUser(c *utils.Context, id int, user *User) error {
+	fmt.Println(user.Password)
+	if user.Password != "" {
+		user.Password = hashPassword(user.Password)
+	}
 	m, err := json.Marshal(user)
 	if err != nil {
 		return err

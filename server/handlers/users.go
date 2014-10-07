@@ -40,7 +40,7 @@ func editUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, er
 		Prenom   string `json:"u_prenom"`
 		Nom      string `json:"u_nom"`
 		Role     int8   `json:"u_role"`
-		Password string `json:"u_password"`
+		Password string `json:"u_pass"`
 	}
 	dec := json.NewDecoder(r.Body)
 	if err := dec.Decode(&user); err != nil {

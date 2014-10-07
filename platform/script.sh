@@ -67,12 +67,12 @@ if [[ $# -lt 2 ]]; then
 	exit 1
 fi
 
-echo ">> Moving to ./db"
-cd db || exit $?
-docker_db || exit $?
-cd .. || exit $?
-echo
-echo ">> ...DB done"
+# echo ">> Moving to ./db"
+# cd db || exit $?
+# docker_db || exit $?
+# cd .. || exit $?
+# echo
+# echo ">> ...DB done"
 
 echo ">> Moving to ./cheyenne"
 cd cheyenne || exit $?
