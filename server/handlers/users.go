@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -31,22 +32,29 @@ func editUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, er
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
-
-	role, err := strconv.Atoi(r.PostFormValue("u_role"))
-	if err != nil {
-		return http.StatusBadRequest, err
-	}
-	user := &models.User{
-		Id:     id,
-		Nom:    r.PostFormValue("u_nom"),
-		Prenom: r.PostFormValue("u_prenom"),
-		Role:   int8(role),
-	}
-
-	if s, err := checkPdvId(c, user.Id, r); err != nil {
+	if s, err := checkPdvId(c, id, r); err != nil {
 		return s, err
 	}
-	if err = models.UpdateUser(c, user); err != nil {
+
+	var user struct {
+		Prenom   string `json:"prenom"`
+		Nom      string `json:"nom"`
+		Role     int8   `json:"role"`
+		Password string `json:"password"`
+	}
+	dec := json.NewDecoder(r.Body)
+	if err := dec.Decode(&user); err != nil {
+		return http.StatusBadRequest, err
+	}
+	defer r.Body.Close()
+
+	u := &models.User{
+		Prenom:   user.Prenom,
+		Nom:      user.Nom,
+		Role:     user.Role,
+		Password: user.Password,
+	}
+	if err = models.UpdateUser(c, u); err != nil {
 		return http.StatusInternalServerError, err
 	}
 	fmt.Fprint(w, "Success")
