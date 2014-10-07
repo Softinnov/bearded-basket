@@ -10,12 +10,12 @@ import (
 )
 
 type User struct {
-	Id       int    `json:"id,omitempty"`
-	Pdv      int    `json:"pdv,omitempty"`
-	Nom      string `json:"nom,omitempty"`
-	Prenom   string `json:"prenom,omitempty"`
-	Role     int8   `json:"role,omitempty"`
-	Password string `json:"password,omitempty"`
+	Id       int    `json:"u_id,omitempty"`
+	Pdv      int    `json:"u_pdv,omitempty"`
+	Nom      string `json:"u_nom,omitempty"`
+	Prenom   string `json:"u_prenom,omitempty"`
+	Role     int8   `json:"u_role,omitempty"`
+	Password string `json:"u_password,omitempty"`
 }
 
 func GetUser(c *utils.Context, id int) (*User, error) {
@@ -57,33 +57,43 @@ func buildSqlSets(b []byte) (string, error) {
 	var buf bytes.Buffer
 	var data map[string]interface{}
 
-	json.Unmarshal(b, &data)
+	err := json.Unmarshal(b, &data)
+	if err != nil {
+		return "", err
+	}
 	flag := false
 	for key, val := range data {
 		if flag {
 			buf.WriteString(", ")
 		}
-		buf.WriteString(key + "=" + fmt.Sprintf("%v", val))
+		switch val.(type) {
+		case string:
+			buf.WriteString(key + "=" + fmt.Sprintf("%q", val))
+		default:
+			buf.WriteString(key + "=" + fmt.Sprintf("%v", val))
+		}
 		flag = true
 	}
 	return buf.String(), nil
 }
 
-func UpdateUser(c *utils.Context, user *User) error {
+func UpdateUser(c *utils.Context, id int, user *User) error {
 	m, err := json.Marshal(user)
 	if err != nil {
 		return err
 	}
-	req, err := buildSqlSets(m)
+	r, err := buildSqlSets(m)
 	if err != nil {
 		return err
 	}
-	stmt, err := c.DB.Prepare(fmt.Sprintf("UPDATE utilisateur SET %s WHERE u_id=?", req))
+	req := fmt.Sprintf("UPDATE utilisateur SET %s WHERE u_id=%v", r, id)
+	log.Println("DB Request:", req)
+	stmt, err := c.DB.Prepare(req)
 	if err != nil {
 		log.Println("UpdateUser:", err)
 		return err
 	}
-	_, err = stmt.Exec(user.Id)
+	_, err = stmt.Exec()
 	if err != nil {
 		log.Println("UpdateUser:", err)
 		return err

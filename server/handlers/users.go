@@ -37,10 +37,10 @@ func editUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, er
 	}
 
 	var user struct {
-		Prenom   string `json:"prenom"`
-		Nom      string `json:"nom"`
-		Role     int8   `json:"role"`
-		Password string `json:"password"`
+		Prenom   string `json:"u_prenom"`
+		Nom      string `json:"u_nom"`
+		Role     int8   `json:"u_role"`
+		Password string `json:"u_password"`
 	}
 	dec := json.NewDecoder(r.Body)
 	if err := dec.Decode(&user); err != nil {
@@ -54,7 +54,7 @@ func editUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, er
 		Role:     user.Role,
 		Password: user.Password,
 	}
-	if err = models.UpdateUser(c, u); err != nil {
+	if err = models.UpdateUser(c, id, u); err != nil {
 		return http.StatusInternalServerError, err
 	}
 	fmt.Fprint(w, "Success")

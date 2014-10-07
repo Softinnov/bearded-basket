@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DBNAME=prod
-DBTABLES="utilisateur pdv"
+DBTABLES="utilisateur pdv role"
 DBUSER=admin
 DBPASS=admin
 ANDESPATH=$1
