@@ -33,6 +33,19 @@ func GetUser(c *utils.Context, id int) (*User, error) {
 	return &user, nil
 }
 
+func GetCurrentUser(c *utils.Context, s *Session) (*User, error) {
+	user := User{}
+
+	err := c.DB.
+		QueryRow("SELECT u_id, u_pdv, u_nom, u_prenom, u_role FROM utilisateur WHERE u_id=?", s.Id).
+		Scan(&user.Id, &user.Pdv, &user.Nom, &user.Prenom, &user.Role)
+	if err != nil {
+		log.Println("GetCurrentUser:", err)
+		return nil, err
+	}
+	return &user, nil
+}
+
 func CreateUser(c *utils.Context) (*User, error) {
 	return nil, nil
 }

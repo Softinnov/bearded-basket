@@ -17,7 +17,7 @@ func checkPdvId(c *utils.Context, id int, r *http.Request) (int, error) {
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
-	session, err := models.GetFromCookies(c.Store, r)
+	session, err := models.GetSessionFromCookies(c.Store, r)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
@@ -62,15 +62,14 @@ func editUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, er
 }
 
 func indexUsers(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
-	session, err := models.GetFromCookies(c.Store, r)
+	session, err := models.GetSessionFromCookies(c.Store, r)
 	if err != nil {
-		return http.StatusInternalServerError, err
+		return http.StatusUnauthorized, err
 	}
 	users, err := models.GetUsersFromSession(c, session)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
-	fmt.Printf("%#v\n", users)
 	utils.WriteJSON(w, users)
 	return http.StatusOK, nil
 }
@@ -92,5 +91,17 @@ func deleteUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, 
 	}
 	fmt.Fprint(w, "Success")
 	return http.StatusOK, nil
+}
 
+func getCurrentUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
+	s, err := models.GetSessionFromCookies(c.Store, r)
+	if err != nil {
+		return http.StatusUnauthorized, err
+	}
+	user, err := models.GetCurrentUser(c, s)
+	if err != nil {
+		return http.StatusInternalServerError, err
+	}
+	utils.WriteJSON(w, user)
+	return http.StatusOK, nil
 }

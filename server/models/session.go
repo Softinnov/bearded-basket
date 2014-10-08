@@ -32,7 +32,7 @@ func StoreInCookies(store *sessions.CookieStore, s *Session, w http.ResponseWrit
 	return nil
 }
 
-func GetFromCookies(store *sessions.CookieStore, r *http.Request) (*Session, error) {
+func GetSessionFromCookies(store *sessions.CookieStore, r *http.Request) (*Session, error) {
 	session, err := store.Get(r, "session-go")
 	if err != nil {
 		return nil, err

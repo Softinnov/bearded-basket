@@ -1,7 +1,9 @@
 app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $http, $window) {
-	$scope.userEdit = false;
-	$scope.userNew = false;
+	$scope.userEdit = null;
+	$scope.userNew = null;
+	$scope.userCurrent = null;
 	$scope.users = [];
+	$scope.roles = [];
 
 	$http({method: 'GET', url: 'api/users'}).success(function(data) {
 		$scope.users = data;
@@ -11,20 +13,26 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 	});
 
 	$http({method: 'GET', url: 'api/roles'}).success(function(data) {
-		$scope.roles = {};
-
-		angular.forEach(data, function(role, k) {
-			$scope.roles[role.r_id] = role.r_libelle;
-		});
+		$scope.roles = data;
 	}).error(function() {
 		alert("cannot get roles");
 	});
+
+	$http({method: 'GET', url: 'api/user'}).success(function(data) {
+		$scope.userCurrent = data;
+	}).error(function() {
+		alert("cannot get currentUser");
+	})
+
+	$scope.newUser = function() {
+		$scope.userNew = {};
+	};
 
 	$scope.modifyUser = function(user) {
 		$scope.userEdit = angular.copy(user);
 	};
 
-	$scope.newUser = function() {
+	$scope.createUser = function() {
 		$http({
 			method: 'POST',
 			url: 'api/users',
