@@ -12,30 +12,25 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func checkPdvId(c *utils.Context, id int, r *http.Request) (int, error) {
-	user, err := models.GetUser(c, id)
-	if err != nil {
-		return http.StatusInternalServerError, err
-	}
-	session, err := models.GetSessionFromCookies(c.Store, r)
-	if err != nil {
-		return http.StatusInternalServerError, err
-	}
-	if session.PdvId != user.Pdv {
-		return http.StatusUnauthorized, errors.New("")
-	}
-	return http.StatusOK, nil
-}
-
 func editUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
 	id, err := strconv.Atoi(mux.Vars(r)["id"])
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
-	if s, err := checkPdvId(c, id, r); err != nil {
-		return s, err
+	uEdit, err := models.GetUser(c, id)
+	if err != nil {
+		return http.StatusInternalServerError, err
 	}
-
+	session, err := models.GetSessionFromCookies(c.Store, r)
+	if err != nil {
+		return http.StatusUnauthorized, err
+	}
+	if session.PdvId != uEdit.Pdv {
+		return http.StatusUnauthorized, errors.New("")
+	}
+	if session.Role < uEdit.Role {
+		return http.StatusUnauthorized, errors.New("")
+	}
 	var user struct {
 		Prenom   string `json:"u_prenom"`
 		Nom      string `json:"u_nom"`
@@ -54,7 +49,7 @@ func editUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, er
 		Role:     user.Role,
 		Password: user.Password,
 	}
-	if err = models.UpdateUser(c, id, u); err != nil {
+	if err = models.UpdateUser(c, id, u, session); err != nil {
 		return http.StatusInternalServerError, err
 	}
 	fmt.Fprint(w, "Success")
@@ -111,8 +106,16 @@ func deleteUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, 
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
-	if s, err := checkPdvId(c, id, r); err != nil {
-		return s, err
+	u, err := models.GetUser(c, id)
+	if err != nil {
+		return http.StatusInternalServerError, err
+	}
+	session, err := models.GetSessionFromCookies(c.Store, r)
+	if err != nil {
+		return http.StatusUnauthorized, err
+	}
+	if session.PdvId != u.Pdv {
+		return http.StatusUnauthorized, errors.New("")
 	}
 	if err = models.RemoveUser(c, id); err != nil {
 		return http.StatusInternalServerError, err

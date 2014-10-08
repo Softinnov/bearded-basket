@@ -111,7 +111,7 @@ func hashPassword(p string) string {
 	return hex.EncodeToString(hasher.Sum(nil))
 }
 
-func UpdateUser(c *utils.Context, id int, user *User) error {
+func UpdateUser(c *utils.Context, id int, user *User, session *Session) error {
 	if user.Password != "" {
 		user.Password = hashPassword(user.Password)
 	}

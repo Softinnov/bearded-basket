@@ -10,7 +10,7 @@ import (
 type Session struct {
 	Id    int      `json:"id"`
 	Name  []string `json:"name"`
-	Role  int      `json:"role"`
+	Role  int8     `json:"role"`
 	PdvId int      `json:"pdvid"`
 }
 
@@ -45,7 +45,7 @@ func GetSessionFromCookies(store *sessions.CookieStore, r *http.Request) (*Sessi
 	if !ok {
 		return nil, errors.New("bad session")
 	}
-	role, ok := session.Values["role"].(int)
+	role, ok := session.Values["role"].(int8)
 	if !ok {
 		return nil, errors.New("bad session")
 	}
