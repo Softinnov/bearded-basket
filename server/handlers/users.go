@@ -75,7 +75,35 @@ func indexUsers(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, 
 }
 
 func newUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
-	return 0, nil
+	var user struct {
+		Prenom   string `json:"u_prenom"`
+		Nom      string `json:"u_nom"`
+		Role     int8   `json:"u_role"`
+		Password string `json:"u_pass"`
+		Login    string `json:"u_login"`
+	}
+	dec := json.NewDecoder(r.Body)
+	if err := dec.Decode(&user); err != nil {
+		return http.StatusBadRequest, err
+	}
+	defer r.Body.Close()
+
+	s, err := models.GetSessionFromCookies(c.Store, r)
+	if err != nil {
+		return http.StatusUnauthorized, err
+	}
+	u := &models.User{
+		Prenom:   user.Prenom,
+		Nom:      user.Nom,
+		Role:     user.Role,
+		Password: user.Password,
+		Login:    user.Login,
+	}
+	if err := models.CreateUser(c, u, s); err != nil {
+		return http.StatusInternalServerError, err
+	}
+	fmt.Fprint(w, "Success")
+	return http.StatusCreated, nil
 }
 
 func deleteUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {

@@ -53,6 +53,11 @@ func GetSessionFromCookies(store *sessions.CookieStore, r *http.Request) (*Sessi
 	if !ok {
 		return nil, errors.New("bad session")
 	}
-	s := &Session{id, name, role, pdvid}
+	s := &Session{
+		Id:    id,
+		Name:  name,
+		Role:  role,
+		PdvId: pdvid,
+	}
 	return s, nil
 }

@@ -1,7 +1,6 @@
 package models
 
 import (
-	"bytes"
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
@@ -18,14 +17,17 @@ type User struct {
 	Prenom   string `json:"u_prenom,omitempty"`
 	Role     int8   `json:"u_role,omitempty"`
 	Password string `json:"u_pass,omitempty"`
+	Login    string `json:"u_login,omitempty"`
+	Supprime *int8  `json:"u_supprime,omitempty"`
+	FaitPar  int    `json:"u_faitpar,omitempty"`
 }
 
 func GetUser(c *utils.Context, id int) (*User, error) {
 	user := User{}
 
 	err := c.DB.
-		QueryRow("SELECT u_id, u_pdv, u_nom, u_prenom, u_role FROM utilisateur WHERE u_id=?", id).
-		Scan(&user.Id, &user.Pdv, &user.Nom, &user.Prenom, &user.Role)
+		QueryRow("SELECT u_id, u_pdv, u_nom, u_prenom, u_role, u_login FROM utilisateur WHERE u_id=?", id).
+		Scan(&user.Id, &user.Pdv, &user.Nom, &user.Prenom, &user.Role, &user.Login)
 	if err != nil {
 		log.Println("GetUser:", err)
 		return nil, err
@@ -37,8 +39,8 @@ func GetCurrentUser(c *utils.Context, s *Session) (*User, error) {
 	user := User{}
 
 	err := c.DB.
-		QueryRow("SELECT u_id, u_pdv, u_nom, u_prenom, u_role FROM utilisateur WHERE u_id=?", s.Id).
-		Scan(&user.Id, &user.Pdv, &user.Nom, &user.Prenom, &user.Role)
+		QueryRow("SELECT u_id, u_pdv, u_nom, u_prenom, u_role, u_login FROM utilisateur WHERE u_id=?", s.Id).
+		Scan(&user.Id, &user.Pdv, &user.Nom, &user.Prenom, &user.Role, &user.Login)
 	if err != nil {
 		log.Println("GetCurrentUser:", err)
 		return nil, err
@@ -46,54 +48,60 @@ func GetCurrentUser(c *utils.Context, s *Session) (*User, error) {
 	return &user, nil
 }
 
-func CreateUser(c *utils.Context) (*User, error) {
-	return nil, nil
+func CreateUser(c *utils.Context, user *User, s *Session) error {
+	if user.Password != "" {
+		user.Password = hashPassword(user.Password)
+	}
+	user.Pdv = s.PdvId
+	user.Supprime = new(int8)
+	user.FaitPar = s.Id
+	fmt.Printf("%#v\n", user)
+	m, err := json.Marshal(user)
+	if err != nil {
+		log.Println("CreateUser:", err)
+		return err
+	}
+	fmt.Printf("%s\n", m)
+	r, err := utils.BuildSqlSets(m)
+	if err != nil {
+		log.Println("CreateUser:", err)
+		return err
+	}
+	fmt.Println(r)
+	req := fmt.Sprintf("INSERT INTO utilisateur SET %s", r)
+	stmt, err := c.DB.Prepare(req)
+	if err != nil {
+		log.Println("CreateUser:", err)
+		return err
+	}
+	_, err = stmt.Exec()
+	if err != nil {
+		log.Println("CreateUser:", err)
+		return err
+	}
+	return nil
 }
 
 func GetUsersFromSession(c *utils.Context, s *Session) ([]*User, error) {
 	users := make([]*User, 0)
 
 	rows, err := c.DB.
-		Query("SELECT u_id, u_pdv, u_nom, u_prenom, u_role FROM utilisateur WHERE u_pdv=? AND u_supprime=0", s.PdvId)
+		Query("SELECT u_id, u_pdv, u_nom, u_prenom, u_role, u_login FROM utilisateur WHERE u_pdv=? AND u_supprime=0", s.PdvId)
 	if err != nil {
-		log.Println("GetUsers:", err)
+		log.Println("GetUsersFromSession:", err)
 		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var user User
-		err := rows.Scan(&user.Id, &user.Pdv, &user.Nom, &user.Prenom, &user.Role)
+		err := rows.Scan(&user.Id, &user.Pdv, &user.Nom, &user.Prenom, &user.Role, &user.Login)
 		if err != nil {
-			log.Println("GetUsers:", err)
+			log.Println("GetUsersFromSession:", err)
 			return nil, err
 		}
 		users = append(users, &user)
 	}
 	return users, nil
-}
-
-func buildSqlSets(b []byte) (string, error) {
-	var buf bytes.Buffer
-	var data map[string]interface{}
-
-	err := json.Unmarshal(b, &data)
-	if err != nil {
-		return "", err
-	}
-	flag := false
-	for key, val := range data {
-		if flag {
-			buf.WriteString(", ")
-		}
-		switch val.(type) {
-		case string:
-			buf.WriteString(key + "=" + fmt.Sprintf("%q", val))
-		default:
-			buf.WriteString(key + "=" + fmt.Sprintf("%v", val))
-		}
-		flag = true
-	}
-	return buf.String(), nil
 }
 
 func hashPassword(p string) string {
@@ -109,10 +117,12 @@ func UpdateUser(c *utils.Context, id int, user *User) error {
 	}
 	m, err := json.Marshal(user)
 	if err != nil {
+		log.Println("UpdateUser:", err)
 		return err
 	}
-	r, err := buildSqlSets(m)
+	r, err := utils.BuildSqlSets(m)
 	if err != nil {
+		log.Println("UpdateUser:", err)
 		return err
 	}
 	req := fmt.Sprintf("UPDATE utilisateur SET %s WHERE u_id=%v", r, id)

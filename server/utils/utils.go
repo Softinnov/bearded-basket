@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -15,6 +17,30 @@ func WriteJSON(w http.ResponseWriter, v interface{}) error {
 	w.Header().Set("content-type", "application/json; charset=utf-8")
 	_, err = w.Write(data)
 	return err
+}
+
+func BuildSqlSets(b []byte) (string, error) {
+	var buf bytes.Buffer
+	var data map[string]interface{}
+
+	err := json.Unmarshal(b, &data)
+	if err != nil {
+		return "", err
+	}
+	flag := false
+	for key, val := range data {
+		if flag {
+			buf.WriteString(", ")
+		}
+		switch val.(type) {
+		case string:
+			buf.WriteString(key + "=" + fmt.Sprintf("%q", val))
+		default:
+			buf.WriteString(key + "=" + fmt.Sprintf("%v", val))
+		}
+		flag = true
+	}
+	return buf.String(), nil
 }
 
 func CheyenneLogHTTP(msg string, status int) {

@@ -24,8 +24,12 @@
 
 
 			<div class="panel list-panel">
-			{{userCurrent}}
-			<button type="button" ng-click="newUser()">Ajouter un utilisateur</button>
+
+				<button type="button" ng-click="newUser()">Ajouter un utilisateur</button>
+				{{userCurrent}}
+				<br />
+				<br />
+
 				<table style="text-align: center;">
 					<tr>
 						<th>Nom</th>
@@ -60,12 +64,13 @@
 					</div>
 					<div>
 						<label>Accréditation:</label>
-						<div ng-repeat="role in roles">
+						<div ng-repeat="role in roles | limitTo: (userCurrent.u_role-1)">
 							<input type="radio" name="accréditation" ng-model="userNew.u_role" ng-value="role.r_id" />
 							{{role.r_libelle}}
 						</div>
 					</div>
 					<button type="submit">Enregistrer</button>
+					<button type="button" ng-click="userNew = null">Annuler</button>
 				</form>
 			</div>
 
@@ -94,8 +99,9 @@
 						<input type="number" name="role" ng-model="userEdit.u_role" />
 					</div>
 					<button type="submit">Enregistrer</button>
+					<button type="button" ng-click="deleteUser()">Supprimer</button>
+					<button type="button" ng-click="userEdit = null">Annuler</button>
 				</form>
-				<button type="button" ng-click="deleteUser()">Supprimer</button>
 			</div>
 
 		</div>
