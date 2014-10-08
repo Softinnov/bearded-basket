@@ -33,6 +33,10 @@ func GetUser(c *utils.Context, id int) (*User, error) {
 	return &user, nil
 }
 
+func CreateUser(c *utils.Context) (*User, error) {
+	return nil, nil
+}
+
 func GetUsersFromSession(c *utils.Context, s *Session) ([]*User, error) {
 	var users []*User
 
@@ -87,7 +91,6 @@ func hashPassword(p string) string {
 }
 
 func UpdateUser(c *utils.Context, id int, user *User) error {
-	fmt.Println(user.Password)
 	if user.Password != "" {
 		user.Password = hashPassword(user.Password)
 	}
@@ -100,7 +103,6 @@ func UpdateUser(c *utils.Context, id int, user *User) error {
 		return err
 	}
 	req := fmt.Sprintf("UPDATE utilisateur SET %s WHERE u_id=%v", r, id)
-	log.Println("DB Request:", req)
 	stmt, err := c.DB.Prepare(req)
 	if err != nil {
 		log.Println("UpdateUser:", err)
@@ -109,6 +111,21 @@ func UpdateUser(c *utils.Context, id int, user *User) error {
 	_, err = stmt.Exec()
 	if err != nil {
 		log.Println("UpdateUser:", err)
+		return err
+	}
+	return nil
+}
+
+func RemoveUser(c *utils.Context, id int) error {
+	req := fmt.Sprintf("UPDATE utilisateur SET u_supprime=1 WHERE u_id=%v", id)
+	stmt, err := c.DB.Prepare(req)
+	if err != nil {
+		log.Println("RemoveUser:", err)
+		return err
+	}
+	_, err = stmt.Exec()
+	if err != nil {
+		log.Println("RemoveUser:", err)
 		return err
 	}
 	return nil

@@ -73,3 +73,23 @@ func indexUsers(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, 
 	utils.WriteJSON(w, users)
 	return http.StatusOK, nil
 }
+
+func newUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
+	return 0, nil
+}
+
+func deleteUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
+	id, err := strconv.Atoi(mux.Vars(r)["id"])
+	if err != nil {
+		return http.StatusInternalServerError, err
+	}
+	if s, err := checkPdvId(c, id, r); err != nil {
+		return s, err
+	}
+	if err = models.RemoveUser(c, id); err != nil {
+		return http.StatusInternalServerError, err
+	}
+	fmt.Fprint(w, "Success")
+	return http.StatusOK, nil
+
+}
