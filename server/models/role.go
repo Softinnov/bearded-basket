@@ -24,7 +24,7 @@ func GetRole(c *utils.Context, id int) (*Role, error) {
 }
 
 func GetRoles(c *utils.Context) ([]*Role, error) {
-	var roles []*Role
+	roles := make([]*Role, 0)
 
 	rows, err := c.DB.Query("SELECT r_id, r_libelle FROM role")
 	if err != nil {

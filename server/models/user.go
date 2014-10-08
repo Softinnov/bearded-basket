@@ -38,7 +38,7 @@ func CreateUser(c *utils.Context) (*User, error) {
 }
 
 func GetUsersFromSession(c *utils.Context, s *Session) ([]*User, error) {
-	var users []*User
+	users := make([]*User, 0)
 
 	rows, err := c.DB.
 		Query("SELECT u_id, u_pdv, u_nom, u_prenom, u_role FROM utilisateur WHERE u_pdv=? AND u_supprime=0", s.PdvId)

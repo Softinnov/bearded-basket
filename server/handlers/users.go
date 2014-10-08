@@ -70,6 +70,7 @@ func indexUsers(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, 
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
+	fmt.Printf("%#v\n", users)
 	utils.WriteJSON(w, users)
 	return http.StatusOK, nil
 }
