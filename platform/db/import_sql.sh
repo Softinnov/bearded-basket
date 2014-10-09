@@ -28,7 +28,7 @@ do
     echo "  -> importing $ARG"
     gunzip -f "$DATA""$ARG".txt.gz
     cat "$DATA""$ARG".sql | mysql -u"$1" -p"$2" "$3" || exit $?
-    mysqlimport -u"$1" -p"$2" "$3" "$DATA""$ARG".txt || exit $?
+    mysqlimport --local -u"$1" -p"$2" "$3" "$DATA""$ARG".txt || exit $?
 done
 
 echo "=> Stopping MySQL Server"

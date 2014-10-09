@@ -2,66 +2,119 @@
 <html ng-app="app">
 	<head>
 		<title>Ext Users</title>
-    <style type="text/css">
-.list-panel {
-  float: left;
-}
-.edit-panel {
-}
-.clickable {
-  cursor: pointer;
-}
-.clickable:hover {
-  background-color: red;
-}
-    </style>
+		<meta charset="UTF-8">
+		<style type="text/css">
+			.panel {
+				float: left;
+			}
+			.list-panel {
+				height: 100%;
+			}
+			.clickable {
+				cursor: pointer;
+			}
+			.clickable:hover {
+				background-color: red;
+			}
+		</style>
 	</head>
 	<body>
 
-    <div ng-controller="UsersCtrl">
+		<div ng-controller="UsersCtrl">
 
-      <div class="list-panel">
-        <table style="text-align: center;">
-          <tr>
-            <th>Nom</th>
-            <th>Prenom</th>
-          </tr>
-          <tr class="clickable" ng-repeat="user in users" ng-click="modifyUser(user)">
-            <td>{{user.u_nom}}</td>
-            <td>{{user.u_prenom}}</td>
-          </tr>
-        </table>
-      </div>
-  
-      <div class="edit-panel">
-        <form ng-show="userEdit" ng-submit="editUser()">
-          <div>
-            <label>Id: {{userEdit.u_id}}</label>
-          </div>
-          <div>
-            <label>Pdv: {{userEdit.u_pdv}}</label>
-          </div>
-          <div>
-            <label>Nom:</label>
-            <input type="text" name="nom" ng-model="userEdit.u_nom" />
-          </div>
-          <div>
-            <label>Prenom:</label>
-            <input type="text" name="prenom" ng-model="userEdit.u_prenom" />
-            <div>
-            </div>
-            <label>Role:</label>
-            <input type="number" name="role" ng-model="userEdit.u_role" />
-          </div>
-          <button type="submit">save</button>
-        </form>
-      </div>
 
-    </div>
+			<div class="panel list-panel">
+
+				<button type="button" ng-click="newUser()">Ajouter un utilisateur</button>
+				{{userCurrent}}
+				<br />
+				<br />
+
+				<table style="text-align: center;">
+					<tr>
+						<th>Nom</th>
+						<th>Prenom</th>
+						<th>Accréditation</th>
+					</tr>
+					<tr class="clickable" ng-repeat="user in users" ng-click="modifyUser(user)">
+						<td>{{user.u_nom}}</td>
+						<td>{{user.u_prenom}}</td>
+						<td>{{roles[user.u_role - 1].r_libelle}}</td>
+					</tr>
+				</table>
+			</div>
+
+			<div class="panel new-panel">
+				<form ng-show="userNew" ng-submit="createUser()">
+					<div>
+						<label>Login:</label>
+						<input type="text" name="login" ng-model="userNew.u_login" />
+					</div>
+					<div>
+						<label>Mot de passe:</label>
+						<input type="password" name="mot de passe" ng-model="userNew.u_pass" />
+					</div>
+					<div>
+						<label>Nom:</label>
+						<input type="text" name="nom" ng-model="userNew.u_nom" />
+					</div>
+					<div>
+						<label>Prénom:</label>
+						<input type="text" name="prénom" ng-model="userNew.u_prenom" />
+					</div>
+					<div>
+						<label>Accréditation:</label>
+						<div ng-repeat="role in roles | limitTo: (userCurrent.u_role-1)">
+							<input type="radio" name="accréditation" ng-model="userNew.u_role" ng-value="role.r_id" />
+							{{role.r_libelle}}
+						</div>
+					</div>
+					<button type="submit">Enregistrer</button>
+					<button type="button" ng-click="userNew = null">Annuler</button>
+				</form>
+			</div>
+
+			<div ng-show="userEdit" class="panel edit-panel">
+				<form ng-submit="editUser()">
+					<div>
+						<label>Id: {{userEdit.u_id}}</label>
+					</div>
+					<div>
+						<label>Pdv: {{userEdit.u_pdv}}</label>
+					</div>
+					<div>
+						<label>Password:</label>
+						<input type="password" name="password" ng-model="userEdit.u_pass" />
+					</div>
+					<div>
+						<label>Nom:</label>
+						<input type="text" name="nom" ng-model="userEdit.u_nom" />
+					</div>
+					<div>
+						<label>Prénom:</label>
+						<input type="text" name="prenom" ng-model="userEdit.u_prenom" />
+					</div>
+					<div>
+						<label>Accréditation:</label>
+						<div ng-repeat="role in roles | limitTo: (userCurrent.u_role-1)">
+							<input ng-disabled="userEdit.u_id == userCurrent.u_id" type="radio" name="accréditation" ng-model="userEdit.u_role" ng-value="role.r_id" />
+							{{role.r_libelle}}
+						</div>
+					</div>
+					<button type="submit">Enregistrer</button>
+					<button type="button" ng-click="deleteUser()">Supprimer</button>
+					<button type="button" ng-click="userEdit = null">Annuler</button>
+				</form>
+			</div>
+
+		</div>
 
 		<!-- ANGULARJS -->
 		<script type="application/javascript" src="libs/angular.min.js"></script>
 		<script type="application/javascript" src="libs/angular-route.min.js"></script>
+
+		<!-- LIBS -->
+		<script type="application/javascript" src="libs/lodash.min.js"></script>
 
 		<!-- WEBSITE -->
 		<script type="application/javascript" src="js/app.js"></script>

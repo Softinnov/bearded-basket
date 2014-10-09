@@ -10,7 +10,7 @@ import (
 type Session struct {
 	Id    int      `json:"id"`
 	Name  []string `json:"name"`
-	Role  int      `json:"role"`
+	Role  int8     `json:"role"`
 	PdvId int      `json:"pdvid"`
 }
 
@@ -32,7 +32,7 @@ func StoreInCookies(store *sessions.CookieStore, s *Session, w http.ResponseWrit
 	return nil
 }
 
-func GetFromCookies(store *sessions.CookieStore, r *http.Request) (*Session, error) {
+func GetSessionFromCookies(store *sessions.CookieStore, r *http.Request) (*Session, error) {
 	session, err := store.Get(r, "session-go")
 	if err != nil {
 		return nil, err
@@ -45,7 +45,7 @@ func GetFromCookies(store *sessions.CookieStore, r *http.Request) (*Session, err
 	if !ok {
 		return nil, errors.New("bad session")
 	}
-	role, ok := session.Values["role"].(int)
+	role, ok := session.Values["role"].(int8)
 	if !ok {
 		return nil, errors.New("bad session")
 	}
@@ -53,6 +53,11 @@ func GetFromCookies(store *sessions.CookieStore, r *http.Request) (*Session, err
 	if !ok {
 		return nil, errors.New("bad session")
 	}
-	s := &Session{id, name, role, pdvid}
+	s := &Session{
+		Id:    id,
+		Name:  name,
+		Role:  role,
+		PdvId: pdvid,
+	}
 	return s, nil
 }
