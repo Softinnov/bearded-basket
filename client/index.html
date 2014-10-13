@@ -1,24 +1,5 @@
-<!DOCTYPE html>
-<html ng-app="app">
-	<head>
-		<title>Ext Users</title>
-		<meta charset="UTF-8">
-		<style type="text/css">
-			.panel {
-				float: left;
-			}
-			.list-panel {
-				height: 100%;
-			}
-			.clickable {
-				cursor: pointer;
-			}
-			.clickable:hover {
-				background-color: red;
-			}
-		</style>
-	</head>
-	<body>
+<!--#include virtual="/pdv/head.rsp" -->
+	<div ng-app=app>
 
 		<div ng-controller="UsersCtrl">
 
@@ -34,7 +15,7 @@
 					<tr>
 						<th>Nom</th>
 						<th>Prenom</th>
-						<th>AccrÃ©ditation</th>
+						<th>Accréditation</th>
 					</tr>
 					<tr class="clickable" ng-repeat="user in users" ng-click="modifyUser(user)">
 						<td>{{user.u_nom}}</td>
@@ -59,13 +40,13 @@
 						<input type="text" name="nom" ng-model="userNew.u_nom" />
 					</div>
 					<div>
-						<label>PrÃ©nom:</label>
-						<input type="text" name="prÃ©nom" ng-model="userNew.u_prenom" />
+						<label>Prénom:</label>
+						<input type="text" name="prénom" ng-model="userNew.u_prenom" />
 					</div>
 					<div>
-						<label>AccrÃ©ditation:</label>
+						<label>Accréditation:</label>
 						<div ng-repeat="role in roles | limitTo: (userCurrent.u_role-1)">
-							<input type="radio" name="accrÃ©ditation" ng-model="userNew.u_role" ng-value="role.r_id" />
+							<input type="radio" name="accréditation" ng-model="userNew.u_role" ng-value="role.r_id" />
 							{{role.r_libelle}}
 						</div>
 					</div>
@@ -91,13 +72,13 @@
 						<input type="text" name="nom" ng-model="userEdit.u_nom" />
 					</div>
 					<div>
-						<label>PrÃ©nom:</label>
+						<label>Prénom:</label>
 						<input type="text" name="prenom" ng-model="userEdit.u_prenom" />
 					</div>
 					<div>
-						<label>AccrÃ©ditation:</label>
+						<label>Accréditation:</label>
 						<div ng-repeat="role in roles | limitTo: (userCurrent.u_role-1)">
-							<input ng-disabled="userEdit.u_id == userCurrent.u_id" type="radio" name="accrÃ©ditation" ng-model="userEdit.u_role" ng-value="role.r_id" />
+							<input ng-disabled="userEdit.u_id == userCurrent.u_id" type="radio" name="accréditation" ng-model="userEdit.u_role" ng-value="role.r_id" />
 							{{role.r_libelle}}
 						</div>
 					</div>
@@ -120,5 +101,5 @@
 		<script type="application/javascript" src="js/app.js"></script>
 		<script type="application/javascript" src="js/controllers/users.js"></script>
 
-	</body>
-</html>
+	</div>
+<!--#include virtual="/pdv/footer.inc" -->
