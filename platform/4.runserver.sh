@@ -23,5 +23,5 @@ killall server
 
 cd ../server
 go build && \
-	./server -db "$DBUSER:$DBPASS@($DBIP:3306)/prod" -chey "http://$NGINX:8000" &> $LOGDIR/go.log &
+	./server -db "$DBUSER:$DBPASS@($DBIP:3306)/prod" -chey "http://$NGINX:8000" > $LOGDIR/go.log 2>&1 &
 echo ">> Go server running"
