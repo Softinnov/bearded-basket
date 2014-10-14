@@ -64,7 +64,6 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 	};
 
 	$scope.deleteUser = function() {
-
 		$http({
 			method: 'DELETE',
 			url: 'api/users/' + $scope.userEdit.u_id,
@@ -77,6 +76,4 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 			alert('error');
 		});
 	};
-
 }]);
-
