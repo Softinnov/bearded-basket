@@ -4,6 +4,8 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 	$scope.userCurrent = null;
 	$scope.users = [];
 	$scope.roles = [];
+	$scope.showCreateUser = false;
+	$scope.showEditUser = false;
 
 	$http({method: 'GET', url: 'api/users'}).success(function(data) {
 		$scope.users = data;
@@ -25,11 +27,14 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 	})
 
 	$scope.newUser = function() {
-		$scope.userNew = {};
+		$scope.showCreateUser = true;
+		$scope.showEditUser = false;
 	};
 
 	$scope.modifyUser = function(user) {
 		$scope.userEdit = angular.copy(user);
+		$scope.showCreateUser = false;
+		$scope.showEditUser = true;;
 	};
 
 	$scope.createUser = function() {
@@ -39,7 +44,7 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 			data: $scope.userNew,
 		}).success(function(data){
 			$scope.users.push($scope.userNew);
-			$scope.userNew = false;
+			$scope.showCreateUser = false;
 		}).error(function(){
 			alert('error');
 		});
@@ -57,7 +62,7 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 					$scope.users[k].u_pass = "";
 				}
 			});
-			$scope.userEdit = false;
+			$scope.showEditUser = false;
 		}).error(function(){
 			alert('error');
 		});
@@ -71,7 +76,7 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 			_.remove($scope.users, function(user) {
 				return user.u_id == $scope.userEdit.u_id
 			});
-			$scope.userEdit = false;
+			$scope.showEditUser = false;
 		}).error(function(){
 			alert('error');
 		});

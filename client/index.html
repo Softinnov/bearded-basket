@@ -36,7 +36,7 @@
 			</tfoot>
 		</table>
 
-		<form ng-show="userNew" ng-submit="createUser()" class="pure-form pure-form-aligned">
+		<form ng-show="showCreateUser" ng-submit="createUser()" class="pure-form pure-form-aligned">
 			<fieldset>
 				<div class="pure-control-group">
 					<label for="login">Login</label>
@@ -55,18 +55,15 @@
 					<input id="prenom" type="text" name="prénom" ng-model="userNew.u_prenom" />
 				</div>
 				<div class="pure-control-group">
-					<label>Accréditation</label>
-					<div ng-repeat="role in roles | limitTo: (userCurrent.u_role-1)">
-						<input type="radio" name="accréditation" ng-model="userNew.u_role" ng-value="role.r_id" />
-						{{role.r_libelle}}
-					</div>
+					<label for="accreditation">Accréditation</label>
+					<select id="accreditation" ng-model="userNew.u_role" ng-options="role.r_id as role.r_libelle for role in roles | limitTo: (userCurrent.u_role-1)"></select>
 				</div>
-				<button type="button" ng-click="userNew = null">Abandonner</button>
+				<button type="button" ng-click="showCreateUser = false">Abandonner</button>
 				<button type="submit">Enregistrer</button>
 			</fieldset>
 		</form>
 
-		<form ng-show="userEdit" ng-submit="editUser()" class="pure-form pure-form-aligned" id="idc">
+		<form ng-show="showEditUser" ng-submit="editUser()" class="pure-form pure-form-aligned" id="idc">
 			<h4>Edition du compte : {{userEdit.u_login}}</h4>
 			<fieldset>
 				<div class="pure-control-group">
@@ -82,14 +79,11 @@
 					<input id="prenom" type="text" name="prenom" ng-model="userEdit.u_prenom" />
 				</div>
 				<div class="pure-control-group">
-					<label>Accréditation</label>
-					<div ng-repeat="role in roles | limitTo: (userCurrent.u_role-1)">
-						<input ng-disabled="userEdit.u_id == userCurrent.u_id" type="radio" name="accréditation" ng-model="userEdit.u_role" ng-value="role.r_id" />
-						{{role.r_libelle}}
-					</div>
+					<label for="accreditation">Accréditation</label>
+					<select id="accreditation" ng-model="userEdit.u_role" ng-options="role.r_id as role.r_libelle for role in roles | limitTo: (userCurrent.u_role-1)"></select>
 				</div>
 				<button type="button" ng-click="deleteUser()">Supprimer</button>
-				<button type="button" ng-click="userEdit = null">Abandonner</button>
+				<button type="button" ng-click="showEditUser = false">Abandonner</button>
 				<button type="submit">Enregistrer</button>
 			</fieldset>
 		</form>
