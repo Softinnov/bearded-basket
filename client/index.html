@@ -1,15 +1,21 @@
 <!--#include virtual="/pdv/head.rsp" -->
 	<div ng-app=app>
 
-		<div ng-controller="UsersCtrl">
+		<div ng-controller="UsersCtrl" align="center" id="id2">
 
+			<br />
 
-			<div class="panel list-panel">
+			<div>
+				<b>Nombre d'utilisateurs :</b>
+			</div>
 
+			<div>
 				<button type="button" ng-click="newUser()">Ajouter un utilisateur</button>
 				{{userCurrent}}
-				<br />
-				<br />
+			</div>
+
+			<div>
+
 
 				<table style="text-align: center;">
 					<tr>
@@ -25,7 +31,7 @@
 				</table>
 			</div>
 
-			<div class="panel new-panel">
+			<div>
 				<form ng-show="userNew" ng-submit="createUser()">
 					<div>
 						<label>Login:</label>
@@ -55,7 +61,7 @@
 				</form>
 			</div>
 
-			<div ng-show="userEdit" class="panel edit-panel">
+			<div ng-show="userEdit">
 				<form ng-submit="editUser()">
 					<div>
 						<label>Id: {{userEdit.u_id}}</label>
@@ -91,11 +97,11 @@
 		</div>
 
 		<!-- ANGULARJS -->
-		<script type="application/javascript" src="libs/angular.min.js"></script>
-		<script type="application/javascript" src="libs/angular-route.min.js"></script>
+		<script type="application/javascript" src="libs/js/angular.min.js"></script>
+		<script type="application/javascript" src="libs/js/angular-route.min.js"></script>
 
 		<!-- LIBS -->
-		<script type="application/javascript" src="libs/lodash.min.js"></script>
+		<script type="application/javascript" src="libs/js/lodash.min.js"></script>
 
 		<!-- WEBSITE -->
 		<script type="application/javascript" src="js/app.js"></script>
