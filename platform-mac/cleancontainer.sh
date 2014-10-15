@@ -21,4 +21,4 @@ if [ "$RUNNING" = "true" ]; then
 fi
  
 echo ">> Clean container: $1" 
-docker rm $1
+docker rm $1 2> /dev/null

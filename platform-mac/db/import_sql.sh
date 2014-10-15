@@ -1,7 +1,13 @@
 #!/bin/bash
 
+TEST=false
+if [ $1 == "--test" ]; then
+	TEST=true
+	shift
+fi
+
 if [[ $# -lt 4 ]]; then
-	echo "Usage: $0 <username> <password> <database> <sql_file1> <...>"
+	echo "Usage: $0 [--test] <username> <password> <database> <sql_file1> <...>"
 	echo "sql_file: file names without .sql or .txt.gz"
 	exit 1
 fi
@@ -25,10 +31,18 @@ DATA="/data/"
 echo "=> importing files inside $DATA"
 for ARG in ${*:4}
 do
-    echo "  -> importing $ARG"
-    gunzip -f "$DATA""$ARG".txt.gz
-    cat "$DATA""$ARG".sql | mysql -u"$1" -p"$2" "$3" || exit $?
-    mysqlimport --local -u"$1" -p"$2" "$3" "$DATA""$ARG".txt || exit $?
+	if [ $TEST = true ]; then
+		NARG="$ARG"_test
+
+		echo "  -> importing $ARG.sql"
+		cat "$DATA""$ARG".sql | mysql -u"$1" -p"$2" "$3" || exit $?
+		echo "  -> importing $ARG.txt"
+		mysqlimport --local -u"$1" -p"$2" "$3" "$DATA"/db_tests/"$ARG".txt || exit $?
+	else
+		echo "  -> importing $ARG"
+		cat "$DATA""$ARG".sql | mysql -u"$1" -p"$2" "$3" || exit $?
+		mysqlimport --local -u"$1" -p"$2" "$3" "$DATA""$ARG".txt || exit $?
+	fi
 done
 
 echo "=> Stopping MySQL Server"
