@@ -38,6 +38,11 @@ func GetUser(c *utils.Context, id int) (*User, error) {
 func GetCurrentUser(c *utils.Context, s *Session) (*User, error) {
 	user := User{}
 
+	if s == nil {
+		err := fmt.Errorf("nil session")
+		log.Println("GetCurrentUser:", err)
+		return nil, err
+	}
 	err := c.DB.
 		QueryRow("SELECT u_id, u_pdv, u_nom, u_prenom, u_role, u_login FROM utilisateur WHERE u_id=?", s.Id).
 		Scan(&user.Id, &user.Pdv, &user.Nom, &user.Prenom, &user.Role, &user.Login)
