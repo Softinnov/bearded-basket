@@ -11,7 +11,7 @@ import (
 )
 
 type User struct {
-	Id       int    `json:"u_id,omitempty"`
+	Id       int64  `json:"u_id,omitempty"`
 	Pdv      int    `json:"u_pdv,omitempty"`
 	Nom      string `json:"u_nom,omitempty"`
 	Prenom   string `json:"u_prenom,omitempty"`
@@ -22,7 +22,7 @@ type User struct {
 	FaitPar  int    `json:"u_faitpar,omitempty"`
 }
 
-func GetUser(c *utils.Context, id int) (*User, error) {
+func GetUser(c *utils.Context, id int64) (*User, error) {
 	user := User{}
 
 	err := c.DB.
@@ -48,7 +48,7 @@ func GetCurrentUser(c *utils.Context, s *Session) (*User, error) {
 	return &user, nil
 }
 
-func CreateUser(c *utils.Context, user *User, s *Session) error {
+func CreateUser(c *utils.Context, user *User, s *Session) (int64, error) {
 	if user.Password != "" {
 		user.Password = hashPassword(user.Password)
 	}
@@ -59,27 +59,32 @@ func CreateUser(c *utils.Context, user *User, s *Session) error {
 	m, err := json.Marshal(user)
 	if err != nil {
 		log.Println("CreateUser:", err)
-		return err
+		return 0, err
 	}
 	fmt.Printf("%s\n", m)
 	r, err := utils.BuildSqlSets(m)
 	if err != nil {
 		log.Println("CreateUser:", err)
-		return err
+		return 0, err
 	}
 	fmt.Println(r)
 	req := fmt.Sprintf("INSERT INTO utilisateur SET %s", r)
 	stmt, err := c.DB.Prepare(req)
 	if err != nil {
 		log.Println("CreateUser:", err)
-		return err
+		return 0, err
 	}
-	_, err = stmt.Exec()
+	res, err := stmt.Exec()
 	if err != nil {
 		log.Println("CreateUser:", err)
-		return err
+		return 0, err
 	}
-	return nil
+	rid, err := res.LastInsertId()
+	if err != nil {
+		log.Println("CreateUser:", err)
+		return 0, err
+	}
+	return rid, nil
 }
 
 func GetUsersFromSession(c *utils.Context, s *Session) ([]*User, error) {
@@ -111,35 +116,44 @@ func hashPassword(p string) string {
 	return hex.EncodeToString(hasher.Sum(nil))
 }
 
-func UpdateUser(c *utils.Context, id int, user *User, session *Session) error {
+func UpdateUser(c *utils.Context, id int64, user *User, session *Session) (int64, error) {
 	if user.Password != "" {
 		user.Password = hashPassword(user.Password)
 	}
 	m, err := json.Marshal(user)
 	if err != nil {
 		log.Println("UpdateUser:", err)
-		return err
+		return 0, err
 	}
 	r, err := utils.BuildSqlSets(m)
 	if err != nil {
 		log.Println("UpdateUser:", err)
-		return err
+		return 0, err
 	}
 	req := fmt.Sprintf("UPDATE utilisateur SET %s WHERE u_id=%v", r, id)
 	stmt, err := c.DB.Prepare(req)
 	if err != nil {
 		log.Println("UpdateUser:", err)
-		return err
+		return 0, err
 	}
-	_, err = stmt.Exec()
+	res, err := stmt.Exec()
 	if err != nil {
 		log.Println("UpdateUser:", err)
-		return err
+		return 0, err
 	}
-	return nil
+	if err != nil {
+		log.Println("UpdateUser:", err)
+		return 0, err
+	}
+	rid, err := res.LastInsertId()
+	if err != nil {
+		log.Println("UpdateUser:", err)
+		return 0, err
+	}
+	return rid, nil
 }
 
-func RemoveUser(c *utils.Context, id int) error {
+func RemoveUser(c *utils.Context, id int64) error {
 	req := fmt.Sprintf("UPDATE utilisateur SET u_supprime=1 WHERE u_id=%v", id)
 	stmt, err := c.DB.Prepare(req)
 	if err != nil {

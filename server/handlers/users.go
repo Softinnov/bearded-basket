@@ -13,7 +13,7 @@ import (
 )
 
 func editUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
-	id, err := strconv.Atoi(mux.Vars(r)["id"])
+	id, err := strconv.ParseInt(mux.Vars(r)["id"], 0, 64)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
@@ -49,7 +49,7 @@ func editUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, er
 		Role:     user.Role,
 		Password: user.Password,
 	}
-	if err = models.UpdateUser(c, id, u, session); err != nil {
+	if _, err = models.UpdateUser(c, id, u, session); err != nil {
 		return http.StatusInternalServerError, err
 	}
 	fmt.Fprint(w, "Success")
@@ -94,7 +94,7 @@ func newUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, err
 		Password: user.Password,
 		Login:    user.Login,
 	}
-	if err := models.CreateUser(c, u, s); err != nil {
+	if _, err := models.CreateUser(c, u, s); err != nil {
 		return http.StatusInternalServerError, err
 	}
 	fmt.Fprint(w, "Success")
@@ -102,7 +102,7 @@ func newUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, err
 }
 
 func deleteUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
-	id, err := strconv.Atoi(mux.Vars(r)["id"])
+	id, err := strconv.ParseInt(mux.Vars(r)["id"], 0, 64)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
