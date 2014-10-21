@@ -8,6 +8,33 @@ import (
 	"net/http"
 )
 
+const (
+	Unauthorised = iota + 1
+	Internal
+)
+
+type MError struct {
+	Id  int
+	Err error
+}
+
+func (e *MError) Error() string {
+	return e.Err.Error()
+}
+
+func (e *MError) HTTPError() (int, string) {
+	switch e.Id {
+	case Unauthorised:
+		return http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized)
+	default:
+		return http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError)
+	}
+}
+
+func NewMError(id int, f string, a ...interface{}) *MError {
+	return &MError{id, fmt.Errorf(f, a...)}
+}
+
 func WriteJSON(w http.ResponseWriter, v interface{}) error {
 	data, err := json.Marshal(v)
 	if err != nil {

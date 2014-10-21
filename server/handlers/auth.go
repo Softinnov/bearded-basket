@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 
-	"github.com/Softinnov/bearded-basket/server/models"
 	"github.com/Softinnov/bearded-basket/server/utils"
 )
 
@@ -41,14 +41,14 @@ func cookieAuth(c *utils.Context, w http.ResponseWriter, r *http.Request) bool {
 	switch res.StatusCode {
 	case 200:
 		utils.CheyenneLogHTTP(r.URL.String(), res.StatusCode)
-		session := &models.Session{}
+		session := &utils.Session{}
 		err := json.NewDecoder(res.Body).Decode(session)
 		if err != nil {
 			utils.LogHTTP(w, err, http.StatusInternalServerError, r)
 			return false
 		}
 		res.Body.Close()
-		if err := models.StoreInCookies(c.Store, session, w, r); err != nil {
+		if err := utils.StoreInCookies(c.Store, session, w, r); err != nil {
 			utils.LogHTTP(w, err, http.StatusInternalServerError, r)
 			return false
 		}
@@ -67,6 +67,17 @@ func (ah authHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if !cookieAuth(ah.c, w, r) {
 		return
 	}
+
+	s, err := utils.SessionFromCookies(ah.c.Store, r)
+	if err != nil || s == nil {
+		utils.LogHTTP(w, err, http.StatusUnauthorized, r)
+		return
+	}
+	if s.Role < 3 {
+		utils.LogHTTP(w, errors.New("role unauthorized"), http.StatusUnauthorized, r)
+		return
+	}
+	ah.c.Session = s
 	status, err := ah.fn(ah.c, w, r)
 	utils.LogHTTP(w, err, status, r)
 }

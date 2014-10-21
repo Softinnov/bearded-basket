@@ -20,9 +20,10 @@ func main() {
 	defer database.Close(db)
 
 	context := &utils.Context{
-		Store: sessions.NewCookieStore([]byte("123456789")),
-		DB:    db,
-		Chey:  cheyf,
+		Store:   sessions.NewCookieStore([]byte("123456789")),
+		DB:      db,
+		Chey:    cheyf,
+		Session: nil,
 	}
 
 	handlers.Init(context)

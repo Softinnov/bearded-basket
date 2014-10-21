@@ -1,6 +1,6 @@
 server/server
 platform/logs
 platform-mac/logs
-*.sql
-*.txt
-*.txt.gz
+platform*/*.sql
+platform*/*.txt
+platform*/*.txt.gz

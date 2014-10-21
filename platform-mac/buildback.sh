@@ -4,7 +4,7 @@
 # usage: buildback
 
 TEST=false
-if [ $1 == "--test" ]; then
+if [ "$1" = "--test" ]; then
 	TEST=true
 	shift
 fi
