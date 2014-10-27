@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM debian:7.7
 MAINTAINER Ghislain Guiot
 
 # From tutum-docker-mysql

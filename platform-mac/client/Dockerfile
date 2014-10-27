@@ -1,5 +1,5 @@
 
-FROM ubuntu:14.04
+FROM debian:7.7
 MAINTAINER Ghislain Guiot
 
 ENV DEBIAN_FRONTEND noninteractive

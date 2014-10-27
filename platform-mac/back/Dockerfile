@@ -1,5 +1,5 @@
 
-FROM busybox
+FROM busybox:ubuntu-14.04
 MAINTAINER Ghislain Guiot
 
 ADD run.sh /run.sh
