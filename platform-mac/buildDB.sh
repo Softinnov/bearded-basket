@@ -1,13 +1,13 @@
 #!/bin/sh
 
 TEST=false
-if [ "$1" == "--test" ]; then
+if [ "$1" = "-t" ]; then
 	TEST=true
 	shift
 fi
 
 if [ $# -ne 4 ]; then
-	echo "Usage: $0 [--test] <dbname> <dbuser> <dbpass> <dbtables>"
+	echo "Usage: $0 [-t] <dbname> <dbuser> <dbpass> <dbtables>"
 	exit 1
 fi
 

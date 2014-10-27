@@ -5,7 +5,7 @@
 # example: runserver.sh localhost db admin admin $(pwd)/logs
 
 TEST=false
-if [ "$1" == "--test" ]; then
+if [ "$1" = "-t" ]; then
 	TEST=true
 	shift
 else

@@ -3,7 +3,7 @@
 # RUN DB CONTAINER
 
 TEST=false
-if [ "$1" == "--test" ]; then
+if [ "$1" = "-t" ]; then
 	TEST=true
 	shift
 fi
