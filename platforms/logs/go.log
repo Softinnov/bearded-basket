@@ -1,0 +1,66 @@
+2014/10/24 22:11:31 &http.Cookie{Name:"RSPSID", Value:"CQMQERWJNEROTOYIKIKWKUPK", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:11:31 &http.Cookie{Name:"RSPSID", Value:"CQMQERWJNEROTOYIKIKWKUPK", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:11:31 HTTP GET 200: OK /api/roles
+2014/10/24 22:11:31 Cheyenne 200: /api/user
+2014/10/24 22:11:32 HTTP GET 200: OK /api/user
+2014/10/24 22:11:32 Cheyenne 200: /api/users
+2014/10/24 22:11:32 HTTP GET 200: OK /api/users
+2014/10/24 22:23:04 &http.Cookie{Name:"RSPSID", Value:"VBHCONRGYZMSLMEHAHKLSSPF", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:23:04 &http.Cookie{Name:"RSPSID", Value:"VBHCONRGYZMSLMEHAHKLSSPF", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:23:04 HTTP GET 200: OK /api/roles
+2014/10/24 22:23:04 Cheyenne 200: /api/user
+2014/10/24 22:23:04 HTTP GET 200: OK /api/user
+2014/10/24 22:23:04 Cheyenne 200: /api/users
+2014/10/24 22:23:04 HTTP GET 200: OK /api/users
+2014/10/24 22:24:18 &http.Cookie{Name:"RSPSID", Value:"MTSTODFWMYPMQVLPOWHQEUMN", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:24:18 &http.Cookie{Name:"RSPSID", Value:"MTSTODFWMYPMQVLPOWHQEUMN", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:24:18 HTTP GET 200: OK /api/roles
+2014/10/24 22:24:18 Cheyenne 200: /api/user
+2014/10/24 22:24:18 HTTP GET 200: OK /api/user
+2014/10/24 22:24:18 Cheyenne 200: /api/users
+2014/10/24 22:24:18 HTTP GET 200: OK /api/users
+2014/10/24 22:24:19 &http.Cookie{Name:"RSPSID", Value:"MTSTODFWMYPMQVLPOWHQEUMN", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:24:19 HTTP GET 200: OK /api/roles
+2014/10/24 22:24:19 &http.Cookie{Name:"RSPSID", Value:"MTSTODFWMYPMQVLPOWHQEUMN", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:24:20 Cheyenne 200: /api/users
+2014/10/24 22:24:20 HTTP GET 200: OK /api/users
+2014/10/24 22:24:20 Cheyenne 200: /api/user
+2014/10/24 22:24:20 HTTP GET 200: OK /api/user
+2014/10/24 22:25:17 &http.Cookie{Name:"RSPSID", Value:"VJSPRVQNCKEEQDQBXCOIPNND", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:25:17 &http.Cookie{Name:"RSPSID", Value:"VJSPRVQNCKEEQDQBXCOIPNND", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:25:17 HTTP GET 200: OK /api/roles
+2014/10/24 22:25:18 Cheyenne 200: /api/users
+2014/10/24 22:25:18 HTTP GET 200: OK /api/users
+2014/10/24 22:25:18 Cheyenne 200: /api/user
+2014/10/24 22:25:18 HTTP GET 200: OK /api/user
+2014/10/24 22:25:19 &http.Cookie{Name:"RSPSID", Value:"VJSPRVQNCKEEQDQBXCOIPNND", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:25:19 &http.Cookie{Name:"RSPSID", Value:"VJSPRVQNCKEEQDQBXCOIPNND", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:25:19 HTTP GET 200: OK /api/roles
+2014/10/24 22:25:19 Cheyenne 200: /api/users
+2014/10/24 22:25:19 HTTP GET 200: OK /api/users
+2014/10/24 22:25:19 Cheyenne 200: /api/user
+2014/10/24 22:25:19 HTTP GET 200: OK /api/user
+2014/10/24 22:28:16 &http.Cookie{Name:"RSPSID", Value:"BKLSTYCSHJPYOPJKYVGLMTZS", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:28:16 HTTP GET 200: OK /api/roles
+2014/10/24 22:28:16 &http.Cookie{Name:"RSPSID", Value:"BKLSTYCSHJPYOPJKYVGLMTZS", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:28:16 Cheyenne 200: /api/users
+2014/10/24 22:28:16 HTTP GET 200: OK /api/users
+2014/10/24 22:28:16 Cheyenne 200: /api/user
+2014/10/24 22:28:16 HTTP GET 200: OK /api/user
+2014/10/24 22:28:17 &http.Cookie{Name:"RSPSID", Value:"BKLSTYCSHJPYOPJKYVGLMTZS", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:28:17 HTTP GET 200: OK /api/roles
+2014/10/24 22:28:17 &http.Cookie{Name:"RSPSID", Value:"BKLSTYCSHJPYOPJKYVGLMTZS", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:28:18 Cheyenne 200: /api/users
+2014/10/24 22:28:18 HTTP GET 200: OK /api/users
+2014/10/24 22:28:18 Cheyenne 200: /api/user
+2014/10/24 22:28:18 HTTP GET 200: OK /api/user
+2014/10/24 22:28:20 &http.Cookie{Name:"RSPSID", Value:"BKLSTYCSHJPYOPJKYVGLMTZS", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:28:20 Cheyenne 200: /api/users/1038
+2014/10/24 22:28:20 HTTP PUT 202: Accepted /api/users/1038
+2014/10/24 22:28:21 &http.Cookie{Name:"RSPSID", Value:"BKLSTYCSHJPYOPJKYVGLMTZS", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:28:21 HTTP GET 200: OK /api/roles
+2014/10/24 22:28:21 &http.Cookie{Name:"RSPSID", Value:"BKLSTYCSHJPYOPJKYVGLMTZS", Path:"", Domain:"", Expires:time.Time{sec:0, nsec:0x0, loc:(*time.Location)(nil)}, RawExpires:"", MaxAge:0, Secure:false, HttpOnly:false, Raw:"", Unparsed:[]string(nil)}
+2014/10/24 22:28:21 Cheyenne 200: /api/users
+2014/10/24 22:28:21 HTTP GET 200: OK /api/users
+2014/10/24 22:28:22 Cheyenne 200: /api/user
+2014/10/24 22:28:22 HTTP GET 200: OK /api/user
