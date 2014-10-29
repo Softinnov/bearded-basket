@@ -17,3 +17,17 @@ $ ./4.runclient.sh $(pwd)/../client $(pwd)/logs
 ```
 
 Finally, open your browser at localhost:8000 (or boot2docker IP for MacOSX)
+
+TESTS
+=====
+
+Create images with:
+```sh
+$ ./buildDB.sh -t
+$ ./buildback.sh -t
+```
+
+Then launch the test container:
+```sh
+$ ./3.runserver.sh -t go test ./...
+```
