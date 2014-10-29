@@ -1,7 +1,6 @@
-platform-mac/bin/bearded-basket
+platforms/bin/bearded-basket
 server/server
-platform/logs
-platform-mac/logs
-platform*/*.sql
-platform*/*.txt
-platform*/*.txt.gz
+platforms/logs
+platforms/*.sql
+platforms/*.txt
+platforms/*.txt.gz
