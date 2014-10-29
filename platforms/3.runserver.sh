@@ -30,7 +30,7 @@ DBCON=db
 DBCONTEST="$DBCON"_test
 
 if [ $TEST = true ] || [ $REM = true ]; then
-	./1.rundb.sh --test
+	./1.rundb.sh -t
 
 	echo ">> Running the $BCONTEST container"
 	docker run --rm -v $GOPATH/src:/go/src --link $DBCONTEST:$DBCONTEST softinnov/$BCONTEST ${*:1}
