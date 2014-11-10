@@ -1,17 +1,24 @@
 #!/bin/sh
 
 # RUN SERVER GO
-# usage: runserver <nginx> <db container> <dbuser> <dbpass> <logdir>
-# example: runserver.sh localhost db admin admin $(pwd)/logs
+# usage: runserver <go dir> <log dir>
+# example: runserver.sh $(pwd)/../server $(pwd)/logs
 
 TEST=false
+REM=false
 if [ "$1" = "-t" ]; then
 	TEST=true
 	shift
 else
-	if [ $# -ne 2 ]; then
-		echo "Usage: $0 [--test +commands] [<go dir> <logdir>]"
-		exit 1
+	if [ "$1" = "-tn" ]; then
+		# No remove of database after tests
+		REM=true
+		shift
+	else
+		if [ $# -ne 2 ]; then
+			echo "Usage: $0 [-t/-tn +commands] [<go dir> <log dir>]"
+			exit 1
+		fi
 	fi
 fi
 
@@ -22,12 +29,16 @@ BCONTEST="$BCON"_test
 DBCON=db
 DBCONTEST="$DBCON"_test
 
-if [ $TEST = true ]; then
-	echo ">> Removing old container (stop it if running)"
-	./cleancontainer.sh $BCONTEST
+if [ $TEST = true ] || [ $REM = true ]; then
+	./1.rundb.sh -t
 
 	echo ">> Running the $BCONTEST container"
-	docker run -v $GOPATH/src:/go/src --link $DBCONTEST:$DBCONTEST softinnov/$BCONTEST ${*:1}
+	docker run --rm -v $GOPATH/src:/go/src --link $DBCONTEST:$DBCONTEST softinnov/$BCONTEST ${*:1}
+
+	if [ $TEST = true ]; then
+		echo ">> Removing old container (stop it if running)"
+		./cleancontainer.sh $DBCONTEST
+	fi
 else
 	echo ">> Removing old container (stop it if running)"
 	./cleancontainer.sh $BCON

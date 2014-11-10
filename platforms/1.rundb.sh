@@ -9,7 +9,6 @@ if [ "$1" = "-t" ]; then
 fi
 
 DBDATA=dbdata
-DBDATATEST="$DBDATA"_test
 DBCON=db
 DBCONTEST="$DBCON"_test
 
@@ -18,7 +17,7 @@ if [ $TEST = true ]; then
 	./cleancontainer.sh $DBCONTEST
 
 	echo ">> Running DB container"
-	docker run -d --volumes-from $DBDATATEST --name $DBCONTEST softinnov/$DBCONTEST || exit $?
+	docker run -d --name $DBCONTEST softinnov/$DBCONTEST || exit $?
 else
 	echo ">> Removing old container (stop it if running)"
 	./cleancontainer.sh $DBCON

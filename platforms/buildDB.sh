@@ -4,52 +4,35 @@ TEST=false
 if [ "$1" = "-t" ]; then
 	TEST=true
 	shift
-fi
-
-if [ $# -ne 4 ]; then
-	echo "Usage: $0 [-t] <dbname> <dbuser> <dbpass> <dbtables>"
-	exit 1
+else
+	if [ $# -ne 4 ]; then
+		echo "Usage: $0 [-t] <dbname> <dbuser> <dbpass> <dbtables>"
+		exit 1
+	fi
 fi
 
 DBNAME=$1
-DBTEST="$DBNAME"_test
 DBUSER=$2
 DBPASS=$3
 DBTABLES=$4
 DBDATA=dbdata
-DBDATATEST="$DBDATA"_test
 DBCON=db
-DBCONTEST="$DBCON"_test
 
 if [ $TEST = true ]; then
-	echo ">> Removing old dbdata and db container"
-	./cleancontainer.sh $DBDATATEST
-	./cleancontainer.sh $DBCONTEST
+	echo ">> Removing old db_test container"
+	./cleancontainer.sh db_test
 
-	echo ">> Entering db folder"
-	cd db
+	echo ">> Entering into dbtest folder"
+	cd dbtests
 
-	echo ">> Building the db image"
-	docker build -t softinnov/$DBCONTEST . || exit $?
-
-	echo ">> Initializing the data-only container"
-	docker run -d -v /var/lib/mysql --name $DBDATATEST busybox echo data-only || exit $?
-
-	echo ">> Initializing the mysql container"
-	docker run --rm --volumes-from $DBDATATEST -e MYSQL_USER=$DBUSER -e MYSQL_PASS=$DBPASS softinnov/$DBCONTEST || exit $?
-
-	echo ">> Creating database $DBTEST for test environment"
-	docker run --rm --volumes-from $DBDATATEST softinnov/$DBCONTEST bash -c "/create_db.sh $DBTEST" || exit $?
-
-	echo ">> Importing tables $DBTABLES"
-	docker run --rm -v $(pwd)/..:/data --volumes-from $DBDATATEST softinnov/$DBCONTEST /bin/bash -c \
-		"/import_sql.sh --test $DBUSER $DBPASS $DBTEST $DBTABLES" || exit $?
+	echo ">> Building the db_test image"
+	docker build -t softinnov/db_test . || exit $?
 else
 	echo ">> Removing old dbdata and db container"
 	./cleancontainer.sh $DBDATA
 	./cleancontainer.sh $DBCON
 
-	echo ">> Entering db folder"
+	echo ">> Entering into db folder"
 	cd db
 
 	echo ">> Building the db image"

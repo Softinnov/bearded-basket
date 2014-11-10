@@ -145,7 +145,7 @@ func CreateUser(c *utils.Context, u *User) (int64, *utils.SError) {
 }
 
 func (u *User) UpdateUser(c *utils.Context, up *User) *utils.SError {
-	if c.Session.PdvId != u.Pdv || c.Session.Role < up.Role ||
+	if c.Session.PdvId != u.Pdv || c.Session.Role <= up.Role ||
 		(c.Session.Id == u.Id && c.Session.Role != up.Role) {
 		return &utils.SError{StatusBadRequest,
 			fmt.Errorf("incorrect fields"),
