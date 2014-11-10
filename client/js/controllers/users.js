@@ -6,24 +6,24 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 	$scope.roles = [];
 	$scope.showCreateUser = false;
 	$scope.showEditUser = false;
+	$scope.error = null;
 
 	$http({method: 'GET', url: 'api/users'}).success(function(data) {
 		$scope.users = data;
 	}).error(function(){
-		alert("cannot get users");
-		//$window.location.href = '../';
+		$window.location.href = '../';
 	});
 
 	$http({method: 'GET', url: 'api/roles'}).success(function(data) {
 		$scope.roles = data;
-	}).error(function() {
-		alert("cannot get roles");
+	}).error(function(e) {
+		$scope.errors = e;
 	});
 
 	$http({method: 'GET', url: 'api/user'}).success(function(data) {
 		$scope.userCurrent = data;
 	}).error(function() {
-		alert("cannot get currentUser");
+		$window.location.href = '../';
 	})
 
 	$scope.newUser = function() {
@@ -45,8 +45,8 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 		}).success(function(data){
 			$scope.users.push($scope.userNew);
 			$scope.showCreateUser = false;
-		}).error(function(){
-			alert('error');
+		}).error(function(e){
+			$scope.error = e;
 		});
 	};
 
@@ -63,8 +63,8 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 				}
 			});
 			$scope.showEditUser = false;
-		}).error(function(){
-			alert('error');
+		}).error(function(e){
+			$scope.error = e;
 		});
 	};
 
@@ -77,8 +77,8 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 				return user.u_id == $scope.userEdit.u_id
 			});
 			$scope.showEditUser = false;
-		}).error(function(){
-			alert('error');
+		}).error(function(e){
+			$scope.error = e;
 		});
 	};
 }]);

@@ -8,10 +8,10 @@ import (
 
 type basicHandler struct {
 	c  *utils.Context
-	fn func(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error)
+	fn func(c *utils.Context, w http.ResponseWriter, r *http.Request) *utils.SError
 }
 
 func (ah basicHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	status, err := ah.fn(ah.c, w, r)
-	utils.LogHTTP(w, err, status, r)
+	e := ah.fn(ah.c, w, r)
+	LogHTTP(e, w, r)
 }
