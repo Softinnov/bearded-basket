@@ -11,14 +11,14 @@ func Init(c *utils.Context) {
 
 	r := mux.NewRouter()
 
-	// AUTHENTICATED
+	// NEED AUTHENTICATION
 	r.Handle("/api/users/{id:[0-9]+}", authHandler{c, editUser}).Methods("PUT")
 	r.Handle("/api/users", authHandler{c, indexUsers}).Methods("GET")
 	r.Handle("/api/user", authHandler{c, getCurrentUser}).Methods("GET")
 	r.Handle("/api/users", authHandler{c, newUser}).Methods("POST")
 	r.Handle("/api/users/{id:[0-9]+}", authHandler{c, deleteUser}).Methods("DELETE")
 
-	// NOT AUTHENTICATED
+	// NO AUTHENTICATION
 	r.Handle("/api/roles", basicHandler{c, indexRoles}).Methods("GET")
 
 	http.Handle("/", r)

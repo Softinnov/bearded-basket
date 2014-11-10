@@ -7,11 +7,13 @@ import (
 	"github.com/Softinnov/bearded-basket/server/utils"
 )
 
-func indexRoles(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
-	roles, err := models.GetRoles(c)
-	if err != nil {
-		return http.StatusInternalServerError, err
+func indexRoles(c *utils.Context, w http.ResponseWriter, r *http.Request) *utils.SError {
+	roles, e := models.GetRoles(c)
+	if e != nil {
+		return convHSt(e)
 	}
-	utils.WriteJSON(w, roles)
-	return http.StatusOK, nil
+	if e := WriteJSON(w, http.StatusOK, roles); e != nil {
+		return &utils.SError{http.StatusInternalServerError, nil, e}
+	}
+	return nil
 }

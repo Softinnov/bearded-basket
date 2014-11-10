@@ -3,6 +3,10 @@
 
 	<div ng-controller="UsersCtrl" align="center" id="id2">
 
+		<aside ng-show="error" style="color:#8c3a2b;border-radius:3px;width:40%;padding: 0.5em 0.5em;border:1px solid;margin:1em;">
+			Erreur: {{error}}
+		</aside>
+
 		<br />
 
 		<div class="pure-g" align="left">
@@ -36,34 +40,34 @@
 			</tfoot>
 		</table>
 
-		<form ng-show="showCreateUser" ng-submit="createUser()" class="pure-form pure-form-aligned">
+		<form name="createForm" ng-show="showCreateUser" ng-submit="createUser()" class="pure-form pure-form-aligned">
 			<fieldset>
 				<div class="pure-control-group">
 					<label for="login">Login</label>
-					<input id="login" type="text" name="login" ng-model="userNew.u_login" />
+					<input id="login" type="text" name="login" ng-model="userNew.u_login" required/>
 				</div>
 				<div class="pure-control-group">
 					<label for="password">Mot de passe</label>
-					<input id="password" type="password" name="mot de passe" ng-model="userNew.u_pass" />
+					<input id="password" type="password" name="mot de passe" ng-model="userNew.u_pass" required/>
 				</div>
 				<div class="pure-control-group">
 					<label for="nom">Nom</label>
-					<input id="nom" type="text" name="nom" ng-model="userNew.u_nom" />
+					<input id="nom" type="text" name="nom" ng-model="userNew.u_nom" required/>
 				</div>
 				<div class="pure-control-group">
 					<label for="prenom">Prénom</label>
-					<input id="prenom" type="text" name="prénom" ng-model="userNew.u_prenom" />
+					<input id="prenom" type="text" name="prénom" ng-model="userNew.u_prenom" required/>
 				</div>
 				<div class="pure-control-group">
 					<label for="accreditation">Accréditation</label>
-					<select id="accreditation" ng-model="userNew.u_role" ng-options="role.r_id as role.r_libelle for role in roles | limitTo: (userCurrent.u_role-1)"></select>
+					<select id="accreditation" ng-init="userNew.u_role=1" ng-model="userNew.u_role" ng-options="role.r_id as role.r_libelle for role in roles | limitTo: (userCurrent.u_role-1)"></select>
 				</div>
 				<button type="button" ng-click="showCreateUser = false">Abandonner</button>
-				<button type="submit">Enregistrer</button>
+				<button type="submit" ng-disabled="createForm.$invalid">Enregistrer</button>
 			</fieldset>
 		</form>
 
-		<form ng-show="showEditUser" ng-submit="editUser()" class="pure-form pure-form-aligned" id="idc">
+		<form name="editForm" ng-show="showEditUser" ng-submit="editUser()" class="pure-form pure-form-aligned" id="idc">
 			<h4>Edition du compte : {{userEdit.u_login}}</h4>
 			<fieldset>
 				<div class="pure-control-group">
@@ -72,19 +76,19 @@
 				</div>
 				<div class="pure-control-group">
 					<label for="nom">Nom</label>
-					<input id="nom" type="text" name="nom" ng-model="userEdit.u_nom" />
+					<input id="nom" type="text" name="nom" ng-model="userEdit.u_nom" required/>
 				</div>
 				<div class="pure-control-group">
 					<label for="prenom">Prénom</label>
-					<input id="prenom" type="text" name="prenom" ng-model="userEdit.u_prenom" />
+					<input id="prenom" type="text" name="prenom" ng-model="userEdit.u_prenom" required/>
 				</div>
-				<div class="pure-control-group">
+				<div ng_hide="userCurrent.u_id == userEdit.u_id || userCurrent.u_role <= userEdit.u_role" class="pure-control-group">
 					<label for="accreditation">Accréditation</label>
 					<select id="accreditation" ng-model="userEdit.u_role" ng-options="role.r_id as role.r_libelle for role in roles | limitTo: (userCurrent.u_role-1)"></select>
 				</div>
-				<button type="button" ng-click="deleteUser()">Supprimer</button>
+				<button ng-hide="userCurrent.u_id == userEdit.u_id || userCurrent.u_role <= userEdit.u_role" type="button" ng-click="deleteUser()">Supprimer</button>
 				<button type="button" ng-click="showEditUser = false">Abandonner</button>
-				<button type="submit">Enregistrer</button>
+				<button type="submit" ng-disabled="editForm.$invalid">Enregistrer</button>
 			</fieldset>
 		</form>
 

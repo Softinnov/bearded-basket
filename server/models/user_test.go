@@ -416,6 +416,21 @@ func TestRemoveUser(t *testing.T) {
 			},
 			session: &utils.Session{Id: 1, PdvId: 0, Role: 3},
 		},
+		{
+			name:  "On Me",
+			works: false,
+			user: &User{
+				Id:       4,
+				Pdv:      0,
+				Nom:      "MARTIN",
+				Prenom:   "Roger",
+				Role:     2,
+				Login:    "stock",
+				FaitPar:  0,
+				Supprime: 1,
+			},
+			session: &utils.Session{Id: 4, PdvId: 0, Role: 3},
+		},
 	}
 
 	for _, te := range tes {

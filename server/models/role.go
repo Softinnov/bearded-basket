@@ -1,7 +1,7 @@
 package models
 
 import (
-	"log"
+	"fmt"
 
 	"github.com/Softinnov/bearded-basket/server/utils"
 )
@@ -11,36 +11,42 @@ type Role struct {
 	Libelle string `json:"r_libelle"`
 }
 
-func GetRole(c *utils.Context, id int) (*Role, error) {
-	role := Role{}
+func GetRole(c *utils.Context, id int) (*Role, *utils.SError) {
+	r := Role{}
 
-	err := c.DB.QueryRow("SELECT r_id, r_libelle FROM role WHERE r_id=?", id).
-		Scan(&role.Id, &role.Libelle)
-	if err != nil {
-		log.Println("GetRole:", err)
-		return nil, err
+	e := c.DB.QueryRow("SELECT r_id, r_libelle FROM role WHERE r_id=?", id).
+		Scan(&r.Id, &r.Libelle)
+	if e != nil {
+		return nil, &utils.SError{StatusInternalServerError,
+			nil,
+			fmt.Errorf("GetRole: %s", e),
+		}
 	}
-	return &role, nil
+	return &r, nil
 }
 
-func GetRoles(c *utils.Context) ([]*Role, error) {
-	roles := make([]*Role, 0)
+func GetRoles(c *utils.Context) ([]*Role, *utils.SError) {
+	rs := make([]*Role, 0)
 
-	rows, err := c.DB.Query("SELECT r_id, r_libelle FROM role")
-	if err != nil {
-		log.Println("GetRoles:", err)
-		return nil, err
+	rows, e := c.DB.Query("SELECT r_id, r_libelle FROM role")
+	if e != nil {
+		return nil, &utils.SError{StatusInternalServerError,
+			nil,
+			fmt.Errorf("GetRoles: %s", e),
+		}
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var role Role
+		var r Role
 
-		err := rows.Scan(&role.Id, &role.Libelle)
-		if err != nil {
-			log.Println("GetRoles:", err)
-			return nil, err
+		e := rows.Scan(&r.Id, &r.Libelle)
+		if e != nil {
+			return nil, &utils.SError{StatusInternalServerError,
+				nil,
+				fmt.Errorf("GetRoles: %s", e),
+			}
 		}
-		roles = append(roles, &role)
+		rs = append(rs, &r)
 	}
-	return roles, nil
+	return rs, nil
 }
