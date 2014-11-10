@@ -91,6 +91,16 @@ func CreateUser(c *utils.Context, u *User) (int64, *utils.SError) {
 			errors.New("CreateUser: incorrect fields"),
 		}
 	}
+	us, err := GetUsersFromSession(c)
+	if err != nil {
+		return 0, err
+	}
+	if len(us) >= 10 {
+		return 0, &utils.SError{StatusBadRequest,
+			errors.New("Nombre limite de 10 utilisateurs atteint"),
+			fmt.Errorf("CreateUser: maximum users reached %d", len(us)),
+		}
+	}
 	m, e := json.Marshal(struct {
 		*User
 		Pdv      int    `json:"u_pdv"`

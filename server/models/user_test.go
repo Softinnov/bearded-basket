@@ -221,18 +221,18 @@ func TestCreateUser(t *testing.T) {
 			session: &utils.Session{Id: 1, PdvId: 0, Role: 5},
 		},
 		{
-			name:  "Empty field (Name) User",
+			name:  "More than 10 Users",
 			works: false,
 			user: &User{
-				Pdv:      0,
-				Nom:      "",
-				Prenom:   "PrenomTest",
-				Role:     4,
-				Password: "coucou",
-				Login:    "loginTest",
+				Pdv:      42,
+				Nom:      "fake",
+				Prenom:   "fake",
+				Role:     1,
+				Password: "fake",
+				Login:    "fake",
 				FaitPar:  1,
 			},
-			session: &utils.Session{Id: 1, PdvId: 0, Role: 5},
+			session: &utils.Session{Id: 1, PdvId: 42, Role: 5},
 		},
 	}
 
