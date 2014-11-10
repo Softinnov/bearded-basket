@@ -15,7 +15,7 @@
 			</div>
 
 			<div class="pure-u-1-2" align="right">
-				<button type="button" ng-click="newUser()">Ajouter un utilisateur</button>
+				<button type="button" class="pure-button" ng-click="newUser()">Ajouter un utilisateur</button>
 			</div>
 		</div>
 
@@ -62,8 +62,8 @@
 					<label for="accreditation">Accréditation</label>
 					<select id="accreditation" ng-init="userNew.u_role=1" ng-model="userNew.u_role" ng-options="role.r_id as role.r_libelle for role in roles | limitTo: (userCurrent.u_role-1)"></select>
 				</div>
-				<button type="button" ng-click="showCreateUser = false">Abandonner</button>
-				<button type="submit" ng-disabled="createForm.$invalid">Enregistrer</button>
+				<button type="button" class="pure-button" ng-click="showCreateUser = false">Abandonner</button>
+				<button type="submit" class="pure-button" ng-disabled="createForm.$invalid">Enregistrer</button>
 			</fieldset>
 		</form>
 
@@ -86,9 +86,9 @@
 					<label for="accreditation">Accréditation</label>
 					<select id="accreditation" ng-model="userEdit.u_role" ng-options="role.r_id as role.r_libelle for role in roles | limitTo: (userCurrent.u_role-1)"></select>
 				</div>
-				<button ng-hide="userCurrent.u_id == userEdit.u_id || userCurrent.u_role <= userEdit.u_role" type="button" ng-click="deleteUser()">Supprimer</button>
-				<button type="button" ng-click="showEditUser = false">Abandonner</button>
-				<button type="submit" ng-disabled="editForm.$invalid">Enregistrer</button>
+				<button ng-hide="userCurrent.u_id == userEdit.u_id || userCurrent.u_role <= userEdit.u_role" type="button" class="pure-button" ng-click="deleteUser()">Supprimer</button>
+				<button type="button" class="pure-button"ng-click="showEditUser = false">Abandonner</button>
+				<button type="submit" class="pure-button" ng-disabled="editForm.$invalid">Enregistrer</button>
 			</fieldset>
 		</form>
 
