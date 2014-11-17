@@ -18,12 +18,19 @@ echo ">> Building back image..."
 cd back || exit $?
 ./compile.sh || exit $?
 docker build -t softinnov/prod-back . || exit $?
+rm -rf bearded-basket
 cd ..
 echo ">> back image done."
 
 echo ">> Building client image..."
 cd client || exit $?
-docker build -t softinnov/prod-client . || exit $?
+RET=0
+cp -r ../../client . || exit $?
+docker build -t softinnov/prod-client . || RET=$?
+if [ $RET -ne 0 ]; then
+	rm -rf client
+	exit $RET
+fi
+rm -rf client
 cd ..
 echo ">> client image done."
-
