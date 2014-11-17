@@ -1,8 +1,8 @@
 #!/bin/sh
 
-if [ $# -ne 1  ]; then
-	echo "Usage: $0 <script.sh>"
+if [ $# -ne 2  ]; then
+	echo "Usage: $0 <ip> <script.sh>"
 	exit 1
 fi
 
-ssh root@192.99.12.123 'bash -s' < $1
+ssh root@"$1" 'bash -s' < $2

@@ -1,16 +1,21 @@
+BUILD DEPLOYEMENT
+=================
+
+In order to build all images for the deployement, simply run `build.sh`.
+
 DEPLOYEMENT
 ===========
 
-First of all, add you ssh key to be identified without password check by running:
-(Replace you ssh key file by yours)
+First of all, add your ssh key to be identified without password check by running:
+(Replace the ssh key file by yours)
 
 ```sh
-$ ./init.sh ~/.ssh/id_rsa.pub
+$ ./init.sh 0.0.0.0 ~/.ssh/id_rsa.pub
 ```
 
-Then, run the following command:
+Then, run the following command (replace the IP with the proper one):
 ```sh
-$ ./run.sh install.sh
+$ ./run.sh 0.0.0.0 install.sh
 ```
 
 This command will install all necessary packages for the server configuration.

@@ -1,9 +1,9 @@
 #!/bin/sh
 
-if [ $# -ne 1  ]; then
-	echo "Usage: $0 <ssh_key.pub>"
+if [ $# -ne 2  ]; then
+	echo "Usage: $0 <ip> <ssh_key.pub>"
 	exit 1
 fi
 
 echo ">> copy of ssh key"
-ssh-copy-id -i $1 root@192.99.12.123
+ssh-copy-id -i $2 root@"$1"
