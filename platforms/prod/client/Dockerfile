@@ -4,6 +4,7 @@ MAINTAINER Ghislain Guiot
 
 RUN rm -v /etc/nginx/nginx.conf
 ADD nginx.conf /etc/nginx/
+ADD client /client
 
 VOLUME /var/log/nginx
 
