@@ -6,6 +6,8 @@ In order to build all images for the deployement, simply run `build.sh`.
 DEPLOYEMENT
 ===========
 
+### Debian/Ubuntu
+
 First of all, add your ssh key to be identified without password check by running:
 (Replace the ssh key file by yours)
 

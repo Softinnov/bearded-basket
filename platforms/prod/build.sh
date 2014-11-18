@@ -25,7 +25,7 @@ echo ">> back image done."
 echo ">> Building client image..."
 cd client || exit $?
 RET=0
-cp -r ../../client . || exit $?
+cp -r ../../../client . || exit $?
 docker build -t softinnov/prod-client . || RET=$?
 if [ $RET -ne 0 ]; then
 	rm -rf client
