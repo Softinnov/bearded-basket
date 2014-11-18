@@ -1,5 +1,5 @@
 
-FROM softinnov/mininginx
+FROM softinnov/nginx
 MAINTAINER Ghislain Guiot
 
 RUN rm -v /etc/nginx/nginx.conf
