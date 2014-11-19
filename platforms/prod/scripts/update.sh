@@ -1,10 +1,21 @@
-#!/bin/sh
+#/bin/sh
 
-apt-get update -y
+cd
 
-curl -sSL https://get.docker.com/ubuntu/ | sudo sh || exit $?
+rm -rf prod-*.tar
+unzip prod.zip || exit $?
 
-docker run --rm busybox echo "everything works" || exit $?
+docker stop prod-db prod-chey prod-back prod-client
+docker rm prod-db prod-chey prod-back prod-client
+docker rmi softinnov/prod-db
+docker rmi softinnov/prod-chey
+docker rmi softinnov/prod-back
+docker rmi softinnov/prod-client
+
+docker load -i prod-db.tar     || exit $?
+docker load -i prod-chey.tar   || exit $?
+docker load -i prod-back.tar   || exit $?
+docker load -i prod-client.tar || exit $?
 
 PROD[0]="docker run -d --volumes-from dbdata --name prod-db softinnov/prod-db"
 OLD[0]="prod-db"
