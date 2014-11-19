@@ -39,7 +39,7 @@ else
 	docker build -t softinnov/$DBCON . || exit $?
 
 	echo ">> Initializing the data-only container"
-	docker run -d -v /var/lib/mysql --name $DBDATA busybox echo data-only || exit $?
+	docker run -d -v /var/lib/mysql --name $DBDATA softinnov/$DBCON echo data-only || exit $?
 
 	echo ">> Initializing the mysql container"
 	docker run --rm --volumes-from $DBDATA -e MYSQL_USER=$DBUSER -e MYSQL_PASS=$DBPASS softinnov/$DBCON || exit $?
