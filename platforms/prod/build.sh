@@ -9,7 +9,7 @@ echo ">> db image done."
 echo ">> Building cheyenne image..."
 cd chey || exit $?
 git submodule init
-git submodule update
+git submodule update --remote
 docker build -t softinnov/prod-chey . || exit $?
 cd ..
 echo ">> cheyenne image done."

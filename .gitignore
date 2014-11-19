@@ -1,6 +1,6 @@
 platforms/bin/bearded-basket
 server/server
-platforms/logs
+logs
 platforms/*.sql
 platforms/*.txt
 platforms/*.txt.gz
