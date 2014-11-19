@@ -1,3 +1,4 @@
 [submodule "platforms/prod/chey/esc-pdv"]
 	path = platforms/prod/chey/esc-pdv
 	url = git@bitbucket.org:hamdouni/esc-pdv.git
+	branch = preprod
