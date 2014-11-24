@@ -8,4 +8,4 @@ fi
 echo ">> copy of ssh key"
 ssh-copy-id -i $2 root@"$1" || exit $?
 
-ssh root@"$1" mkdir /home/bearded-basket
+ssh root@"$1" mkdir -p /home/bearded-basket

@@ -4,3 +4,7 @@ logs
 platforms/*.sql
 platforms/*.txt
 platforms/*.txt.gz
+platforms/prod/data/*.sql
+platforms/prod/data/*.txt
+platforms/prod/data/*.txt.gz
+*.zip

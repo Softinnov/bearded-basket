@@ -11,7 +11,7 @@ if [ "$1" = "--init" ]; then
 		exit 1
 	fi
 else
-	if [ $# -ne 1 ]; then
+	if [ $# -ne 2 ]; then
 		echo $USAGE
 		exit 1
 	fi
@@ -37,4 +37,3 @@ echo ">> Uploading docker images on the server..."
 
 echo ">> Updating docker images on the server..."
 ./scripts/launch.sh $1 scripts/update.sh || exit $?
-

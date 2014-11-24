@@ -1,8 +1,9 @@
 #!/bin/sh
 
 apt-get update -y
+apt-get install -y curl
 
-curl -sSL https://get.docker.com/ubuntu/ | sudo sh || exit $?
+curl -sSL https://get.docker.com/ubuntu/ | sh || exit $?
 
 docker run --rm busybox echo "everything works" || exit $?
 
