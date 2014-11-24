@@ -5,4 +5,4 @@ if [ $# -ne 1  ]; then
 	exit 1
 fi
 
-scp prod.zip root@"$1":/home/root || exit $?
+scp prod.zip root@"$1":/home/bearded-basket/ || exit $?

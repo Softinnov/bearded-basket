@@ -1,14 +1,33 @@
 #!/bin/sh
 
-if [ $# -ne 2  ]; then
-	echo "Usage: $0 <ip> <ssh_key.pub>"
-	exit 1
+INIT=false
+USAGE="Usage: $0 [--init] <ip> <ssh_key.pub>"
+
+if [ "$1" = "--init" ]; then
+	INIT=true
+	shift
+	if [ $# -ne 2 ]; then
+		echo $USAGE
+		exit 1
+	fi
+else
+	if [ $# -ne 1 ]; then
+		echo $USAGE
+		exit 1
+	fi
 fi
 
-./scripts/init.sh $1 $2 || exit $?
 
-echo ">> Installing docker on the server..."
-./scripts/launch.sh $1 scripts/install.sh || exit $?
+if [ $INIT = true ]; then
+	./scripts/init.sh $1 $2 || exit $?
+
+	echo ">> Constructing dbdata... from $(pwd)/data"
+	./scripts/data.sh $1 || exit $?
+
+	echo ">> Installing docker on the server..."
+	./scripts/launch.sh $1 scripts/install.sh || exit $?
+fi
+
 
 echo ">> Building images..."
 ./scripts/build.sh || exit $?

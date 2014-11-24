@@ -1,6 +1,6 @@
 #/bin/sh
 
-cd
+cd /home
 
 rm -rf prod-*.tar
 unzip prod.zip || exit $?
