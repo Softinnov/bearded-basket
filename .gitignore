@@ -8,3 +8,4 @@ platforms/prod/data/*.sql
 platforms/prod/data/*.txt
 platforms/prod/data/*.txt.gz
 *.zip
+*.tar

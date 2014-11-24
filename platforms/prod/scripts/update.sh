@@ -1,6 +1,6 @@
 #/bin/sh
 
-cd /home
+cd /home/bearded-basket
 
 rm -rf prod-*.tar
 unzip prod.zip || exit $?
