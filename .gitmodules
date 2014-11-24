@@ -1,0 +1,3 @@
+[submodule "platforms/prod/chey/esc-pdv"]
+	path = platforms/prod/chey/esc-pdv
+	url = https://bitbucket.org/softinnov/esc-pdv.git
