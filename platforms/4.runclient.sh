@@ -12,5 +12,5 @@ echo ">> Removing old container (stop it if running)"
 ./cleancontainer.sh client
 
 echo ">> Running the client container"
-docker run --name client -v $1:/client -v $2:/var/log/nginx --link chey:chey --link back:back -p 8000:8000 -d softinnov/dev-client
+docker run --name client -v $1:/client -v $2:/var/log/nginx --link chey:chey --link back:back -p 443:443 -p 8000:8000 -d softinnov/dev-client
 
