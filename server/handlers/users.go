@@ -42,11 +42,13 @@ func newUser(c *utils.Context, w http.ResponseWriter, r *http.Request) *utils.SE
 	}
 	defer r.Body.Close()
 
-	nu, e := models.CreateUser(c, &u)
+	id, e := models.CreateUser(c, &u)
 	if e != nil {
 		return convHSt(e)
 	}
-	if e := WriteJSON(w, http.StatusCreated, nu); e != nil {
+	u.Id = id
+	u.Password = ""
+	if e := WriteJSON(w, http.StatusCreated, u); e != nil {
 		return &utils.SError{http.StatusInternalServerError, nil, e}
 	}
 	return nil

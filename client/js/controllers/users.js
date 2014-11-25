@@ -47,9 +47,7 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 			url: 'api/users',
 			data: $scope.userNew,
 		}).success(function(data){
-			$scope.userNew.u_id = data;
-			$scope.userNew.u_pass = "";
-			$scope.users.push($scope.userNew);
+			$scope.users.push(data);
 			$scope.showCreateUser = false;
 			$scope.userNew = {u_role:1};
 		}).error(function(e){

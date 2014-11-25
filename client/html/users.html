@@ -67,17 +67,17 @@
 	<form name="editForm" ng-show="showEditUser" ng-submit="editUser()" class="pure-form pure-form-aligned" id="idc">
 		<h4>Edition du compte : {{userEdit.u_login}}</h4>
 		<fieldset>
-			<div class="pure-control-group">
+			<div ng-hide="userCurrent.u_role <= userEdit.u_role" class="pure-control-group">
 				<label for="password">Mot de passe</label>
 				<input id="password" type="password" name="password" ng-model="userEdit.u_pass" />
 			</div>
 			<div class="pure-control-group">
 				<label for="nom">Nom</label>
-				<input id="nom" type="text" name="nom" ng-model="userEdit.u_nom" required/>
+				<input id="nom" type="text" name="nom" ng-model="userEdit.u_nom" ng-disabled="userCurrent.u_role <= userEdit.u_role" required/>
 			</div>
 			<div class="pure-control-group">
 				<label for="prenom">Prénom</label>
-				<input id="prenom" type="text" name="prenom" ng-model="userEdit.u_prenom" required/>
+				<input id="prenom" type="text" name="prenom" ng-model="userEdit.u_prenom" ng-disabled="userCurrent.u_role <= userEdit.u_role" required/>
 			</div>
 			<div ng_hide="userCurrent.u_id == userEdit.u_id || userCurrent.u_role <= userEdit.u_role" class="pure-control-group">
 				<label for="accreditation">Accréditation</label>
@@ -85,7 +85,7 @@
 			</div>
 			<button ng-hide="userCurrent.u_id == userEdit.u_id || userCurrent.u_role <= userEdit.u_role" type="button" class="pure-button" ng-click="deleteUser()">Supprimer</button>
 			<button type="button" class="pure-button"ng-click="showEditUser = false">Abandonner</button>
-			<button type="submit" class="pure-button" ng-disabled="editForm.$invalid">Enregistrer</button>
+			<button type="submit" class="pure-button" ng-disabled="editForm.$invalid || userCurrent.u_role <= userEdit.u_role">Enregistrer</button>
 		</fieldset>
 	</form>
 
