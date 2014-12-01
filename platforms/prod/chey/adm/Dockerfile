@@ -1,8 +1,8 @@
 FROM softinnov/cheyenne
 
-ADD httpd.cfg /httpd.cfg
+ADD httpd.adm.cfg /httpd.cfg
 
-ADD esc-pdv/src /esc-pdv
+ADD esc-adm/src /esc-adm
 VOLUME /var/log
 
 EXPOSE 80

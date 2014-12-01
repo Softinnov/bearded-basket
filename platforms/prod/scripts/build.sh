@@ -16,11 +16,12 @@ for E in $ESCS; do
 	cd $E
 	rm -rf $ESC && mkdir $ESC
 	git archive --remote=git@bitbucket.org:softinnov/"$ESC".git --format=tar preprod | tar -xf - -C $ESC || exit $?
-	cd ..
 	echo ">> done."
+	echo ">> Building $ESC image..."
+	docker build -t softinnov/prod-$ESC . || exit $?
+	cd ..
 done
 
-docker build -t softinnov/prod-chey . || exit $?
 cd ..
 echo ">> cheyenne image done."
 

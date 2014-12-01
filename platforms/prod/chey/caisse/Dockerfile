@@ -1,8 +1,8 @@
 FROM softinnov/cheyenne
 
-ADD httpd.cfg /httpd.cfg
+ADD httpd.caisse.cfg /httpd.cfg
 
-ADD esc-pdv/src /esc-pdv
+ADD esc-caisse/src /esc-caisse
 VOLUME /var/log
 
 EXPOSE 80
