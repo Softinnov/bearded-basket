@@ -8,8 +8,18 @@ echo ">> db image done."
 
 echo ">> Building cheyenne image..."
 cd chey || exit $?
-git submodule init
-git submodule update --remote
+
+ESCS="pdv adm caisse"
+for E in $ESCS; do
+	ESC=esc-$E
+	echo ">> Fetching "$ESC"..."
+	cd $E
+	rm -rf $ESC && mkdir $ESC
+	git archive --remote=git@bitbucket.org:softinnov/"$ESC".git --format=tar preprod | tar -xf - -C $ESC || exit $?
+	cd ..
+	echo ">> done."
+done
+
 docker build -t softinnov/prod-chey . || exit $?
 cd ..
 echo ">> cheyenne image done."
