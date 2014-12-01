@@ -6,7 +6,7 @@ docker build -t softinnov/prod-db . || exit $?
 cd ..
 echo ">> db image done."
 
-echo ">> Building cheyenne image..."
+echo ">> Building esc images..."
 cd chey || exit $?
 
 ESCS="pdv adm caisse"
@@ -23,7 +23,7 @@ for E in $ESCS; do
 done
 
 cd ..
-echo ">> cheyenne image done."
+echo ">> esc images done."
 
 echo ">> Building back image..."
 cd back || exit $?
