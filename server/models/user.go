@@ -101,6 +101,20 @@ func CreateUser(c *utils.Context, u *User) (int64, *utils.SError) {
 			fmt.Errorf("CreateUser: maximum users reached %d", len(us)),
 		}
 	}
+	var count int
+	e := c.DB.QueryRow("SELECT COUNT(*) FROM utilisateur WHERE u_login=? AND u_supprime=0", u.Login).Scan(&count)
+	if e != nil {
+		return 0, &utils.SError{StatusInternalServerError,
+			nil,
+			fmt.Errorf("CreateUser: %s", e),
+		}
+	}
+	if count > 0 {
+		return 0, &utils.SError{StatusBadRequest,
+			errors.New("login déjà existant"),
+			fmt.Errorf("CreateUser: login already exists (%d)", count),
+		}
+	}
 	m, e := json.Marshal(struct {
 		*User
 		Pdv      int    `json:"u_pdv"`
