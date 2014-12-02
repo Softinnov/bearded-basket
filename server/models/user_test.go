@@ -234,6 +234,20 @@ func TestCreateUser(t *testing.T) {
 			},
 			session: &utils.Session{Id: 1, PdvId: 42, Role: 5},
 		},
+		{
+			name:  "Same login",
+			works: false,
+			user: &User{
+				Pdv:      0,
+				Nom:      "NomTest",
+				Prenom:   "PrenomTest",
+				Role:     3,
+				Password: "coucou",
+				Login:    "admin",
+				FaitPar:  1,
+			},
+			session: &utils.Session{Id: 1, PdvId: 0, Role: 5},
+		},
 	}
 
 	for _, te := range tes {
