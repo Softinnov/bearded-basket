@@ -11,7 +11,7 @@ $ ./buildall
 Then launch every containers like this:
 ```sh
 $ ./1.rundb.sh
-$ ./2.runchey.sh <path to ANDES> $(pwd)/logs
+$ ./2.runchey.sh <path to esc-pdv> $(pwd)/logs
 $ ./3.runserver.sh $(pwd)/../server $(pwd)/logs
 $ ./4.runclient.sh $(pwd)/../client $(pwd)/logs
 ```

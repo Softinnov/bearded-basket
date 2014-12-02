@@ -6,13 +6,24 @@ docker build -t softinnov/prod-db . || exit $?
 cd ..
 echo ">> db image done."
 
-echo ">> Building cheyenne image..."
+echo ">> Building esc images..."
 cd chey || exit $?
-git submodule init
-git submodule update --remote
-docker build -t softinnov/prod-chey . || exit $?
+
+ESCS="pdv adm caisse"
+for E in $ESCS; do
+	ESC=esc-$E
+	echo ">> Fetching "$ESC"..."
+	cd $E
+	rm -rf $ESC && mkdir $ESC
+	git archive --remote=git@bitbucket.org:softinnov/"$ESC".git --format=tar preprod | tar -xf - -C $ESC || exit $?
+	echo ">> done."
+	echo ">> Building $ESC image..."
+	docker build -t softinnov/prod-$ESC . || exit $?
+	cd ..
+done
+
 cd ..
-echo ">> cheyenne image done."
+echo ">> esc images done."
 
 echo ">> Building back image..."
 cd back || exit $?

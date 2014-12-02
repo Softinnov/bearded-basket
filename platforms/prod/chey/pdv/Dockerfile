@@ -1,7 +1,6 @@
 FROM softinnov/cheyenne
 
-ADD httpd.cfg /httpd.cfg
-ADD mysql-protocol.r /libs/mysql-protocol.r
+ADD httpd.pdv.cfg /httpd.cfg
 
 ADD esc-pdv/src /esc-pdv
 VOLUME /var/log

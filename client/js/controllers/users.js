@@ -38,16 +38,17 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 	$scope.modifyUser = function(user) {
 		$scope.userEdit = angular.copy(user);
 		$scope.showCreateUser = false;
-		$scope.showEditUser = true;;
+		$scope.showEditUser = true;
 	};
 
 	$scope.createUser = function() {
+		$scope.error = null;
 		$http({
 			method: 'POST',
 			url: 'api/users',
 			data: $scope.userNew,
 		}).success(function(data){
-			$scope.users.push($scope.userNew);
+			$scope.users.push(data);
 			$scope.showCreateUser = false;
 			$scope.userNew = {u_role:1};
 		}).error(function(e){
@@ -56,6 +57,7 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 	};
 
 	$scope.editUser = function() {
+		$scope.error = null;
 		$http({
 			method: 'PUT',
 			url: 'api/users/' + $scope.userEdit.u_id,
@@ -75,12 +77,13 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 	};
 
 	$scope.deleteUser = function() {
+		$scope.error = null;
 		$http({
 			method: 'DELETE',
 			url: 'api/users/' + $scope.userEdit.u_id,
 		}).success(function(data){
 			_.remove($scope.users, function(user) {
-				return user.u_id == $scope.userEdit.u_id
+				return user.u_id == $scope.userEdit.u_id;
 			});
 			$scope.showEditUser = false;
 		}).error(function(e){
