@@ -67,11 +67,11 @@ else
 	fi
 	echo "\n======= STEP 4 =========\n"
 	echo ">> Building images..."
-	./scripts/build.sh || exit $?
+	./scripts/build_slave.sh || exit $?
 
 	echo "\n======= STEP 5 =========\n"
 	echo ">> Save images into tar"
-	./scripts/save.sh || exit $?
+	./scripts/save_slave.sh || exit $?
 
 	echo "\n======= STEP 6 =========\n"
 	echo ">> Uploading docker images on the server..."
@@ -79,5 +79,5 @@ else
 
 	echo "\n======= STEP 7 =========\n"
 	echo ">> Updating docker images on the server..."
-	./scripts/launch.sh $1 scripts/update.sh || exit $?
+	./scripts/launch.sh $1 scripts/update_slave.sh || exit $?
 fi
