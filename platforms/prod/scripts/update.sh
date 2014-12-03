@@ -2,9 +2,6 @@
 
 cd /home/bearded-basket
 
-rm -rf prod-*.tar
-unzip prod.zip || exit $?
-
 OLD[0]="prod-db"
 PROD[0]="docker run -d --volumes-from dbdata -v $(pwd)/data:/data --name ${OLD[0]} softinnov/${OLD[0]}"
 OLD[1]="prod-esc-pdv"
