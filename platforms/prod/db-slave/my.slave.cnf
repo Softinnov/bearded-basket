@@ -1,0 +1,8 @@
+[mysqld]
+bind-address=0.0.0.0
+server-id = 2
+# master-host = 
+master-user = admin
+master-password = admin
+replicate-do-db = prod
+log-warnings

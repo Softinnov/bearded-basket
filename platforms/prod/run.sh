@@ -1,7 +1,7 @@
 #!/bin/sh
 
 INIT=false
-USAGE="Usage: $0 [-s STEP] [--init] <ip> [ssh_key.pub]"
+USAGE="Usage: $0 [--init] <ip> [ssh_key.pub]"
 
 if [ "$1" = "--init" ]; then
 	INIT=true

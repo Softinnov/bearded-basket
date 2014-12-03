@@ -1,4 +1,4 @@
 [mysqld]
 bind-address=0.0.0.0
-#server-id
-#log-bin
+server-id = 1
+log-bin
