@@ -36,7 +36,7 @@ echo ">> Building images..."
 ./scripts/build.sh || exit $?
 
 echo "\n======= STEP 5 =========\n"
-echo ">> Save images into zipfile"
+echo ">> Save images into tar"
 ./scripts/save.sh || exit $?
 
 echo "\n======= STEP 6 =========\n"
