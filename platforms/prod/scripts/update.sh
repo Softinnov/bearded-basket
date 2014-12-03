@@ -13,7 +13,7 @@ PROD[3]="docker run -d --link prod-db:db -v $(pwd)/logs/adm:/var/log --name ${OL
 OLD[4]="prod-back"
 PROD[4]="docker run -d --link prod-db:db -v $(pwd)/logs:/logs --name ${OLD[4]} softinnov/${OLD[4]}"
 OLD[5]="prod-client"
-PROD[5]="docker run -d --link prod-esc-pdv:esc-pdv --link prod-esc-adm:esc-adm --link prod-esc-caisse:esc-caisse --link prod-back:back -v $(pwd)/logs:/var/log/nginx -v /etc/ssl/private:/etc/ssl/private -p 80:8000 -p 443:443 --name ${OLD[5]} softinnov/${OLD[5]}"
+PROD[5]="docker run -d --link prod-esc-pdv:esc-pdv --link prod-esc-adm:esc-adm --link prod-esc-caisse:esc-caisse --link prod-back:back -v $(pwd)/logs:/var/log/nginx -v /etc/ssl/private:/etc/ssl/private -p 80:80 -p 443:443 --name ${OLD[5]} softinnov/${OLD[5]}"
 
 for i in {0..5}; do
 	ARG=${PROD[$i]}
