@@ -2,7 +2,7 @@
 
 INIT=false
 MYSQL=master
-USAGE="Usage: $0 [--init] [--slave] <ip> [ssh_key.pub]"
+USAGE="Usage: $0 [--init] [--slave] <ip> [ip master] [ssh_key.pub]"
 
 if [ "$1" = "--init" ]; then
 	INIT=true
@@ -21,7 +21,6 @@ else
 		exit 1
 	fi
 fi
-
 
 if [ $MYSQL = master ]; then
 	if [ $INIT = true ]; then
@@ -79,5 +78,5 @@ else
 
 	echo "\n======= STEP 7 =========\n"
 	echo ">> Updating docker images on the server..."
-	./scripts/launch.sh $1 scripts/update_slave.sh || exit $?
+	./scripts/launch.sh $1 scripts/update_slave.sh $2 || exit $?
 fi

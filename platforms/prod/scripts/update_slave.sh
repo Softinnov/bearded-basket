@@ -1,24 +1,24 @@
 #/bin/sh
 
+USAGE="Usage: $0 <ip master>"
+
+if [ $# -ne 1 ]; then
+	echo $USAGE
+	exit 1
+fi
+
 cd /home/bearded-basket
 
-OLD[0]="prod-db"
-PROD[0]="docker run -d --volumes-from dbdata -v $(pwd)/data:/data --name ${OLD[0]} softinnov/${OLD[0]}"
+CNT="prod-db-slave"
+ARG="docker run -d --volumes-from dbdata --name ${OLD[0]} softinnov/${OLD[0]} /run.sh $1"
 
-# Only run the docker "prod-db-slave" with run.sh <ip master>
+echo ">> stopping and removing $CNT"
+docker stop $CNT 2> /dev/null
+docker rm $CNT 2> /dev/null
 
-for i in {0..5}; do
-	ARG=${PROD[$i]}
-	CNT=${OLD[$i]}
+docker rmi softinnov/$CNT
 
-	echo ">> stopping and removing $CNT"
-	docker stop $CNT 2> /dev/null
-	docker rm $CNT 2> /dev/null
+docker load -i "$CNT".tar || exit $?
 
-	docker rmi softinnov/$CNT
-
-	docker load -i "$CNT".tar || exit $?
-
-	echo ">> $ARG"
-	$ARG || exit $?
-done
+echo ">> $ARG"
+$ARG || exit $?
