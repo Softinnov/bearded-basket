@@ -12,14 +12,14 @@ func Init(slaveMode bool) {
 	}
 	var step2, step3 string
 
-	step1 := fmt.Sprintf("./scripts/init.sh %s %s", ipServer, flagSSHKey)
+	step1 := fmt.Sprintf("./init.sh %s %s", ipServer, flagSSHKey)
 
 	if slaveMode {
-		step2 = fmt.Sprintf("./scripts/data_slave.sh %s", ipServer)
-		step3 = fmt.Sprintf("./scripts/launch.sh %s scripts/install_slave.sh", ipServer)
+		step2 = fmt.Sprintf("./data_slave.sh %s", ipServer)
+		step3 = fmt.Sprintf("./launch.sh %s scripts/install_slave.sh", ipServer)
 	} else {
-		step2 = fmt.Sprintf("./scripts/data.sh %s", ipServer)
-		step3 = fmt.Sprintf("./scripts/launch.sh %s scripts/install.sh", ipServer)
+		step2 = fmt.Sprintf("./data.sh %s", ipServer)
+		step3 = fmt.Sprintf("./launch.sh %s scripts/install.sh", ipServer)
 	}
 	o, e := exec.Command(
 		"sh", "-c",
@@ -38,16 +38,16 @@ func Deploy(slaveMode bool) {
 	}
 	var step4, step5, step7 string
 
-	step6 := fmt.Sprintf("./scripts/upload.sh %s", ipServer)
+	step6 := fmt.Sprintf("./upload.sh %s", ipServer)
 
 	if slaveMode {
-		step4 = "./scripts/build_slave.sh"
-		step5 = "./scripts/save_slave.sh"
-		step7 = fmt.Sprintf("./scripts/launch.sh %s scripts/update_slave.sh %s", ipServer, flagMIP)
+		step4 = "./build_slave.sh"
+		step5 = "./save_slave.sh"
+		step7 = fmt.Sprintf("./launch.sh %s scripts/update_slave.sh %s", ipServer, flagMIP)
 	} else {
-		step4 = "./scripts/build.sh"
-		step5 = "./scripts/save.sh"
-		step7 = fmt.Sprintf("./scripts/launch.sh %s scripts/update.sh", ipServer)
+		step4 = "./build.sh"
+		step5 = "./save.sh"
+		step7 = fmt.Sprintf("./launch.sh %s scripts/update.sh", ipServer)
 	}
 	o, e := exec.Command(
 		"sh", "-c",
