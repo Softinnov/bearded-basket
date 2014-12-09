@@ -17,7 +17,7 @@ func init() {
 func runSlave(cmd *cobra.Command, args []string) {
 	ipServer = flagMIP
 	if flagInit {
-		Init(true)
+		Init("_slave")
 	}
-	Deploy(false)
+	Deploy("_slave")
 }

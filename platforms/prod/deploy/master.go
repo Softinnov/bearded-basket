@@ -16,7 +16,7 @@ func init() {
 func runMaster(cmd *cobra.Command, args []string) {
 	ipServer = flagMIP
 	if flagInit {
-		Init(false)
+		Init("")
 	}
-	Deploy(false)
+	Deploy("")
 }

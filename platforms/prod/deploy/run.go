@@ -6,21 +6,16 @@ import (
 	"os/exec"
 )
 
-func Init(slaveMode bool) {
+func Init(slaveMode string) {
 	if ipServer == "" || flagSSHKey == "" {
 		log.Fatal("Error usage: initialisation require <ip> and <ssh key>")
 	}
 	var step2, step3 string
 
 	step1 := fmt.Sprintf("./init.sh %s %s", ipServer, flagSSHKey)
+	step2 := fmt.Sprintf("./data%s.sh %s", slaveMode, ipServer)
+	step3 := fmt.Sprintf("./launch.sh %s scripts/install%s.sh", slaveMode, ipServer)
 
-	if slaveMode {
-		step2 = fmt.Sprintf("./data_slave.sh %s", ipServer)
-		step3 = fmt.Sprintf("./launch.sh %s scripts/install_slave.sh", ipServer)
-	} else {
-		step2 = fmt.Sprintf("./data.sh %s", ipServer)
-		step3 = fmt.Sprintf("./launch.sh %s scripts/install.sh", ipServer)
-	}
 	o, e := exec.Command(
 		"sh", "-c",
 		fmt.Sprintf("%s && %s && %s", step1, step2, step3),
@@ -32,21 +27,19 @@ func Init(slaveMode bool) {
 	}
 }
 
-func Deploy(slaveMode bool) {
+func Deploy(slaveMode string) {
 	if ipServer == "" {
 		log.Fatal("Error usage: <ip> is required")
 	}
 	var step4, step5, step7 string
 
+	step4 := fmt.Sprintf("./build%s.sh", slaveMode)
+	step5 := fmt.Sprintf("./save%s.sh", slaveMode)
 	step6 := fmt.Sprintf("./upload.sh %s", ipServer)
 
 	if slaveMode {
-		step4 = "./build_slave.sh"
-		step5 = "./save_slave.sh"
 		step7 = fmt.Sprintf("./launch.sh %s scripts/update_slave.sh %s", ipServer, flagMIP)
 	} else {
-		step4 = "./build.sh"
-		step5 = "./save.sh"
 		step7 = fmt.Sprintf("./launch.sh %s scripts/update.sh", ipServer)
 	}
 	o, e := exec.Command(
