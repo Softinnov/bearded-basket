@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 docker save softinnov/prod-db         > prod-db.tar         || exit $?
 docker save softinnov/prod-esc-pdv    > prod-esc-pdv.tar    || exit $?

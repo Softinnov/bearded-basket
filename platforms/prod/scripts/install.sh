@@ -1,18 +1,19 @@
-#!/bin/sh
+#!/bin/bash
 
-apt-get update -y
-apt-get install -y curl
+G="\x1b[32m"
+B="\x1b[34m"
+W="\x1b[0m"
 
+echo -e "$B >> installing docker $W"
 curl -sSL https://get.docker.com/ubuntu/ | sh || exit $?
+echo -e "$G >> done. $W"
 
-docker run --rm busybox echo "everything works" || exit $?
+echo -e "$B >> test of docker $W"
+docker run --rm busybox echo -e "everything works" || exit $?
+echo -e "$G >> done. $W"
 
-apt-get install -y zip
+cd /home/bearded-basket/docker-db
 
-cd /home/bearded-basket/
-
-unzip data.zip || exit $?
-
-cd docker-db
-
+echo -e "$B >> build db-preprod $W"
 ./build-db-preprod.sh dbdata db-mysql || exit $?
+echo -e "$G >> done. $W"

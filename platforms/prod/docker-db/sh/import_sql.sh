@@ -35,13 +35,13 @@ do
 		NARG="$ARG"_test
 
 		echo "  -> importing $ARG.sql"
-		cat "$DATA""$ARG".sql | mysql -u"$1" -p"$2" "$3" || exit $?
+		cat "$DATA""$ARG".sql | mysql -u"$1" -p"$2" "$3"
 		echo "  -> importing $ARG.txt"
-		mysqlimport --local -u"$1" -p"$2" "$3" "$DATA"/db_tests/"$ARG".txt || exit $?
+		mysqlimport --local -u"$1" -p"$2" "$3" "$DATA"/db_tests/"$ARG".txt
 	else
 		echo "  -> importing $ARG"
 		cat "$DATA""$ARG".sql | mysql -u"$1" -p"$2" "$3" || exit $?
-		mysqlimport --local -u"$1" -p"$2" "$3" "$DATA""$ARG".txt || exit $?
+		mysqlimport --local -u"$1" -p"$2" "$3" "$DATA""$ARG".txt
 	fi
 done
 

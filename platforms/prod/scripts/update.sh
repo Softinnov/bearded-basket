@@ -1,4 +1,9 @@
-#/bin/sh
+#/bin/bash
+
+R="\x1b[31m"
+G="\x1b[32m"
+B="\x1b[34m"
+W="\x1b[0m"
 
 cd /home/bearded-basket
 
@@ -19,14 +24,16 @@ for i in {0..5}; do
 	ARG=${PROD[$i]}
 	CNT=${OLD[$i]}
 
-	echo ">> stopping and removing $CNT"
-	docker stop $CNT 2> /dev/null
-	docker rm $CNT 2> /dev/null
+	echo -e "$B >> stopping and removing $CNT $W"
+	docker stop $CNT > /dev/null 2>&1
+	docker rm $CNT > /dev/null 2>&1
 
-	docker rmi softinnov/$CNT
+	echo -e "$B >> removing softinnov/$CNT $W"
+	docker rmi softinnov/$CNT > /dev/null 2>&1
 
+	echo -e "$B >> loading "$CNT".tar $W"
 	docker load -i "$CNT".tar || exit $?
 
-	echo ">> $ARG"
+	echo -e "$B >> $ARG $W"
 	$ARG || exit $?
 done

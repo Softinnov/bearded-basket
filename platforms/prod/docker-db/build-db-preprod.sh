@@ -38,7 +38,7 @@ echo ">> Importing tables"
 
 for table in $DBTABLES
 do
-	gunzip -f $DBDATAIMPORT/$table.txt.gz
+	gunzip -f $DBDATAIMPORT/$table.txt.gz > /dev/null 2>&1
 done
 
 docker run --rm -v $DBDATAIMPORT:/data --volumes-from $DBDATA $DBCON \
@@ -46,5 +46,7 @@ docker run --rm -v $DBDATAIMPORT:/data --volumes-from $DBDATA $DBCON \
 
 for table in $DBTABLES
 do
-	gzip -f $DBDATAIMPORT/$table.txt
+	gzip -f $DBDATAIMPORT/$table.txt > /dev/null 2>&1
 done
+
+exit 0
