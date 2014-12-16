@@ -1,6 +1,11 @@
 package main
 
-import "github.com/spf13/cobra"
+import (
+	"fmt"
+	"log"
+
+	"github.com/spf13/cobra"
+)
 
 var cmdMaster = &cobra.Command{
 	Use:   "master",
@@ -10,11 +15,20 @@ var cmdMaster = &cobra.Command{
 }
 
 func init() {
-	cmdMaster.PersistentFlags().StringVar(&flagMIP, "ip", "", "server ip address")
+	cmdMaster.Flags().StringVar(&flagMIP, "ip", "", "server ip address")
 }
 
 func runMaster(cmd *cobra.Command, args []string) {
 	ipServer = flagMIP
+	if flagInit {
+		if ipServer == "" || flagSSHKey == "" {
+			fmt.Println(ipServer, flagSSHKey)
+			log.Fatal("Error usage: initialisation require <ip> and <ssh key>")
+		}
+	}
+	if ipServer == "" {
+		log.Fatal("Error usage: <ip> is required")
+	}
 	if flagInit {
 		Init("")
 	}

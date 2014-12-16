@@ -1,6 +1,10 @@
 package main
 
-import "github.com/spf13/cobra"
+import (
+	"log"
+
+	"github.com/spf13/cobra"
+)
 
 var cmdSlave = &cobra.Command{
 	Use:   "slave",
@@ -15,7 +19,13 @@ func init() {
 }
 
 func runSlave(cmd *cobra.Command, args []string) {
-	ipServer = flagMIP
+	ipServer = flagSIP
+	if flagInit && (ipServer == "" || flagSSHKey == "") {
+		log.Fatal("Error usage: initialisation require <ip> and <ssh key>")
+	}
+	if flagMIP == "" || ipServer == "" {
+		log.Fatal("Error usage: <slave ip> <master ip> are required")
+	}
 	if flagInit {
 		Init("_slave")
 	}

@@ -40,7 +40,7 @@ do
 		mysqlimport --local -u"$1" -p"$2" "$3" "$DATA"/db_tests/"$ARG".txt
 	else
 		echo "  -> importing $ARG"
-		cat "$DATA""$ARG".sql | mysql -u"$1" -p"$2" "$3" || exit $?
+		cat "$DATA""$ARG".sql | mysql -u"$1" -p"$2" "$3"
 		mysqlimport --local -u"$1" -p"$2" "$3" "$DATA""$ARG".txt
 	fi
 done

@@ -12,7 +12,7 @@ echo -e "$B >> test of docker $W"
 docker run --rm busybox echo -e "everything works" || exit $?
 echo -e "$G >> done. $W"
 
-cd /home/bearded-basket/docker-db
+cd /home/bearded-basket/docker-db_slave
 
 echo -e "$B >> build db-preprod $W"
 ./build-db-preprod.sh dbdata db-mysql || exit $?

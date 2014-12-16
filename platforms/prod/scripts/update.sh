@@ -8,7 +8,7 @@ W="\x1b[0m"
 cd /home/bearded-basket
 
 OLD[0]="prod-db"
-PROD[0]="docker run -d --volumes-from dbdata -v $(pwd)/data:/data --name ${OLD[0]} softinnov/${OLD[0]}"
+PROD[0]="docker run -d --volumes-from dbdata -v $(pwd)/data:/data -p 3306:3306 --name ${OLD[0]} softinnov/${OLD[0]}"
 OLD[1]="prod-esc-pdv"
 PROD[1]="docker run -d --link prod-db:db -v $(pwd)/logs/pdv:/var/log --name ${OLD[1]} softinnov/${OLD[1]}"
 OLD[2]="prod-esc-caisse"

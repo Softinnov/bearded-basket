@@ -13,3 +13,7 @@ fi
 echo -e "$B >> sending docker-db_slave/ $W"
 rsync --progress -az docker-db_slave root@"$1":/home/bearded-basket/ || exit $?
 echo -e "$G >> done. $W"
+
+echo -e "$B >> sending scripts/ $W"
+rsync --progress -az scripts root@"$1":/home/bearded-basket/ || exit $?
+echo -e "$G >> done. $W"

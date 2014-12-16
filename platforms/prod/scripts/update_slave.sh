@@ -7,7 +7,9 @@ W="\x1b[0m"
 
 USAGE="$R Usage: $0 <ip master> $W"
 
+
 if [ $# -ne 1 ]; then
+	echo -e $*
 	echo -e $USAGE
 	exit 1
 fi
@@ -15,7 +17,7 @@ fi
 cd /home/bearded-basket
 
 CNT="prod-db-slave"
-ARG="docker run -d --volumes-from dbdata --name ${OLD[0]} softinnov/${OLD[0]} /run.sh $1"
+ARG="docker run -d --volumes-from dbdata --name $CNT softinnov/$CNT /run.sh $1"
 
 echo -e "$B >> stopping and removing $CNT $W"
 docker stop $CNT > /dev/null 2>&1
