@@ -9,6 +9,4 @@ if [ $# -ne 1 ]; then
 	exit 1
 fi
 
-echo "\nmaster-host = $IP\n" >> /etc/mysql/conf.d/my.cnf
-
 exec mysqld_safe

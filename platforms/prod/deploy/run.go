@@ -9,8 +9,8 @@ import (
 
 func Init(slaveMode string) {
 	step1 := fmt.Sprintf("%s/init.sh %s %s", flagDir, ipServer, flagSSHKey)
-	step2 := fmt.Sprintf("%s/data%s.sh %s", flagDir, slaveMode, ipServer)
-	step3 := fmt.Sprintf("%s/launch.sh %s %[1]s/install%[3]s.sh", flagDir, ipServer, slaveMode)
+	step2 := fmt.Sprintf("%s/data.sh %s", flagDir, ipServer)
+	step3 := fmt.Sprintf("%s/launch.sh %s %[1]s/install.sh", flagDir, ipServer)
 
 	fmt.Println(fmt.Sprintf("%s && %s && %s", step1, step2, step3))
 	c := exec.Command(

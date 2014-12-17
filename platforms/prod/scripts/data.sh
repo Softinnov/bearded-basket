@@ -11,7 +11,7 @@ if [ $# -ne 1  ]; then
 fi
 
 echo -e "$B >> sending data/ $W"
-rsync --progress -az data/ root@"$1":/home/bearded-basket/ || exit $?
+rsync --progress -az data/ root@"$1":/home/bearded-basket/data || exit $?
 echo -e "$G >> done. $W"
 
 echo -e "$B >> sending docker-db/ $W"
