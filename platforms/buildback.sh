@@ -1,7 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
 # BUILD BACK IMAGE
-# usage: buildback
+# usage: ./buildback [-t]
+
+R="\x1b[31m"
+G="\x1b[32m"
+B="\x1b[34m"
+W="\x1b[0m"
 
 TEST=false
 if [ "$1" = "-t" ]; then
@@ -9,22 +14,19 @@ if [ "$1" = "-t" ]; then
 	shift
 fi
 
-if [ $# -ne 0 ]; then
-	echo "Usage: $0"
-	exit 1
-fi
-
 BCON=back
 BCONTEST="$BCON"_test
 
 if [ $TEST = true ]; then
-	echo ">> Building $BCONTEST image"
+	echo -e "$B >> Building $BCONTEST image $W"
 	cd $BCONTEST
 	docker build -t softinnov/$BCONTEST . || exit $?
 	cd ..
 else
-	echo ">> Building $BCON image"
+	echo -e "$B >> Building $BCON image $W"
 	cd back
 	docker build -t softinnov/dev-$BCON . || exit $?
 	cd ..
 fi
+
+echo -e "$G >> Done. $W"

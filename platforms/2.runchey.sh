@@ -1,17 +1,24 @@
-#!/bin/sh
+#!/bin/bash
 
 # RUN CHEYENNE WEBAPP
-# usage: runchey <absolute path to cheyenne webapp> <log dir>
+# usage: ./2.runchey.sh <absolute path to cheyenne webapp> <log dir>
+# example: ./2.runchey.sh ~/esc-pdv/src $(pwd)/logs
+
+R="\x1b[31m"
+G="\x1b[32m"
+B="\x1b[34m"
+W="\x1b[0m"
 
 if [ $# -ne 2 ]; then
-	echo "Usage: $0 <absolute path to cheyenne webapp> <log dir>"
+	echo -e "$R Usage: $0 <absolute path to cheyenne webapp> <log dir> $W"
 	exit 1
 fi
 
-echo ">> Removing old container (stop it if running)"
+echo -e "$B >> Removing old container (stop it if running) $W"
 ./cleancontainer.sh chey
 
-echo ">> Running the cheyenne container with esc-pdv path in $1"
-echo ">> linked with db"
+echo -e "$B >> Running the cheyenne container with esc-pdv path in $1 $W"
+echo -e "$B >> linked with db $W"
 docker run --name chey --link db:db -v $1:/esc-pdv -v $2:/var/log -d -p 8001:80 softinnov/chey || exit $?
 
+echo -e "$G >> Done. $W"
