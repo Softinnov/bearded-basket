@@ -45,7 +45,7 @@ else
 
 	mkdir -p bin
 	cd $GODIR && \
-		GOOS=linux GOARCH=amd64 go build -o bearded-basket && \
+		GOOS=linux GOARCH=amd64 godep go build -o bearded-basket && \
 		cd - > /dev/null && \
 		mv $GODIR/bearded-basket bin/bearded-basket
 

@@ -1,6 +1,11 @@
 INSTALL
 ======
 
+You need Godep installed:
+```bash
+go get -u github.com/tools/godep
+```
+
 Before launching the script, put the data tables inside this directory (.sql & .txt).
 
 Create images with:
@@ -29,5 +34,5 @@ $ ./buildback.sh -t
 
 Then launch the test container:
 ```sh
-$ ./3.runserver.sh -t go test ./...
+$ ./3.runserver.sh -t godep go test ./...
 ```

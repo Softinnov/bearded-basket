@@ -2,7 +2,7 @@
 
 cd back || exit $?
 
-GOOS=linux GOARCH=amd64 go build -o bearded-basket || exit $?
+GOOS=linux GOARCH=amd64 godep go build -o bearded-basket || exit $?
 
 cd -
 

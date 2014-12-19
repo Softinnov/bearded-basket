@@ -11,5 +11,5 @@ PREREQUISITE
 ### Developement
 
  - git
- - golang >= 1.3
+ - golang >= 1.3 (+godep)
  - docker >= 1.3 (add modification on /etc/hosts)
