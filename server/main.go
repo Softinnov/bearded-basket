@@ -7,6 +7,7 @@ import (
 	"github.com/Softinnov/bearded-basket/server/database"
 	"github.com/Softinnov/bearded-basket/server/handlers"
 	"github.com/Softinnov/bearded-basket/server/utils"
+	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 )
 
@@ -20,7 +21,7 @@ func main() {
 	defer database.Close(db)
 
 	context := &utils.Context{
-		Store:   sessions.NewCookieStore([]byte("123456789")),
+		Store:   sessions.NewCookieStore(securecookie.GenerateRandomKey(32)),
 		DB:      db,
 		Chey:    cheyf,
 		Session: nil,

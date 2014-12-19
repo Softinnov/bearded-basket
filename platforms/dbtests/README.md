@@ -8,7 +8,7 @@ $ docker build softinnov/db_test .
 
 Then go in parent folder and launch tests like this:
 ```sh
-$ ./3.runserver.sh -t go test ./...
+$ ./3.runserver.sh -t godep go test ./...
 ```
 
 Extra:

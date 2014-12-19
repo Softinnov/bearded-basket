@@ -1,4 +1,13 @@
-#!/bin/sh
+#!/bin/bash
+
+# BUILD DB IMAGE
+# usage: ./buildDB [-t] <dbname> <dbuser> <dbpass> <dbtables>
+# example: /buildDB.sh prod admin admin "role utilisateur pdv"
+
+R="\x1b[31m"
+G="\x1b[32m"
+B="\x1b[34m"
+W="\x1b[0m"
 
 TEST=false
 if [ "$1" = "-t" ]; then
@@ -6,7 +15,7 @@ if [ "$1" = "-t" ]; then
 	shift
 else
 	if [ $# -ne 4 ]; then
-		echo "Usage: $0 [-t] <dbname> <dbuser> <dbpass> <dbtables>"
+		echo -e "$R Usage: $0 [-t] <dbname> <dbuser> <dbpass> <dbtables> $W"
 		exit 1
 	fi
 fi
@@ -19,35 +28,35 @@ DBDATA=dbdata
 DBCON=db
 
 if [ $TEST = true ]; then
-	echo ">> Removing old db_test container"
+	echo -e "$B >> Removing old db_test container $W"
 	./cleancontainer.sh db_test
 
-	echo ">> Entering into dbtest folder"
 	cd dbtests
 
-	echo ">> Building the db_test image"
+	echo -e "$B >> Building the db_test image $W"
 	docker build -t softinnov/db_test . || exit $?
 else
-	echo ">> Removing old dbdata and db container"
+	echo -e "$B >> Removing old dbdata and db container $W"
 	./cleancontainer.sh $DBDATA
 	./cleancontainer.sh $DBCON
 
-	echo ">> Entering into db folder"
 	cd db
 
-	echo ">> Building the db image"
+	echo -e "$B >> Building the db image $W"
 	docker build -t softinnov/$DBCON . || exit $?
 
-	echo ">> Initializing the data-only container"
+	echo -e "$B >> Initializing the data-only container $W"
 	docker run -d -v /var/lib/mysql --name $DBDATA softinnov/$DBCON echo data-only || exit $?
 
-	echo ">> Initializing the mysql container"
+	echo -e "$B >> Initializing the mysql container $W"
 	docker run --rm --volumes-from $DBDATA -e MYSQL_USER=$DBUSER -e MYSQL_PASS=$DBPASS softinnov/$DBCON || exit $?
 
-	echo ">> Creating database $DBNAME for dev environment"
+	echo -e "$B >> Creating database $DBNAME for dev environment $W"
 	docker run --rm --volumes-from $DBDATA softinnov/$DBCON bash -c "/create_db.sh $DBNAME" || exit $?
 
-	echo ">> Importing tables $DBTABLES"
+	echo -e "$B >> Importing tables $DBTABLES $W"
 	docker run --rm -v $(pwd)/..:/data --volumes-from $DBDATA softinnov/$DBCON /bin/bash -c \
 		"/import_sql.sh $DBUSER $DBPASS $DBNAME $DBTABLES" || exit $?
 fi
+
+echo -e "$G >> Done. $W"
