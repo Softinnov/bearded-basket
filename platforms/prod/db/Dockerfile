@@ -16,11 +16,11 @@ ADD update_dbdata.sh /
 RUN rm -rf /var/lib/mysql/*
 
 # Add MySQL configuration
-ADD my.cnf /etc/mysql/conf.d/my.cnf
+ADD my.master.cnf /etc/mysql/conf.d/my.cnf
 ADD mysqld_charset.cnf /etc/mysql/conf.d/mysqld_charset.cnf
 
 # Add VOLUMEs to allow backup of config and databases
-VOLUME ["/etc/mysql", "/var/lib/mysql", "/data"]
+VOLUME ["/var/lib/mysql", "/data"]
 
 EXPOSE 3306
 

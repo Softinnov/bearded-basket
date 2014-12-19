@@ -1,39 +1,43 @@
-#!/bin/sh
+#!/bin/bash
 
-echo ">> Building db image..."
+G="\x1b[32m"
+B="\x1b[34m"
+W="\x1b[0m"
+
+echo -e "$B >> Building db image... $W"
 cd db || exit $?
 docker build -t softinnov/prod-db . || exit $?
 cd ..
-echo ">> db image done."
+echo -e "$G >> db image done. $W"
 
-echo ">> Building esc images..."
+echo -e "$B >> Building esc images... $W"
 cd chey || exit $?
 
 ESCS="pdv adm caisse"
 for E in $ESCS; do
 	ESC=esc-$E
-	echo ">> Fetching "$ESC"..."
+	echo -e "$B >> Fetching "$ESC"... $W"
 	cd $E
 	rm -rf $ESC && mkdir $ESC
 	git archive --remote=git@bitbucket.org:softinnov/"$ESC".git --format=tar preprod | tar -xf - -C $ESC || exit $?
-	echo ">> done."
-	echo ">> Building $ESC image..."
+	echo -e "$G >> done. $W"
+	echo -e "$B >> Building $ESC image... $W"
 	docker build -t softinnov/prod-$ESC . || exit $?
 	cd ..
 done
 
 cd ..
-echo ">> esc images done."
+echo -e "$G >> esc images done. $W"
 
-echo ">> Building back image..."
+echo -e "$B >> Building back image... $W"
 cd back || exit $?
 ./compile.sh || exit $?
 docker build -t softinnov/prod-back . || exit $?
 rm -rf bearded-basket
 cd ..
-echo ">> back image done."
+echo -e "$G >> back image done. $W"
 
-echo ">> Building client image..."
+echo -e "$B >> Building client image... $W"
 cd client || exit $?
 RET=0
 cp -r ../../../client . || exit $?
@@ -44,4 +48,4 @@ if [ $RET -ne 0 ]; then
 fi
 rm -rf client
 cd ..
-echo ">> client image done."
+echo -e "$G >> client image done. $W"
