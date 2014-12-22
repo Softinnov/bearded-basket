@@ -10,6 +10,9 @@ if [ $# -ne 1  ]; then
 	exit 1
 fi
 
+IP=$1
+shift
+
 echo -e "$B >> sending tar images $W"
-rsync --progress -az tar_master/*.tar root@"$1":/home/bearded-basket/ || exit $?
+rsync --progress -az tar_slave/*.tar root@"$1":/home/bearded-basket/ || exit $?
 echo -e "$G >> done. $W"

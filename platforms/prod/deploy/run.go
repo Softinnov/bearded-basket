@@ -29,14 +29,16 @@ func Init(slaveMode string) {
 
 func Deploy(slaveMode string) {
 	var step7 string
+	var step6 string
 
 	step4 := fmt.Sprintf("%s/build%s.sh", flagDir, slaveMode)
 	step5 := fmt.Sprintf("%s/save%s.sh", flagDir, slaveMode)
-	step6 := fmt.Sprintf("%s/upload.sh %s", flagDir, ipServer)
 
 	if slaveMode != "" {
+		step6 = fmt.Sprintf("%s/upload_slave.sh %s", flagDir, ipServer)
 		step7 = fmt.Sprintf("%s/launch.sh %s %[1]s/update_slave.sh %[3]s", flagDir, ipServer, flagMIP)
 	} else {
+		step6 = fmt.Sprintf("%s/upload.sh %s", flagDir, ipServer)
 		step7 = fmt.Sprintf("%s/launch.sh %s %[1]s/update.sh", flagDir, ipServer)
 	}
 	c := exec.Command(
