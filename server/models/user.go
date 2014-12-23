@@ -7,21 +7,24 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/Softinnov/bearded-basket/server/database"
 	"github.com/Softinnov/bearded-basket/server/utils"
 )
 
 type User struct {
-	Id       int64  `json:"u_id,omitempty"`
-	Pdv      int    `json:"u_pdv,omitempty"`
-	Nom      string `json:"u_nom,omitempty"`
-	Prenom   string `json:"u_prenom,omitempty"`
-	Role     int8   `json:"u_role,omitempty"`
-	Password string `json:"u_pass,omitempty"`
-	Login    string `json:"u_login,omitempty"`
-	Supprime int8   `json:"u_supprime,omitempty"`
-	FaitPar  int64  `json:"u_faitpar,omitempty"`
+	Id       int64     `json:"u_id,omitempty"`
+	Pdv      int       `json:"u_pdv,omitempty"`
+	Nom      string    `json:"u_nom,omitempty"`
+	Prenom   string    `json:"u_prenom,omitempty"`
+	Role     int8      `json:"u_role,omitempty"`
+	Password string    `json:"u_pass,omitempty"`
+	Login    string    `json:"u_login,omitempty"`
+	Supprime int8      `json:"u_supprime,omitempty"`
+	Cree     time.Time `json:"u_cree,omitempty"`
+	Modifie  time.Time `json:"u_modifie,omitempty"`
+	FaitPar  int64     `json:"u_faitpar,omitempty"`
 }
 
 func GetUser(c *utils.Context, id int64) (*User, *utils.SError) {
@@ -115,12 +118,15 @@ func CreateUser(c *utils.Context, u *User) (int64, *utils.SError) {
 			fmt.Errorf("CreateUser: login already exists (%d)", count),
 		}
 	}
+	now := time.Now()
 	m, e := json.Marshal(struct {
 		*User
-		Pdv      int    `json:"u_pdv"`
-		Password string `json:"u_pass"`
-		Supprime int8   `json:"u_supprime"`
-		FaitPar  int64  `json:"u_faitpar"`
+		Pdv      int       `json:"u_pdv"`
+		Password string    `json:"u_pass"`
+		Supprime int8      `json:"u_supprime"`
+		FaitPar  int64     `json:"u_faitpar"`
+		Cree     time.Time `json:"u_cree"`
+		Modifie  time.Time `json:"u_modifie"`
 	}{
 		User: u,
 
@@ -128,6 +134,8 @@ func CreateUser(c *utils.Context, u *User) (int64, *utils.SError) {
 		Password: hashPassword(u.Password),
 		Supprime: 0,
 		FaitPar:  c.Session.Id,
+		Cree:     now,
+		Modifie:  now,
 	})
 	if e != nil {
 		return 0, &utils.SError{StatusInternalServerError,
@@ -180,15 +188,17 @@ func (u *User) UpdateUser(c *utils.Context, up *User) *utils.SError {
 		u.Password = hashPassword(up.Password)
 	}
 	m, e := json.Marshal(struct {
-		Prenom   string `json:"u_prenom,omitempty"`
-		Nom      string `json:"u_nom,omitempty"`
-		Role     int8   `json:"u_role,omitempty"`
-		Password string `json:"u_pass,omitempty"`
+		Prenom   string    `json:"u_prenom,omitempty"`
+		Nom      string    `json:"u_nom,omitempty"`
+		Role     int8      `json:"u_role,omitempty"`
+		Password string    `json:"u_pass,omitempty"`
+		Modifie  time.Time `json:"u_modifie,omitempty"`
 	}{
 		Prenom:   up.Prenom,
 		Nom:      up.Nom,
 		Password: hashPassword(up.Password),
 		Role:     up.Role,
+		Modifie:  time.Now(),
 	})
 	if e != nil {
 		return &utils.SError{StatusInternalServerError,
