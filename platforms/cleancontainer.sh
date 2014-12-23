@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # STOP AND REMOVE CONTAINER BY NAME
 # usage: cleancontainer.sh <container name>
