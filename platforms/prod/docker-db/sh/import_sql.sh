@@ -13,7 +13,7 @@ if [[ $# -lt 4 ]]; then
 fi
 
 echo "=> Starting MySQL Server"
-/usr/bin/mysqld_safe > /dev/null 2>&1 &
+/usr/bin/mysqld_safe --sql-mode="NO_AUTO_VALUE_ON_ZERO" > /dev/null 2>&1 &
 PID=$!
 
 RET=1
