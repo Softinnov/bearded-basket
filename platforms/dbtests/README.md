@@ -1,30 +1,23 @@
 INSTALL
 =======
 
-Run the container data only:
-```bash
-$ docker run -d -v /var/lib/mysql --name dbdata busybox echo data-only
+Just build the container:
+```sh
+$ docker build softinnov/db_test .
 ```
 
-Database initialization (ONLY if not initalized before):
-First store the username + password in your local env (`$DBUSER` & `$DBPASS`), then launch:
-```bash
-$ docker run --rm --volumes-from dbdata -e MYSQL_USER=$DBUSER -e MYSQL_PASS=$DBPASS softinnov/db
+Then go in parent folder and launch tests like this:
+```sh
+$ ./3.runserver.sh -t godep go test ./...
 ```
 
-Create database `prod`:
-```bash
-$ docker run --rm --volumes-from dbdata softinnov/db bash -c "/create_db.sh prod"
+Extra:
+If you want to debug the database, first lauch the db_test:
+```sh
+$ ./1.rundb.sh -t
 ```
 
-Then, look for admin password in logs.
-
-Populate database (having them inside `$(pwd)`):
-```bash
-$ docker run --rm -v $(pwd):/data --volumes-from dbdata softinnov/db /bin/bash -c "/import_sql.sh $DBUSER $DBPASS prod pdv [+other tables]"
-```
-
-Finally launch the container mysql:
-```bash
-$ docker run -d --volumes-from dbdata --name db softinnov/db
+Then inspect the database user the `docker exec` command:
+```sh
+$ docker exec -it db_test mysql prod_test
 ```

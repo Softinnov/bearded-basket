@@ -11,75 +11,85 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func getCurrentUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
-	user, err := models.GetCurrentUser(c)
-	if err != nil {
-		return http.StatusInternalServerError, err
+func getCurrentUser(c *utils.Context, w http.ResponseWriter, r *http.Request) *utils.SError {
+	u, e := models.GetCurrentUser(c)
+	if e != nil {
+		return convHSt(e)
 	}
-	utils.WriteJSON(w, user)
-	return http.StatusOK, nil
+	if e := WriteJSON(w, http.StatusOK, u); e != nil {
+		return &utils.SError{http.StatusInternalServerError, nil, e}
+	}
+	return nil
 }
 
-func indexUsers(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
-	us, err := models.GetUsersFromSession(c)
-	if err != nil {
-		return http.StatusInternalServerError, err
+func indexUsers(c *utils.Context, w http.ResponseWriter, r *http.Request) *utils.SError {
+	us, e := models.GetUsersFromSession(c)
+	if e != nil {
+		return convHSt(e)
 	}
-	utils.WriteJSON(w, us)
-	return http.StatusOK, nil
+	if e := WriteJSON(w, http.StatusOK, us); e != nil {
+		return &utils.SError{http.StatusInternalServerError, nil, e}
+	}
+	return nil
 }
 
-func newUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
+func newUser(c *utils.Context, w http.ResponseWriter, r *http.Request) *utils.SError {
 	u := models.User{}
 
 	dec := json.NewDecoder(r.Body)
-	if err := dec.Decode(&u); err != nil {
-		return http.StatusBadRequest, err
+	if e := dec.Decode(&u); e != nil {
+		return &utils.SError{http.StatusBadRequest, fmt.Errorf("champs utilisateur incorrects"), e}
 	}
 	defer r.Body.Close()
 
-	if _, err := models.CreateUser(c, &u); err != nil {
-		return http.StatusInternalServerError, err
+	id, e := models.CreateUser(c, &u)
+	if e != nil {
+		return convHSt(e)
 	}
-	fmt.Fprint(w, "Success")
-	return http.StatusCreated, nil
+	u.Id = id
+	u.Password = ""
+	if e := WriteJSON(w, http.StatusCreated, u); e != nil {
+		return &utils.SError{http.StatusInternalServerError, nil, e}
+	}
+	return nil
 }
 
-func editUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
-	id, err := strconv.ParseInt(mux.Vars(r)["id"], 0, 64)
-	if err != nil {
-		return http.StatusInternalServerError, err
+func editUser(c *utils.Context, w http.ResponseWriter, r *http.Request) *utils.SError {
+	id, e := strconv.ParseInt(mux.Vars(r)["id"], 0, 64)
+	if e != nil {
+		return &utils.SError{http.StatusInternalServerError, nil, e}
 	}
 	u, err := models.GetUser(c, id)
 	if err != nil {
-		return http.StatusInternalServerError, err
+		return convHSt(err)
 	}
 	up := models.User{}
 	dec := json.NewDecoder(r.Body)
-	if err := dec.Decode(&up); err != nil {
-		return http.StatusBadRequest, err
+	if e = dec.Decode(&up); e != nil {
+		return &utils.SError{http.StatusBadRequest,
+			fmt.Errorf("champs utilisateur incorrects"),
+			e,
+		}
 	}
 	defer r.Body.Close()
 
 	if err = u.UpdateUser(c, &up); err != nil {
-		return http.StatusInternalServerError, err
+		return convHSt(err)
 	}
-	fmt.Fprint(w, "Success")
-	return http.StatusAccepted, nil
+	return nil
 }
 
-func deleteUser(c *utils.Context, w http.ResponseWriter, r *http.Request) (int, error) {
-	id, err := strconv.ParseInt(mux.Vars(r)["id"], 0, 64)
-	if err != nil {
-		return http.StatusInternalServerError, err
+func deleteUser(c *utils.Context, w http.ResponseWriter, r *http.Request) *utils.SError {
+	id, e := strconv.ParseInt(mux.Vars(r)["id"], 0, 64)
+	if e != nil {
+		return &utils.SError{http.StatusInternalServerError, nil, e}
 	}
 	u, err := models.GetUser(c, id)
 	if err != nil {
-		return http.StatusInternalServerError, err
+		return convHSt(err)
 	}
 	if err = u.RemoveUser(c); err != nil {
-		return http.StatusInternalServerError, err
+		return convHSt(err)
 	}
-	fmt.Fprint(w, "Success")
-	return http.StatusOK, nil
+	return nil
 }

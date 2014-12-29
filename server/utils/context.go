@@ -2,10 +2,10 @@ package utils
 
 import (
 	"database/sql"
-	"errors"
 	"net/http"
 
 	"github.com/gorilla/sessions"
+	"github.com/mitchellh/mapstructure"
 )
 
 type Context struct {
@@ -41,31 +41,15 @@ func StoreInCookies(store *sessions.CookieStore, s *Session, w http.ResponseWrit
 }
 
 func SessionFromCookies(store *sessions.CookieStore, r *http.Request) (*Session, error) {
-	session, err := store.Get(r, "session-go")
-	if err != nil {
-		return nil, err
+	var s Session
+
+	se, e := store.Get(r, "session-go")
+	if e != nil {
+		return nil, e
 	}
-	id, ok := session.Values["id"].(int64)
-	if !ok {
-		return nil, errors.New("bad session")
+	e = mapstructure.Decode(se.Values, &s)
+	if e != nil {
+		return nil, e
 	}
-	name, ok := session.Values["name"].([]string)
-	if !ok {
-		return nil, errors.New("bad session")
-	}
-	role, ok := session.Values["role"].(int8)
-	if !ok {
-		return nil, errors.New("bad session")
-	}
-	pdvid, ok := session.Values["pdvid"].(int)
-	if !ok {
-		return nil, errors.New("bad session")
-	}
-	s := &Session{
-		Id:    id,
-		Name:  name,
-		Role:  role,
-		PdvId: pdvid,
-	}
-	return s, nil
+	return &s, nil
 }

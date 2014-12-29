@@ -6,24 +6,28 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 	$scope.roles = [];
 	$scope.showCreateUser = false;
 	$scope.showEditUser = false;
+	$scope.error = null;
+	$scope.load = 0;
 
 	$http({method: 'GET', url: 'api/users'}).success(function(data) {
 		$scope.users = data;
+		$scope.load++;
 	}).error(function(){
-		alert("cannot get users");
-		//$window.location.href = '../';
+		$window.location.href = '../';
 	});
 
 	$http({method: 'GET', url: 'api/roles'}).success(function(data) {
 		$scope.roles = data;
-	}).error(function() {
-		alert("cannot get roles");
+		$scope.load++;
+	}).error(function(e) {
+		$scope.errors = e;
 	});
 
 	$http({method: 'GET', url: 'api/user'}).success(function(data) {
 		$scope.userCurrent = data;
+		$scope.load++;
 	}).error(function() {
-		alert("cannot get currentUser");
+		$window.location.href = '../';
 	})
 
 	$scope.newUser = function() {
@@ -34,23 +38,26 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 	$scope.modifyUser = function(user) {
 		$scope.userEdit = angular.copy(user);
 		$scope.showCreateUser = false;
-		$scope.showEditUser = true;;
+		$scope.showEditUser = true;
 	};
 
 	$scope.createUser = function() {
+		$scope.error = null;
 		$http({
 			method: 'POST',
 			url: 'api/users',
 			data: $scope.userNew,
 		}).success(function(data){
-			$scope.users.push($scope.userNew);
+			$scope.users.push(data);
 			$scope.showCreateUser = false;
-		}).error(function(){
-			alert('error');
+			$scope.userNew = {u_role:1};
+		}).error(function(e){
+			$scope.error = e;
 		});
 	};
 
 	$scope.editUser = function() {
+		$scope.error = null;
 		$http({
 			method: 'PUT',
 			url: 'api/users/' + $scope.userEdit.u_id,
@@ -62,23 +69,25 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 					$scope.users[k].u_pass = "";
 				}
 			});
+			$scope.userEdit = {};
 			$scope.showEditUser = false;
-		}).error(function(){
-			alert('error');
+		}).error(function(e){
+			$scope.error = e;
 		});
 	};
 
 	$scope.deleteUser = function() {
+		$scope.error = null;
 		$http({
 			method: 'DELETE',
 			url: 'api/users/' + $scope.userEdit.u_id,
 		}).success(function(data){
 			_.remove($scope.users, function(user) {
-				return user.u_id == $scope.userEdit.u_id
+				return user.u_id == $scope.userEdit.u_id;
 			});
 			$scope.showEditUser = false;
-		}).error(function(){
-			alert('error');
+		}).error(function(e){
+			$scope.error = e;
 		});
 	};
 }]);

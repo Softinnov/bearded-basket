@@ -7,65 +7,74 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"time"
 
+	"github.com/Softinnov/bearded-basket/server/database"
 	"github.com/Softinnov/bearded-basket/server/utils"
 )
 
 type User struct {
-	Id       int64  `json:"u_id,omitempty"`
-	Pdv      int    `json:"u_pdv,omitempty"`
-	Nom      string `json:"u_nom,omitempty"`
-	Prenom   string `json:"u_prenom,omitempty"`
-	Role     int8   `json:"u_role,omitempty"`
-	Password string `json:"u_pass,omitempty"`
-	Login    string `json:"u_login,omitempty"`
-	Supprime int8   `json:"u_supprime,omitempty"`
-	FaitPar  int64  `json:"u_faitpar,omitempty"`
+	Id       int64     `json:"u_id,omitempty"`
+	Pdv      int       `json:"u_pdv,omitempty"`
+	Nom      string    `json:"u_nom,omitempty"`
+	Prenom   string    `json:"u_prenom,omitempty"`
+	Role     int8      `json:"u_role,omitempty"`
+	Password string    `json:"u_pass,omitempty"`
+	Login    string    `json:"u_login,omitempty"`
+	Supprime int8      `json:"u_supprime,omitempty"`
+	Cree     time.Time `json:"u_cree,omitempty"`
+	Modifie  time.Time `json:"u_modifie,omitempty"`
+	FaitPar  int64     `json:"u_faitpar,omitempty"`
 }
 
-func GetUser(c *utils.Context, id int64) (*User, error) {
+func GetUser(c *utils.Context, id int64) (*User, *utils.SError) {
 	u := User{}
 
-	err := c.DB.
+	e := c.DB.
 		QueryRow("SELECT u_id, u_pdv, u_nom, u_prenom, u_role, u_login, u_supprime, u_faitpar FROM utilisateur WHERE u_id=?", id).
 		Scan(&u.Id, &u.Pdv, &u.Nom, &u.Prenom, &u.Role, &u.Login, &u.Supprime, &u.FaitPar)
-	if err != nil {
-		log.Println("GetUser:", err)
-		return nil, err
+	if e != nil {
+		return nil, &utils.SError{StatusBadRequest,
+			fmt.Errorf("champs utilisateur incorrect"),
+			fmt.Errorf("GetUser: %s\n", e),
+		}
 	}
 	return &u, nil
 }
 
-func GetCurrentUser(c *utils.Context) (*User, error) {
-	u, err := GetUser(c, c.Session.Id)
-	if err != nil {
-		log.Println("GetCurrentUser: GetUser call failed")
-		return nil, err
+func GetCurrentUser(c *utils.Context) (*User, *utils.SError) {
+	u, e := GetUser(c, c.Session.Id)
+	if e != nil {
+		return nil, e
 	}
 	return u, nil
 }
 
-func GetUsersFromSession(c *utils.Context) ([]*User, error) {
-	users := make([]*User, 0)
+func GetUsersFromSession(c *utils.Context) ([]*User, *utils.SError) {
+	us := make([]*User, 0)
 
-	rows, err := c.DB.
+	r, e := c.DB.
 		Query("SELECT u_id, u_pdv, u_nom, u_prenom, u_role, u_login FROM utilisateur WHERE u_pdv=? AND u_supprime=0", c.Session.PdvId)
-	if err != nil {
-		log.Println("GetUsersFromSession:", err)
-		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var user User
-		err := rows.Scan(&user.Id, &user.Pdv, &user.Nom, &user.Prenom, &user.Role, &user.Login)
-		if err != nil {
-			log.Println("GetUsersFromSession:", err)
-			return nil, err
+	if e != nil {
+		return nil, &utils.SError{StatusBadRequest,
+			fmt.Errorf("session incorrecte"),
+			fmt.Errorf("GetUsersFromSession:", e),
 		}
-		users = append(users, &user)
 	}
-	return users, nil
+	defer r.Close()
+
+	for r.Next() {
+		var u User
+		e := r.Scan(&u.Id, &u.Pdv, &u.Nom, &u.Prenom, &u.Role, &u.Login)
+		if e != nil {
+			return nil, &utils.SError{StatusInternalServerError,
+				nil,
+				fmt.Errorf("GetUsersFromSession:", e),
+			}
+		}
+		us = append(us, &u)
+	}
+	return us, nil
 }
 
 func hashPassword(p string) string {
@@ -78,17 +87,46 @@ func hashPassword(p string) string {
 	return hex.EncodeToString(hasher.Sum(nil))
 }
 
-func CreateUser(c *utils.Context, u *User) (int64, error) {
+func CreateUser(c *utils.Context, u *User) (int64, *utils.SError) {
 	if u.Password == "" || u.Prenom == "" || u.Nom == "" || u.Login == "" || u.Role >= c.Session.Role || u.Role < 1 {
-		log.Println("CreateUser: incorrect fields")
-		return 0, errors.New("incorrect fields")
+		return 0, &utils.SError{StatusBadRequest,
+			errors.New("champs incorrects"),
+			errors.New("CreateUser: incorrect fields"),
+		}
 	}
-	m, err := json.Marshal(struct {
+	us, err := GetUsersFromSession(c)
+	if err != nil {
+		return 0, err
+	}
+	if len(us) >= 10 {
+		return 0, &utils.SError{StatusBadRequest,
+			errors.New("Nombre limite de 10 utilisateurs atteint"),
+			fmt.Errorf("CreateUser: maximum users reached %d", len(us)),
+		}
+	}
+	var count int
+	e := c.DB.QueryRow("SELECT COUNT(*) FROM utilisateur WHERE u_login=? AND u_supprime=0", u.Login).Scan(&count)
+	if e != nil {
+		return 0, &utils.SError{StatusInternalServerError,
+			nil,
+			fmt.Errorf("CreateUser: %s", e),
+		}
+	}
+	if count > 0 {
+		return 0, &utils.SError{StatusBadRequest,
+			errors.New("login déjà existant"),
+			fmt.Errorf("CreateUser: login already exists (%d)", count),
+		}
+	}
+	now := time.Now()
+	m, e := json.Marshal(struct {
 		*User
-		Pdv      int    `json:"u_pdv"`
-		Password string `json:"u_pass"`
-		Supprime int8   `json:"u_supprime"`
-		FaitPar  int64  `json:"u_faitpar"`
+		Pdv      int       `json:"u_pdv"`
+		Password string    `json:"u_pass"`
+		Supprime int8      `json:"u_supprime"`
+		FaitPar  int64     `json:"u_faitpar"`
+		Cree     time.Time `json:"u_cree"`
+		Modifie  time.Time `json:"u_modifie"`
 	}{
 		User: u,
 
@@ -96,90 +134,125 @@ func CreateUser(c *utils.Context, u *User) (int64, error) {
 		Password: hashPassword(u.Password),
 		Supprime: 0,
 		FaitPar:  c.Session.Id,
+		Cree:     now,
+		Modifie:  now,
 	})
-	if err != nil {
-		log.Println("CreateUser:", err)
-		return 0, err
+	if e != nil {
+		return 0, &utils.SError{StatusInternalServerError,
+			nil,
+			fmt.Errorf("CreateUser: %s", e),
+		}
 	}
-	r, err := utils.BuildSqlSets(m)
-	if err != nil {
-		log.Println("CreateUser:", err)
-		return 0, err
+	r, e := database.BuildSqlSets(m)
+	if e != nil {
+		return 0, &utils.SError{StatusInternalServerError,
+			nil,
+			fmt.Errorf("CreateUser: %s", e),
+		}
 	}
 	req := fmt.Sprintf("INSERT INTO utilisateur SET %s", r)
 	log.Println(req)
-	stmt, err := c.DB.Prepare(req)
-	if err != nil {
-		log.Println("CreateUser:", err)
-		return 0, err
+	stmt, e := c.DB.Prepare(req)
+	if e != nil {
+		return 0, &utils.SError{StatusInternalServerError,
+			nil,
+			fmt.Errorf("CreateUser: %s", e),
+		}
 	}
-	res, err := stmt.Exec()
-	if err != nil {
-		log.Println("CreateUser:", err)
-		return 0, err
+	res, e := stmt.Exec()
+	if e != nil {
+		return 0, &utils.SError{StatusInternalServerError,
+			nil,
+			fmt.Errorf("CreateUser: %s", e),
+		}
 	}
-	rid, err := res.LastInsertId()
-	if err != nil {
-		log.Println("CreateUser:", err)
-		return 0, err
+	rid, e := res.LastInsertId()
+	if e != nil {
+		return 0, &utils.SError{StatusInternalServerError,
+			nil,
+			fmt.Errorf("CreateUser: %s", e),
+		}
 	}
 	return rid, nil
 }
 
-func (u *User) UpdateUser(c *utils.Context, up *User) error {
-	if c.Session.PdvId != u.Pdv || c.Session.Role < up.Role ||
+func (u *User) UpdateUser(c *utils.Context, up *User) *utils.SError {
+	if c.Session.PdvId != u.Pdv || c.Session.Role <= up.Role ||
 		(c.Session.Id == u.Id && c.Session.Role != up.Role) {
-		return errors.New("UpdateUser: incorrect fields")
+		return &utils.SError{StatusBadRequest,
+			fmt.Errorf("incorrect fields"),
+			fmt.Errorf("UpdateUser: incorrect fields"),
+		}
 	}
 	if up.Password != "" {
 		u.Password = hashPassword(up.Password)
 	}
-	m, err := json.Marshal(struct {
-		Prenom   string `json:"u_prenom,omitempty"`
-		Nom      string `json:"u_nom,omitempty"`
-		Role     int8   `json:"u_role,omitempty"`
-		Password string `json:"u_pass,omitempty"`
+	m, e := json.Marshal(struct {
+		Prenom   string    `json:"u_prenom,omitempty"`
+		Nom      string    `json:"u_nom,omitempty"`
+		Role     int8      `json:"u_role,omitempty"`
+		Password string    `json:"u_pass,omitempty"`
+		Modifie  time.Time `json:"u_modifie,omitempty"`
 	}{
 		Prenom:   up.Prenom,
 		Nom:      up.Nom,
 		Password: hashPassword(up.Password),
 		Role:     up.Role,
+		Modifie:  time.Now(),
 	})
-	if err != nil {
-		log.Println("UpdateUser:", err)
-		return err
+	if e != nil {
+		return &utils.SError{StatusInternalServerError,
+			nil,
+			fmt.Errorf("UpdateUser: %s", e),
+		}
 	}
-	r, err := utils.BuildSqlSets(m)
-	if err != nil {
-		log.Println("UpdateUser:", err)
-		return err
+	r, e := database.BuildSqlSets(m)
+	if e != nil {
+		return &utils.SError{StatusInternalServerError,
+			nil,
+			fmt.Errorf("UpdateUser: %s", e),
+		}
 	}
 	req := fmt.Sprintf("UPDATE utilisateur SET %s WHERE u_id=%v", r, u.Id)
-	stmt, err := c.DB.Prepare(req)
-	if err != nil {
-		log.Println("UpdateUser:", err)
-		return err
+	stmt, e := c.DB.Prepare(req)
+	if e != nil {
+		return &utils.SError{StatusInternalServerError,
+			nil,
+			fmt.Errorf("UpdateUser: %s", e),
+		}
 	}
-	_, err = stmt.Exec()
-	if err != nil {
-		log.Println("UpdateUser:", err)
-		return err
+	_, e = stmt.Exec()
+	if e != nil {
+		return &utils.SError{StatusInternalServerError,
+			nil,
+			fmt.Errorf("UpdateUser: %s", e),
+		}
 	}
 	return nil
 }
 
-func (u *User) RemoveUser(c *utils.Context) error {
-	if c.Session.PdvId != u.Pdv {
-		return utils.NewMError(utils.Unauthorised, "RemoveUser: PDV: %d != %d", c.Session.PdvId, u.Pdv)
+func (u *User) RemoveUser(c *utils.Context) *utils.SError {
+	if c.Session.PdvId != u.Pdv || c.Session.Role <= u.Role ||
+		c.Session.Id == u.Id {
+		return &utils.SError{StatusUnauthorized,
+			fmt.Errorf("utilisateur incorrect"),
+			fmt.Errorf("RemoveUser: PDV: %d != %d", c.Session.PdvId, u.Pdv),
+		}
 	}
 	req := fmt.Sprintf("UPDATE utilisateur SET u_supprime=1 WHERE u_id=%v", u.Id)
-	stmt, err := c.DB.Prepare(req)
-	if err != nil {
-		return utils.NewMError(utils.Internal, "RemoveUser: %s", err)
+	stmt, e := c.DB.Prepare(req)
+	if e != nil {
+		return &utils.SError{StatusInternalServerError,
+			nil,
+			fmt.Errorf("RemoveUser: %s", e),
+		}
 	}
-	_, err = stmt.Exec()
-	if err != nil {
-		return utils.NewMError(utils.Internal, "RemoveUser: %s", err)
+	_, e = stmt.Exec()
+	if e != nil {
+		return &utils.SError{StatusInternalServerError,
+			nil,
+			fmt.Errorf("RemoveUser: %s", e),
+		}
 	}
 	return nil
 }

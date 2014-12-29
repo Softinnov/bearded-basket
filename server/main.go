@@ -10,8 +10,11 @@ import (
 	"github.com/gorilla/sessions"
 )
 
-var dbf = flag.String("db", "root:@/prod", "database, usage: user:password@addr/dbname")
-var cheyf = flag.String("chey", "http://localhost:8002", "cheyenne, usage: http://host:port")
+var (
+	dbf     = flag.String("db", "root:@/prod", "database, usage: user:password@addr/dbname")
+	cheyf   = flag.String("chey", "http://localhost:8002", "cheyenne, usage: http://host:port")
+	encrypt = []byte("123456789")
+)
 
 func main() {
 	flag.Parse()
@@ -20,7 +23,7 @@ func main() {
 	defer database.Close(db)
 
 	context := &utils.Context{
-		Store:   sessions.NewCookieStore([]byte("123456789")),
+		Store:   sessions.NewCookieStore(encrypt),
 		DB:      db,
 		Chey:    cheyf,
 		Session: nil,

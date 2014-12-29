@@ -1,6 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
 # RUN DB CONTAINER
+# usage: ./1.rundb.sh [-t]
+
+R="\x1b[31m"
+G="\x1b[32m"
+B="\x1b[34m"
+W="\x1b[0m"
 
 TEST=false
 if [ "$1" = "-t" ]; then
@@ -9,20 +15,21 @@ if [ "$1" = "-t" ]; then
 fi
 
 DBDATA=dbdata
-DBDATATEST="$DBDATA"_test
 DBCON=db
 DBCONTEST="$DBCON"_test
 
 if [ $TEST = true ]; then
-	echo ">> Removing old container (stop it if running)"
+	echo -e "$B >> Removing old container (stop it if running) $W"
 	./cleancontainer.sh $DBCONTEST
 
-	echo ">> Running DB container"
-	docker run -d --volumes-from $DBDATATEST --name $DBCONTEST softinnov/$DBCONTEST || exit $?
+	echo -e "$B >> Running $DBCONTEST container $W"
+	docker run -d --name $DBCONTEST softinnov/$DBCONTEST || exit $?
 else
-	echo ">> Removing old container (stop it if running)"
+	echo -e "$B >> Removing old container (stop it if running) $W"
 	./cleancontainer.sh $DBCON
 
-	echo ">> Running DB container"
+	echo -e "$B >> Running $DBCON container $W"
 	docker run -d --volumes-from $DBDATA --name $DBCON softinnov/$DBCON || exit $?
 fi
+
+echo -e "$G >> Done. $W"

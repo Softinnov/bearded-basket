@@ -1,14 +1,16 @@
-#!/bin/sh
+#!/bin/bash
 
 # BUILD CHEYENNE IMAGE
 # usage: buildchey
 
-if [ $# -ne 0 ]; then
-	echo "Usage: $0"
-	exit 1
-fi
+R="\x1b[31m"
+G="\x1b[32m"
+B="\x1b[34m"
+W="\x1b[0m"
 
-echo ">> Building cheyenne image"
+echo -e "$B >> Building cheyenne image $W"
 cd cheyenne
 docker build -t softinnov/chey . || exit $?
 cd ..
+
+echo -e "$G >> Done. $W"

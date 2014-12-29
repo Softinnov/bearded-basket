@@ -22,7 +22,6 @@ ADD create_mysql_admin_user.sh /create_mysql_admin_user.sh
 ADD import_sql.sh /import_sql.sh
 ADD create_db.sh /create_db.sh
 ADD run.sh /run.sh
-RUN chmod 755 /*.sh
 
 # Exposed ENV
 ENV MYSQL_USER admin
