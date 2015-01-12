@@ -12,6 +12,6 @@ do
 	gunzip /data/"$ARG".txt.gz
 	cat /data/"$ARG".sql | mysql -u$MYSQL_USER -p$MYSQL_PASS $DBNAME || exit $?
 #	mysqlimport --local -u$MYSQL_USER -p$MYSQL_PASS $DBNAME /data/"$ARG".txt || exit $?
-	echo "set sql_mode='no_auto_value_on_zero' ; load data infile '/data/$ARG.txt' into table $ARG" | mysql -u$MYSQL_USER -p$MYSQL_PASS $DBNAME 
+	echo "set sql_mode='no_auto_value_on_zero' ; load data infile '/data/$ARG.txt' into table $ARG character set latin1" | mysql -u$MYSQL_USER -p$MYSQL_PASS $DBNAME 
 	gzip /data/"$ARG".txt
 done
