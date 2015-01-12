@@ -9,6 +9,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
   apt-get -yq install mysql-server pwgen && \
   rm -rf /var/lib/apt/lists/*
+RUN echo Europe/Paris > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 
 ADD update_dbdata.sh /
 

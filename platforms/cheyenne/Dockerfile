@@ -4,6 +4,7 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
 RUN dpkg --add-architecture i386
 RUN apt-get update -y
 RUN apt-get -y install libc6:i386 libreadline6:i386
+RUN echo Europe/Paris > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 
 ADD cheyenne-linux /cheyenne
 ADD httpd.cfg /httpd.cfg

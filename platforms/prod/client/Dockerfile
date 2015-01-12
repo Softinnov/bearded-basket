@@ -1,6 +1,8 @@
 
-FROM softinnov/mininginx
+FROM softinnov/nginx
 MAINTAINER Ghislain Guiot
+
+RUN echo Europe/Paris > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 
 ADD nginx.conf /etc/nginx/
 ADD client /client

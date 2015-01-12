@@ -11,6 +11,7 @@ RUN apt-get update && \
   apt-get -yq install mysql-server pwgen && \
   rm -rf /var/lib/apt/lists/* && \
   rm -rf /var/lib/mysql/*
+RUN echo Europe/Paris > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 
 # Add MySQL configuration
 ADD cnf /etc/mysql/conf.d

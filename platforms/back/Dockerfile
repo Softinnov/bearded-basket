@@ -1,6 +1,8 @@
 
-FROM busybox:ubuntu-14.04
+FROM debian:7.7
 MAINTAINER Ghislain Guiot
+
+RUN echo Europe/Paris > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 
 ADD run.sh /run.sh
 
