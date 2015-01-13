@@ -2,3 +2,6 @@
 bind-address=0.0.0.0
 server-id = 1
 log-bin=mysql-bin
+log_slow_queries  = /var/log/mysql/mysql-slow.log
+long_query_time  = 1
+log-queries-not-using-indexes
