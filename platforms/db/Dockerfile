@@ -15,7 +15,7 @@ RUN echo Europe/Paris > /etc/timezone && dpkg-reconfigure --frontend noninteract
 RUN rm -rf /var/lib/mysql/*
 
 # Add MySQL configuration
-ADD my.cnf /etc/mysql/conf.d/my.cnf
+ADD my.cnf /etc/mysql/my.cnf
 ADD mysqld_charset.cnf /etc/mysql/conf.d/mysqld_charset.cnf
 
 # Add MySQL scripts
