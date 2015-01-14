@@ -31,6 +31,11 @@ DATA="/data/"
 echo "=> importing files inside $DATA"
 for ARG in ${*:4}
 do
+	echo " -> replace mysql ENGINE"
+	cp "$DATA""$ARG".sql "$DATA""$ARG".sql_old
+	sed s/ENGINE=MyISAM/ENGINE=InnoDB/ "$DATA""$ARG".sql_old > "$DATA""$ARG".sql
+	rm "$DATA""$ARG".sql_old
+
 	if [ $TEST = true ]; then
 		NARG="$ARG"_test
 
