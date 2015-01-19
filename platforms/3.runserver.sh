@@ -58,7 +58,7 @@ else
 		mv $GODIR/bearded-basket bin/bearded-basket
 
 	echo -e "$B >> Running the $BCON container $W"
-	docker run --name $BCON -v $(pwd)/bin:/exe -v $LOGDIR:/logs --link $DBCON:$DBCON -p 8002:8002 -d softinnov/dev-$BCON
+	docker run --name $BCON -v $(pwd)/bin:/exe -v $LOGDIR:/logs --link $DBCON:$DBCON -e SERVICE_NAME=back -P -d softinnov/dev-$BCON
 fi
 
 echo -e "$G >> Done. $W"
