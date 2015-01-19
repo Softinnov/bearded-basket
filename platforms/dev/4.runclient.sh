@@ -18,6 +18,6 @@ echo -e "$B >> Removing old container (stop it if running) $W"
 ./cleancontainer.sh client
 
 echo -e "$B >> Running the client container $W"
-docker run --name client -v $1:/client -v $2:/var/log/nginx --link chey:chey --link consul:consul -p 443:443 -P -d softinnov/dev-client
+docker run --name client -v $1:/client -v $2:/var/log/nginx --link chey:chey --link consul:consul -p 443:443 -p 8000:8000 -d softinnov/dev-client
 
 echo -e "$G >> Done. $W"
