@@ -13,6 +13,6 @@ fi
 IP=$1
 shift
 
-echo -e "$B >> sending tar images $W"
-rsync --progress -az tar_slave/*.tar root@"$1":/home/bearded-basket/ || exit $?
+echo -e "$B >> sending tar images to $IP $W"
+rsync --progress -az tar_slave/*.tar root@"$IP":/home/bearded-basket/ || exit $?
 echo -e "$G >> done. $W"
