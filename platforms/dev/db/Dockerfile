@@ -24,6 +24,8 @@ ADD import_sql.sh /import_sql.sh
 ADD create_db.sh /create_db.sh
 ADD run.sh /run.sh
 
+ADD sql-http-proxy /sql-http-proxy
+
 # Exposed ENV
 ENV MYSQL_USER admin
 ENV MYSQL_PASS **Random**
@@ -37,5 +39,6 @@ ENV REPLICATION_PASS replica
 # Add VOLUMEs to allow backup of config and databases
 VOLUME  ["/etc/mysql", "/var/lib/mysql"]
 
-EXPOSE 3306
+EXPOSE 3306 6033
+
 CMD ["/run.sh"]

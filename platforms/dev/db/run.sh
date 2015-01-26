@@ -26,7 +26,7 @@ fi
 function master_slave()
 {
     # Set MySQL REPLICATION - MASTER
-    if [ -n "${REPLICATION_MASTER}" ]; then 
+    if [ -n "${REPLICATION_MASTER}" ]; then
         echo "=> Configuring MySQL replicaiton as master ..."
         if [ ! -f /repliation_configured ]; then
             RAND="$(date +%s | rev | cut -c 1-2)$(echo ${RANDOM})"
@@ -45,9 +45,9 @@ function master_slave()
             echo "=> MySQL replication master already configured, skip"
         fi
     fi
-    
+
     # Set MySQL REPLICATION - SLAVE
-    if [ -n "${REPLICATION_SLAVE}" ]; then 
+    if [ -n "${REPLICATION_SLAVE}" ]; then
         echo "=> Configuring MySQL replicaiton as slave ..."
         if [ -n "${MYSQL_PORT_3306_TCP_ADDR}" ] && [ -n "${MYSQL_PORT_3306_TCP_PORT}" ]; then
             if [ ! -f /repliation_configured ]; then
@@ -65,7 +65,7 @@ function master_slave()
             else
                 echo "=> MySQL replicaiton slave already configured, skip"
             fi
-        else 
+        else
             echo "=> Cannot configure slave, please link it to another MySQL container with alias as 'mysql'"
             exit 1
         fi
@@ -78,9 +78,9 @@ if [[ ! -d $VOLUME_HOME/mysql ]]; then
     echo "=> Installing MySQL ..."
     if [ ! -f /usr/share/mysql/my-default.cnf ] ; then
         cp /etc/mysql/my.cnf /usr/share/mysql/my-default.cnf
-    fi 
+    fi
     mysql_install_db > /dev/null 2>&1
-    echo "=> Done!"  
+    echo "=> Done!"
     echo "=> Creating admin user ..."
     /create_mysql_admin_user.sh
     master_slave
@@ -88,6 +88,7 @@ else
     echo "=> Using an existing volume of MySQL"
     master_slave
     echo "=> Executing MySQLD_SAFE..."
-    exec mysqld_safe
-fi
+    exec mysqld_safe &
 
+    /sql-http-proxy
+fi

@@ -15,6 +15,7 @@ $ ./buildall
 
 Then launch every containers like this:
 ```sh
+$ ./0.runconsul.sh
 $ ./1.rundb.sh
 $ ./2.runchey.sh <path to esc-pdv> $(pwd)/logs
 $ ./3.runserver.sh $(pwd)/../server $(pwd)/logs
