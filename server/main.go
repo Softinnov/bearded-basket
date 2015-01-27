@@ -15,7 +15,6 @@ import (
 )
 
 var (
-	dbhost  = flag.String("dbhost", "", "location of sql database")
 	dbuspw  = flag.String("dbuspw", "root:", "database, usage: user:passwd@addr/dbname")
 	dbname  = flag.String("dbname", "prod", "database, usage: user:passwd@addr/dbname")
 	cheyf   = flag.String("chey", "http://localhost:8002", "cheyenne, usage: http://host:port")
@@ -45,16 +44,28 @@ func getAddrFromConsul(a string) (string, string, error) {
 func main() {
 	flag.Parse()
 
-	a, p, e := getAddrFromConsul("db")
+	ip, p, e := getAddrFromConsul("httpdb")
 	if e != nil {
 		log.Fatal(e)
 	}
-	db := database.Open(*dbuspw + "@(" + a + ":" + p + ")/" + *dbname)
+	httpDB := &database.Db{
+		IP:       ip,
+		Port:     p,
+		UsPwd:    *dbuspw,
+		Database: *dbname,
+	}
+	ip, p, e = getAddrFromConsul("db")
+	if e != nil {
+		log.Fatal(e)
+	}
+
+	db := database.Open(*dbuspw + "@(" + ip + ":" + p + ")/" + *dbname)
 	defer database.Close(db)
 
 	context := &utils.Context{
 		Store:   sessions.NewCookieStore(encrypt),
 		DB:      db,
+		HTTPdb:  httpDB,
 		Chey:    cheyf,
 		Session: nil,
 	}

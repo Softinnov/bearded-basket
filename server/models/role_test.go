@@ -34,22 +34,22 @@ func TestGetRoles(t *testing.T) {
 	}
 }
 
-func TestGetRole(t *testing.T) {
-	c := newTestContext(t)
-	defer database.Close(c.DB)
-
-	r, err := GetRole(c, 1)
-	if err != nil {
-		t.Errorf("Unexpected error: %s", err)
-	}
-	sr := Role{
-		Id:      1,
-		Libelle: "hôte de caisse",
-	}
-	if r == nil {
-		t.Errorf("Expected a role, got nil")
-	}
-	if sr != *r {
-		t.Errorf("Expected %#v, got %#v", sr, *r)
-	}
-}
+//func TestGetRole(t *testing.T) {
+//	c := newTestContext(t)
+//	defer database.Close(c.DB)
+//
+//	r, err := GetRole(c, 1)
+//	if err != nil {
+//		t.Errorf("Unexpected error: %s", err)
+//	}
+//	sr := Role{
+//		Id:      1,
+//		Libelle: "hôte de caisse",
+//	}
+//	if r == nil {
+//		t.Errorf("Expected a role, got nil")
+//	}
+//	if sr != *r {
+//		t.Errorf("Expected %#v, got %#v", sr, *r)
+//	}
+//}

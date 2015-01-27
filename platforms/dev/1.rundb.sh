@@ -29,7 +29,7 @@ else
 	./cleancontainer.sh $DBCON
 
 	echo -e "$B >> Running $DBCON container $W"
-	docker run -d --volumes-from $DBDATA --name $DBCON -e SERVICE_NAME=db -p 3306:3306 softinnov/$DBCON || exit $?
+	docker run -d --volumes-from $DBDATA --name $DBCON -e SERVICE_6033_NAME=httpdb -e SERVICE_3306_NAME=db -P softinnov/$DBCON || exit $?
 fi
 
 echo -e "$G >> Done. $W"

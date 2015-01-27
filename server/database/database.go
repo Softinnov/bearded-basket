@@ -6,9 +6,57 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
 )
+
+type Db struct {
+	IP       string
+	Port     string
+	UsPwd    string
+	Database string
+}
+
+// Response of type:
+//
+// {
+//   "columns": ["id", "name", "age"]
+//   "data": [
+//             ["0", "john", "18"],
+//             ["1", null, "42"]
+//         ],
+//   "error": null
+// }
+type DbQuery struct {
+	Columns []string    `json:"columns,omitempty"`
+	Data    [][]*string `json:"data,omitempty"`
+	Error   string      `json:"error,omitempty"`
+}
+
+func (db Db) Query(query string) (*DbQuery, error) {
+	q := "http://" + db.IP + ":" + db.Port +
+		"/api/" + db.Database + "/" + query
+
+	log.Printf("%s\n", q)
+	r, e := http.Post(q, "", nil)
+	if e != nil {
+		return nil, e
+	}
+	defer r.Body.Close()
+	//b, e := ioutil.ReadAll(r.Body)
+	//if e != nil {
+	//	log.Fatal(e)
+	//}
+	//fmt.Printf("response: %s\n", b)
+
+	dbq := &DbQuery{}
+	e = json.NewDecoder(r.Body).Decode(dbq)
+	if e != nil {
+		return nil, e
+	}
+	return dbq, nil
+}
 
 func Open(addr string) *sql.DB {
 	var err error

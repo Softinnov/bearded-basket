@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 
+	"github.com/Softinnov/bearded-basket/server/database"
 	"github.com/gorilla/sessions"
 	"github.com/mitchellh/mapstructure"
 )
@@ -11,6 +12,7 @@ import (
 type Context struct {
 	Store   *sessions.CookieStore
 	DB      *sql.DB
+	HTTPdb  *database.Db
 	Chey    *string
 	Session *Session
 }
