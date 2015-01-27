@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/Softinnov/bearded-basket/server/database"
@@ -25,6 +26,83 @@ type User struct {
 	Cree     time.Time `json:"u_cree,omitempty"`
 	Modifie  time.Time `json:"u_modifie,omitempty"`
 	FaitPar  int64     `json:"u_faitpar,omitempty"`
+}
+
+func (u *User) Scan(v []*string, c []string) {
+	const longForm = "2006-01-02 15:04:05"
+	for k, val := range v {
+		switch c[k] {
+		case "u_id":
+			i, e := strconv.ParseInt(*val, 10, 64)
+			if e != nil {
+				log.Printf("%s\n", e)
+				continue
+			}
+			u.Id = i
+		case "u_pdv":
+			i, e := strconv.ParseInt(*val, 10, 32)
+			if e != nil {
+				log.Printf("%s\n", e)
+				continue
+			}
+			u.Pdv = int(i)
+		case "u_nom":
+			if val != nil {
+				u.Nom = *val
+			}
+		case "u_prenom":
+			if val != nil {
+				u.Prenom = *val
+			}
+		case "u_role":
+			i, e := strconv.ParseInt(*val, 10, 8)
+			if e != nil {
+				log.Printf("%s\n", e)
+				continue
+			}
+			u.Role = int8(i)
+		case "u_pass":
+			if val != nil {
+				u.Prenom = *val
+			}
+		case "u_login":
+			if val != nil {
+				u.Login = *val
+			}
+		case "u_supprime":
+			i, e := strconv.ParseInt(*val, 10, 8)
+			if e != nil {
+				log.Printf("%s\n", e)
+				continue
+			}
+			u.Supprime = int8(i)
+		case "u_cree":
+			if val != nil {
+				t, e := time.Parse(longForm, *val)
+				if e != nil {
+					fmt.Println(e)
+				}
+				u.Cree = t
+			}
+			fmt.Printf("u_cree: %v %v\n", u.Cree, *val)
+		case "u_modifie":
+			if val != nil {
+				t, e := time.Parse(longForm, *val)
+				if e != nil {
+					fmt.Println(e)
+				}
+				u.Modifie = t
+			}
+			fmt.Printf("u_modifie: %v %v\n", u.Cree, *val)
+		case "u_faitpar":
+			i, e := strconv.ParseInt(*val, 10, 64)
+			if e != nil {
+				log.Printf("%s\n", e)
+				continue
+			}
+			u.FaitPar = i
+		}
+	}
 }
 
 func GetUser(c *utils.Context, id int64) (*User, *utils.SError) {
@@ -53,25 +131,20 @@ func GetCurrentUser(c *utils.Context) (*User, *utils.SError) {
 func GetUsersFromSession(c *utils.Context) ([]*User, *utils.SError) {
 	us := make([]*User, 0)
 
-	r, e := c.DB.
-		Query("SELECT u_id, u_pdv, u_nom, u_prenom, u_role, u_login FROM utilisateur WHERE u_pdv=? AND u_supprime=0", c.Session.PdvId)
+	res, e := c.HTTPdb.
+		Query(fmt.Sprintf("SELEC u_id, u_pdv, u_nom, u_prenom, u_role, u_login FROM utilisateur WHERE u_pdv=%d AND u_supprime=0", c.Session.PdvId))
 	if e != nil {
 		return nil, &utils.SError{StatusBadRequest,
 			fmt.Errorf("session incorrecte"),
-			fmt.Errorf("GetUsersFromSession:", e),
+			fmt.Errorf("GetUsersFromSession: %s", e),
 		}
 	}
-	defer r.Close()
 
-	for r.Next() {
+	for _, re := range res.Data {
 		var u User
-		e := r.Scan(&u.Id, &u.Pdv, &u.Nom, &u.Prenom, &u.Role, &u.Login)
-		if e != nil {
-			return nil, &utils.SError{StatusInternalServerError,
-				nil,
-				fmt.Errorf("GetUsersFromSession:", e),
-			}
-		}
+
+		u.Scan(re, res.Columns)
+
 		us = append(us, &u)
 	}
 	return us, nil

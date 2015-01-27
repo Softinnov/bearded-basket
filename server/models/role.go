@@ -35,7 +35,6 @@ func GetRoles(c *utils.Context) ([]*Role, *utils.SError) {
 	rs := make([]*Role, 0)
 
 	res, e := c.HTTPdb.Query("SELECT r_id, r_libelle FROM role")
-
 	if e != nil {
 		return nil, &utils.SError{StatusInternalServerError,
 			nil,

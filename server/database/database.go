@@ -44,16 +44,14 @@ func (db Db) Query(query string) (*DbQuery, error) {
 		return nil, e
 	}
 	defer r.Body.Close()
-	//b, e := ioutil.ReadAll(r.Body)
-	//if e != nil {
-	//	log.Fatal(e)
-	//}
-	//fmt.Printf("response: %s\n", b)
 
 	dbq := &DbQuery{}
 	e = json.NewDecoder(r.Body).Decode(dbq)
 	if e != nil {
 		return nil, e
+	}
+	if dbq.Error != "" {
+		return nil, fmt.Errorf(dbq.Error)
 	}
 	return dbq, nil
 }
