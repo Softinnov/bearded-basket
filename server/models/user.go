@@ -108,14 +108,16 @@ func (u *User) Scan(v []*string, c []string) {
 func GetUser(c *utils.Context, id int64) (*User, *utils.SError) {
 	u := User{}
 
-	e := c.DB.
-		QueryRow("SELECT u_id, u_pdv, u_nom, u_prenom, u_role, u_login, u_supprime, u_faitpar FROM utilisateur WHERE u_id=?", id).
-		Scan(&u.Id, &u.Pdv, &u.Nom, &u.Prenom, &u.Role, &u.Login, &u.Supprime, &u.FaitPar)
+	res, e := c.HTTPdb.
+		Query(fmt.Sprintf("SELECT u_id, u_pdv, u_nom, u_prenom, u_role, u_login, u_supprime, u_faitpar FROM utilisateur WHERE u_id=%d", id))
 	if e != nil {
 		return nil, &utils.SError{StatusBadRequest,
 			fmt.Errorf("champs utilisateur incorrect"),
 			fmt.Errorf("GetUser: %s\n", e),
 		}
+	}
+	if len(res.Data) == 1 {
+		u.Scan(res.Data[0], res.Columns)
 	}
 	return &u, nil
 }
@@ -132,7 +134,7 @@ func GetUsersFromSession(c *utils.Context) ([]*User, *utils.SError) {
 	us := make([]*User, 0)
 
 	res, e := c.HTTPdb.
-		Query(fmt.Sprintf("SELEC u_id, u_pdv, u_nom, u_prenom, u_role, u_login FROM utilisateur WHERE u_pdv=%d AND u_supprime=0", c.Session.PdvId))
+		Query(fmt.Sprintf("SELECT u_id, u_pdv, u_nom, u_prenom, u_role, u_login FROM utilisateur WHERE u_pdv=%d AND u_supprime=0", c.Session.PdvId))
 	if e != nil {
 		return nil, &utils.SError{StatusBadRequest,
 			fmt.Errorf("session incorrecte"),
