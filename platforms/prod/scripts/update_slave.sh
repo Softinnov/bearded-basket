@@ -30,7 +30,7 @@ IP=$1
 cd /home/bearded-basket
 
 CNT="prod-db-slave"
-ARG="docker run -d --volumes-from dbdata --name $CNT softinnov/$CNT /run.sh $IP"
+ARG="docker run -d --volumes-from dbdata -v /root/.ssh:/root/.ssh --name $CNT softinnov/$CNT /run.sh $IP"
 
 echo -e "$B >> stopping and removing $CNT $W"
 docker stop $CNT > /dev/null 2>&1
@@ -54,7 +54,10 @@ while [[ RET -ne 0 ]]; do
 RET=$?
 done
 
+# add information to connect to master via ssh vpn
+# 127.0.0.1:3307 is forwarded by ssh to master:3306
 docker exec $CNT mysql -h127.0.0.1 -e "STOP SLAVE; CHANGE MASTER TO \
-	MASTER_HOST='$IP', \
+	MASTER_HOST='127.0.0.1', \
+	MASTER_PORT=3307, \
 	MASTER_USER='admin', \
 	MASTER_PASSWORD='admin'; START SLAVE;"

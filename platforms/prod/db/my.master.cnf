@@ -35,7 +35,7 @@ server-id		= 1
 log-bin			= mysql-bin
 expire_logs_days	= 10
 max_binlog_size         = 100M
-
+sql-mode	= "NO_AUTO_VALUE_ON_ZERO"
 
 
 [mysqldump]
