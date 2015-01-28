@@ -1,5 +1,16 @@
 #/bin/bash
 
+####
+#  This script runs the new mysql slave server by doing the following steps:
+#
+#    1. Stops the actual running container
+#    2. Removes it
+#    3. Removes the docker image
+#    4. Loads the tarball image
+#    5. Runs the mysql container
+#    6. Waits until mysql is launched and change to behave as slave.
+####
+
 R="\x1b[31m"
 G="\x1b[32m"
 B="\x1b[34m"
@@ -7,7 +18,6 @@ I="\x1b[35m"
 W="\x1b[0m"
 
 USAGE="$R Usage: $0 <ip master> $W"
-
 
 if [ $# -ne 1 ]; then
 	echo -e $*

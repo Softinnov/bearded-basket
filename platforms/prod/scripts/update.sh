@@ -1,5 +1,15 @@
 #/bin/bash
 
+####
+#  This script runs all the docker containers by doing the following steps:
+#
+#    1. Stops the actual running container
+#    2. Removes it
+#    3. Removes the docker image
+#    4. Loads the tarball image
+#    5. Runs the container
+####
+
 R="\x1b[31m"
 G="\x1b[32m"
 B="\x1b[34m"

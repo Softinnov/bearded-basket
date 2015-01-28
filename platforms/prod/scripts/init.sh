@@ -1,5 +1,10 @@
 #!/bin/bash
 
+####
+#  This script initialize the server with the ssh keys and installing dependencies such
+#  as curl and rsync. Also create the HOME folder.
+####
+
 R="\x1b[31m"
 G="\x1b[32m"
 B="\x1b[34m"

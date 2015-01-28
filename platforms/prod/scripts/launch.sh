@@ -1,5 +1,9 @@
 #!/bin/bash
 
+####
+#  This script is used to run a script from a remote PC to the server.
+####
+
 R="\x1b[31m"
 G="\x1b[32m"
 B="\x1b[34m"

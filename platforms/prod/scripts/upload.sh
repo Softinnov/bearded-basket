@@ -1,5 +1,9 @@
 #!/bin/bash
 
+####
+#  This script uploads the taballs into the server.
+####
+
 R="\x1b[31m"
 G="\x1b[32m"
 B="\x1b[34m"
