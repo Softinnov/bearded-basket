@@ -107,9 +107,8 @@ func (u *User) Scan(v []*string, c []string) {
 
 func GetUser(c *utils.Context, id int64) (*User, *utils.SError) {
 	u := User{}
-
-	res, e := c.HTTPdb.
-		Query(fmt.Sprintf("SELECT u_id, u_pdv, u_nom, u_prenom, u_role, u_login, u_supprime, u_faitpar FROM utilisateur WHERE u_id=%d", id))
+	req := fmt.Sprintf("SELECT u_id, u_pdv, u_nom, u_prenom, u_role, u_login, u_supprime, u_faitpar FROM utilisateur WHERE u_id=%d", id)
+	res, e := c.HTTPdb.Query(req)
 	if e != nil {
 		return nil, &utils.SError{StatusBadRequest,
 			fmt.Errorf("champs utilisateur incorrect"),
@@ -133,8 +132,8 @@ func GetCurrentUser(c *utils.Context) (*User, *utils.SError) {
 func GetUsersFromSession(c *utils.Context) ([]*User, *utils.SError) {
 	us := make([]*User, 0)
 
-	res, e := c.HTTPdb.
-		Query(fmt.Sprintf("SELECT u_id, u_pdv, u_nom, u_prenom, u_role, u_login FROM utilisateur WHERE u_pdv=%d AND u_supprime=0", c.Session.PdvId))
+	req := fmt.Sprintf("SELECT u_id, u_pdv, u_nom, u_prenom, u_role, u_login FROM utilisateur WHERE u_pdv=%d AND u_supprime=0", c.Session.PdvId)
+	res, e := c.HTTPdb.Query(req)
 	if e != nil {
 		return nil, &utils.SError{StatusBadRequest,
 			fmt.Errorf("session incorrecte"),
@@ -156,6 +155,7 @@ func hashPassword(p string) string {
 	if p == "" {
 		return ""
 	}
+
 	hasher := md5.New()
 	hasher.Write([]byte(p))
 
@@ -173,26 +173,42 @@ func CreateUser(c *utils.Context, u *User) (int64, *utils.SError) {
 	if err != nil {
 		return 0, err
 	}
+
 	if len(us) >= 10 {
 		return 0, &utils.SError{StatusBadRequest,
 			errors.New("Nombre limite de 10 utilisateurs atteint"),
 			fmt.Errorf("CreateUser: maximum users reached %d", len(us)),
 		}
 	}
-	var count int
-	e := c.DB.QueryRow("SELECT COUNT(*) FROM utilisateur WHERE u_login=? AND u_supprime=0", u.Login).Scan(&count)
+	req := fmt.Sprintf("SELECT COUNT(*) FROM utilisateur WHERE u_login=%q AND u_supprime=0", u.Login)
+	res, e := c.HTTPdb.Query(req)
 	if e != nil {
 		return 0, &utils.SError{StatusInternalServerError,
 			nil,
 			fmt.Errorf("CreateUser: %s", e),
 		}
 	}
+
+	var count int
+
+	if len(res.Data) == 1 && len(res.Data[0]) == 1 {
+		i, e := strconv.ParseInt(*res.Data[0][0], 10, 32)
+		if e != nil {
+			return 0, &utils.SError{StatusInternalServerError,
+				nil,
+				fmt.Errorf("CreateUser: %s", e),
+			}
+		}
+		count = int(i)
+	}
+
 	if count > 0 {
 		return 0, &utils.SError{StatusBadRequest,
 			errors.New("login déjà existant"),
 			fmt.Errorf("CreateUser: login already exists (%d)", count),
 		}
 	}
+
 	now := time.Now()
 	m, e := json.Marshal(struct {
 		*User
@@ -225,29 +241,16 @@ func CreateUser(c *utils.Context, u *User) (int64, *utils.SError) {
 			fmt.Errorf("CreateUser: %s", e),
 		}
 	}
-	req := fmt.Sprintf("INSERT INTO utilisateur SET %s", r)
-	log.Println(req)
-	stmt, e := c.DB.Prepare(req)
+	req = fmt.Sprintf("INSERT INTO utilisateur SET %s", r)
+	res, e = c.HTTPdb.Exec(req)
 	if e != nil {
 		return 0, &utils.SError{StatusInternalServerError,
 			nil,
 			fmt.Errorf("CreateUser: %s", e),
 		}
 	}
-	res, e := stmt.Exec()
-	if e != nil {
-		return 0, &utils.SError{StatusInternalServerError,
-			nil,
-			fmt.Errorf("CreateUser: %s", e),
-		}
-	}
-	rid, e := res.LastInsertId()
-	if e != nil {
-		return 0, &utils.SError{StatusInternalServerError,
-			nil,
-			fmt.Errorf("CreateUser: %s", e),
-		}
-	}
+
+	rid := res.Infos["lastInsertId"]
 	return rid, nil
 }
 
@@ -288,15 +291,8 @@ func (u *User) UpdateUser(c *utils.Context, up *User) *utils.SError {
 			fmt.Errorf("UpdateUser: %s", e),
 		}
 	}
-	req := fmt.Sprintf("UPDATE utilisateur SET %s WHERE u_id=%v", r, u.Id)
-	stmt, e := c.DB.Prepare(req)
-	if e != nil {
-		return &utils.SError{StatusInternalServerError,
-			nil,
-			fmt.Errorf("UpdateUser: %s", e),
-		}
-	}
-	_, e = stmt.Exec()
+	req := fmt.Sprintf("UPDATE utilisateur SET %s WHERE u_id=%d", r, u.Id)
+	_, e = c.HTTPdb.Exec(req)
 	if e != nil {
 		return &utils.SError{StatusInternalServerError,
 			nil,
@@ -314,15 +310,8 @@ func (u *User) RemoveUser(c *utils.Context) *utils.SError {
 			fmt.Errorf("RemoveUser: PDV: %d != %d", c.Session.PdvId, u.Pdv),
 		}
 	}
-	req := fmt.Sprintf("UPDATE utilisateur SET u_supprime=1 WHERE u_id=%v", u.Id)
-	stmt, e := c.DB.Prepare(req)
-	if e != nil {
-		return &utils.SError{StatusInternalServerError,
-			nil,
-			fmt.Errorf("RemoveUser: %s", e),
-		}
-	}
-	_, e = stmt.Exec()
+	req := fmt.Sprintf("UPDATE utilisateur SET u_supprime=1 WHERE u_id=%d", u.Id)
+	_, e := c.HTTPdb.Exec(req)
 	if e != nil {
 		return &utils.SError{StatusInternalServerError,
 			nil,

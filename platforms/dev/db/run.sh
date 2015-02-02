@@ -90,5 +90,5 @@ else
     echo "=> Executing MySQLD_SAFE..."
     exec mysqld_safe &
 
-    /sql-http-proxy
+    /sql-http-proxy > /var/log/mysql/sql-http-proxy.log 2>&1
 fi

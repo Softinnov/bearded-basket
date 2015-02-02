@@ -18,6 +18,35 @@ type Db struct {
 	Database string
 }
 
+type QueryResult struct {
+	Columns []string         `json:"columns,omitempty"`
+	Data    [][]*string      `json:"data,omitempty"`
+	Infos   map[string]int64 `json:"infos,omitempty"`
+	Error   string           `json:"error,omitempty"`
+}
+
+func (db *Db) fetch(query string) (*QueryResult, error) {
+
+	log.Printf("%s\n", query)
+	r, e := http.Post(query, "", nil)
+	if e != nil {
+		return nil, e
+	}
+	defer r.Body.Close()
+
+	dbq := &QueryResult{}
+
+	e = json.NewDecoder(r.Body).Decode(dbq)
+	if e != nil {
+		return nil, e
+	}
+	if dbq.Error != "" {
+		return nil, fmt.Errorf(dbq.Error)
+	}
+
+	return dbq, nil
+}
+
 // Response of type:
 //
 // {
@@ -28,32 +57,27 @@ type Db struct {
 //         ],
 //   "error": null
 // }
-type DbQuery struct {
-	Columns []string    `json:"columns,omitempty"`
-	Data    [][]*string `json:"data,omitempty"`
-	Error   string      `json:"error,omitempty"`
+func (db *Db) Query(query string) (*QueryResult, error) {
+	q := "http://" + db.IP + ":" + db.Port +
+		"/query/" + db.Database + "/" + query
+
+	return db.fetch(q)
 }
 
-func (db Db) Query(query string) (*DbQuery, error) {
+// Response of type:
+//
+// {
+//   "infos": {
+//           "lastInsertId": 43,
+//           "rowsAffected": 1
+//         },
+//   "error": null
+// }
+func (db *Db) Exec(query string) (*QueryResult, error) {
 	q := "http://" + db.IP + ":" + db.Port +
-		"/api/" + db.Database + "/" + query
+		"/exec/" + db.Database + "/" + query
 
-	log.Printf("%s\n", q)
-	r, e := http.Post(q, "", nil)
-	if e != nil {
-		return nil, e
-	}
-	defer r.Body.Close()
-
-	dbq := &DbQuery{}
-	e = json.NewDecoder(r.Body).Decode(dbq)
-	if e != nil {
-		return nil, e
-	}
-	if dbq.Error != "" {
-		return nil, fmt.Errorf(dbq.Error)
-	}
-	return dbq, nil
+	return db.fetch(q)
 }
 
 func Open(addr string) *sql.DB {
