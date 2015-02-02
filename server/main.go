@@ -54,17 +54,9 @@ func main() {
 		UsPwd:    *dbuspw,
 		Database: *dbname,
 	}
-	ip, p, e = getAddrFromConsul("db")
-	if e != nil {
-		log.Fatal(e)
-	}
-
-	db := database.Open(*dbuspw + "@(" + ip + ":" + p + ")/" + *dbname)
-	defer database.Close(db)
 
 	context := &utils.Context{
 		Store:   sessions.NewCookieStore(encrypt),
-		DB:      db,
 		HTTPdb:  httpDB,
 		Chey:    cheyf,
 		Session: nil,

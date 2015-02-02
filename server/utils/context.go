@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"database/sql"
 	"net/http"
 
 	"github.com/Softinnov/bearded-basket/server/database"
@@ -11,7 +10,6 @@ import (
 
 type Context struct {
 	Store   *sessions.CookieStore
-	DB      *sql.DB
 	HTTPdb  *database.Db
 	Chey    *string
 	Session *Session
