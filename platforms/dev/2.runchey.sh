@@ -19,6 +19,6 @@ echo -e "$B >> Removing old container (stop it if running) $W"
 
 echo -e "$B >> Running the cheyenne container with esc-pdv path in $1 $W"
 echo -e "$B >> linked with db $W"
-docker run --name chey --link db:db -v $1:/esc-pdv -v $2:/var/log -d -p 8001:80 softinnov/chey || exit $?
+docker run --name chey -e SERVICE_80_NAME=chey --link db:db -v $1:/esc-pdv -v $2:/var/log -d -P softinnov/chey || exit $?
 
 echo -e "$G >> Done. $W"
