@@ -6,6 +6,7 @@ RUN echo Europe/Paris > /etc/timezone && dpkg-reconfigure --frontend noninteract
 
 ADD nginx.conf /etc/nginx/
 ADD client /client
+ADD index.html /etc/nginx/html/index.html
 
 VOLUME /var/log/nginx
 VOLUME /etc/ssl/private
