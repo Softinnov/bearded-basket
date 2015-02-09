@@ -11,8 +11,7 @@ import (
 )
 
 type Db struct {
-	IP       string
-	Port     string
+	Host     string
 	UsPwd    string
 	Database string
 }
@@ -57,7 +56,7 @@ func (db *Db) fetch(query string) (*QueryResult, error) {
 //   "error": null
 // }
 func (db *Db) Query(query string) (*QueryResult, error) {
-	q := "http://" + db.IP + ":" + db.Port +
+	q := "http://" + db.Host +
 		"/query/" + db.Database + "/" + query
 
 	return db.fetch(q)
@@ -73,7 +72,7 @@ func (db *Db) Query(query string) (*QueryResult, error) {
 //   "error": null
 // }
 func (db *Db) Exec(query string) (*QueryResult, error) {
-	q := "http://" + db.IP + ":" + db.Port +
+	q := "http://" + db.Host +
 		"/exec/" + db.Database + "/" + query
 
 	return db.fetch(q)

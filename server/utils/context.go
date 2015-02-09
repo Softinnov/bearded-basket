@@ -11,7 +11,7 @@ import (
 type Context struct {
 	Store   *sessions.CookieStore
 	HTTPdb  *database.Db
-	Chey    *string
+	Client  string
 	Session *Session
 }
 
