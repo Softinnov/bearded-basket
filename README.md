@@ -1,7 +1,7 @@
 bearded-basket
 ==============
 
-![architecture](https://docs.google.com/drawings/d/17gI1qThbS60gCfTtME9xIFRNDxauJp4hurALpPH_I8U/pub?w=678&h=488)
+![architecture](https://docs.google.com/drawings/d/19kQsvhiq-QVkVmBhlErZEeFcUaN10SFxRQm-7NFvhok/pub?w=576&h=462)
 
 PREREQUISITE
 ============
