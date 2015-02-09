@@ -13,6 +13,8 @@ RUN echo Europe/Paris > /etc/timezone && dpkg-reconfigure --frontend noninteract
 
 ADD update_dbdata.sh /
 
+ADD sql-http-proxy /sql-http-proxy
+
 # Remove pre-installed database
 RUN rm -rf /var/lib/mysql/*
 
@@ -23,6 +25,6 @@ ADD mysqld_charset.cnf /etc/mysql/conf.d/mysqld_charset.cnf
 # Add VOLUMEs to allow backup of config and databases
 VOLUME ["/var/lib/mysql", "/data"]
 
-EXPOSE 3306
+EXPOSE 3306 6033
 
-CMD ["mysqld_safe"]
+CMD mysqld_safe & && /sql-http-proxy > /var/log/mysql/sql-http-proxy.log 2>&1

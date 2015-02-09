@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # RUN CONSUL and REGISTRATOR containers
-# usage: ./1.rundb.sh [-t]
+# usage: ./0.runconsul.sh
 
 R="\x1b[31m"
 G="\x1b[32m"

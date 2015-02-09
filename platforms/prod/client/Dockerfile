@@ -4,7 +4,19 @@ MAINTAINER Ghislain Guiot
 
 RUN echo Europe/Paris > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 
-ADD nginx.conf /etc/nginx/
+RUN DEBIAN_FRONTEND=noninteractive \
+    apt-get update -qq && \
+    apt-get -y install curl runit && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV CT_URL https://github.com/hashicorp/consul-template/releases/download/v0.5.1/consul-template_0.5.1_linux_amd64.tar.gz
+RUN curl -L $CT_URL | tar -C /usr/local/bin --strip-components 1 -zxf -
+
+ADD nginx.service /etc/service/nginx/run
+ADD consul-template.service /etc/service/consul-template/run
+
+ADD nginx.conf /etc/consul-templates/nginx.conf
+
 ADD client /client
 
 VOLUME /var/log/nginx
@@ -12,4 +24,4 @@ VOLUME /etc/ssl/private
 
 EXPOSE 80 443
 
-CMD ["nginx"]
+CMD ["/usr/bin/runsvdir", "/etc/service"]
