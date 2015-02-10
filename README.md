@@ -28,7 +28,7 @@ $ docker build -t softinnov/docker_dev .
 
 Run the docker image:
 ```bash
-$ docker run -it --rm -v `pwd`:/gopath/src/github.com/softinnov/bearded-basket --privileged -v [path].ssh:/root/.ssh softinnov/docker_dev
+$ docker run -it --rm -v `pwd`:/gopath/src/github.com/Softinnov/bearded-basket --privileged -v [path].ssh:/root/.ssh softinnov/docker_dev
 ```
 
 Once in the container:
