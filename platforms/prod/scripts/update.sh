@@ -34,10 +34,10 @@ for i in {0..5}; do
 
 	if [ $i -ge 2 ]; then
 		echo -e "$B >> removing softinnov/$CNT $W"
-		docker rmi softinnov/$CNT > /dev/null 2>&1
+		docker rmi softinnov/prod-$CNT > /dev/null 2>&1
 
 		echo -e "$B >> loading "$CNT".tar $W"
-		docker load -i "$CNT".tar || exit $?
+		docker load -i prod-"$CNT".tar || exit $?
 	fi
 
 	echo -e "$B >> $ARG $W"
