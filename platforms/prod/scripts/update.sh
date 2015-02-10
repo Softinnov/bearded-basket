@@ -32,11 +32,13 @@ for i in {0..5}; do
 	docker stop $CNT > /dev/null 2>&1
 	docker rm $CNT > /dev/null 2>&1
 
-	echo -e "$B >> removing softinnov/$CNT $W"
-	docker rmi softinnov/$CNT > /dev/null 2>&1
+	if [ $i -ge 2 ]; then
+		echo -e "$B >> removing softinnov/$CNT $W"
+		docker rmi softinnov/$CNT > /dev/null 2>&1
 
-	echo -e "$B >> loading "$CNT".tar $W"
-	docker load -i "$CNT".tar || exit $?
+		echo -e "$B >> loading "$CNT".tar $W"
+		docker load -i "$CNT".tar || exit $?
+	fi
 
 	echo -e "$B >> $ARG $W"
 	$ARG || exit $?
