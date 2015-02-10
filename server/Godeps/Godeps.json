@@ -31,11 +31,6 @@
 			"Rev": "aa5e036e6c44aec69a32eb41097001978b29ad31"
 		},
 		{
-			"ImportPath": "github.com/hashicorp/consul/api",
-			"Comment": "v0.5.0rc1-21-g72a6692",
-			"Rev": "72a66926022f8fae457fc054cebe9eac735db2ae"
-		},
-		{
 			"ImportPath": "github.com/mitchellh/mapstructure",
 			"Rev": "740c764bc6149d3f1806231418adb9f52c11bcbf"
 		}
