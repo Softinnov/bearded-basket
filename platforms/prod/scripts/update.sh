@@ -12,19 +12,19 @@ PROD[0]="docker run -d -p 8400:8400 -p 8500:8500 -p 172.17.42.1:53:53/udp -h con
 OLD[1]="registrator"
 PROD[1]="docker run -d --link consul:consul -v /var/run/docker.sock:/tmp/docker.sock --name registrator progrium/registrator consul://consul:8500"
 OLD[2]="db"
-PROD[2]="docker run -d --volumes-from dbdata -v $(pwd)/data:/data -e SERVICE_6033_NAME=httpdb -e SERVICE_3306_NAME=db -p 6033:6033 -p 3306:3306 --name ${OLD[2]} softinnov/prod-${OLD[2]}"
+PROD[2]="docker run -d -e SERVICE_6033_NAME=httpdb -e SERVICE_3306_NAME=db --volumes-from dbdata -v $(pwd)/data:/data -p 6033:6033 -p 3306:3306 --name ${OLD[2]} softinnov/prod-${OLD[2]}"
 OLD[3]="esc-pdv"
-PROD[3]="docker run -d -e SERVICE_80_NAME=${OLD[3]} --link consul:consul -v $(pwd)/logs/pdv:/var/log --name ${OLD[3]} softinnov/prod-${OLD[3]}"
+PROD[3]="docker run -d -e SERVICE_80_NAME=${OLD[3]} --link consul:consul -v $(pwd)/logs/pdv:/var/log    -P --name ${OLD[3]} softinnov/prod-${OLD[3]}"
 OLD[4]="esc-caisse"
-PROD[4]="docker run -d -e SERVICE_80_NAME=${OLD[4]} --link consul:consul -v $(pwd)/logs/caisse:/var/log --name ${OLD[4]} softinnov/prod-${OLD[4]}"
+PROD[4]="docker run -d -e SERVICE_80_NAME=${OLD[4]} --link consul:consul -v $(pwd)/logs/caisse:/var/log -P --name ${OLD[4]} softinnov/prod-${OLD[4]}"
 OLD[5]="esc-adm"
-PROD[5]="docker run -d -e SERVICE_80_NAME=${OLD[5]} --link consul:consul -v $(pwd)/logs/adm:/var/log --name ${OLD[5]} softinnov/prod-${OLD[5]}"
+PROD[5]="docker run -d -e SERVICE_80_NAME=${OLD[5]} --link consul:consul -v $(pwd)/logs/adm:/var/log    -P --name ${OLD[5]} softinnov/prod-${OLD[5]}"
 OLD[6]="back"
-PROD[6]="docker run -d -e SERVICE_NAME=${OLD[6]} --link consul:consul -v $(pwd)/logs:/logs --name ${OLD[6]} softinnov/prod-${OLD[6]}"
+PROD[6]="docker run -d -e SERVICE_NAME=${OLD[6]}    --link consul:consul -v $(pwd)/logs:/logs           -P --name ${OLD[6]} softinnov/prod-${OLD[6]}"
 OLD[7]="client"
-PROD[7]="docker run -d --link consul:consul -v $(pwd)/logs:/var/log/nginx -v /etc/ssl/private:/etc/ssl/private -e SERVICE_80_NAME=${OLD[7]} -p 80:80 -p 443:443 --name ${OLD[7]} softinnov/prod-${OLD[7]}"
+PROD[7]="docker run -d -e SERVICE_80_NAME=${OLD[7]} --link consul:consul -v $(pwd)/logs:/var/log/nginx -v /etc/ssl/private:/etc/ssl/private -p 80:80 -p 443:443 --name ${OLD[7]} softinnov/prod-${OLD[7]}"
 
-for i in {0..5}; do
+for i in {0..7}; do
 	ARG=${PROD[$i]}
 	CNT=${OLD[$i]}
 
@@ -36,7 +36,7 @@ for i in {0..5}; do
 		echo -e "$B >> removing softinnov/$CNT $W"
 		docker rmi softinnov/prod-$CNT > /dev/null 2>&1
 
-		echo -e "$B >> loading "$CNT".tar $W"
+		echo -e "$B >> loading prod-"$CNT".tar $W"
 		docker load -i prod-"$CNT".tar || exit $?
 	fi
 
