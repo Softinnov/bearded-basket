@@ -1,10 +1,10 @@
 #!/bin/sh
 
-cd back || exit $?
+cd ../../../server || exit $?
 
 go get github.com/tools/godep
 GOOS=linux GOARCH=amd64 godep go build -o bearded-basket || exit $?
 
 cd -
 
-mv back/bearded-basket . || exit $?
+mv ../../../server/bearded-basket . || exit $?
