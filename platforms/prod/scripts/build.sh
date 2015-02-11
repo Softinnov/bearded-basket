@@ -13,6 +13,7 @@
 #    - softinnov/prod-client       (copies the client project here [docker build doesn't support symbolic links])
 ####
 
+R="\x1b[31m"
 G="\x1b[32m"
 B="\x1b[34m"
 W="\x1b[0m"
@@ -58,10 +59,6 @@ build() {
 
 			echo -e "$G >> db image done. $W"
 			;;
-		chey)
-			echo -e "$B >> Building esc images... $W"
-			echo -e "$G >> esc images done. $W"
-			;;
 		esc-pdv)
 			build_esc pdv
 			;;
@@ -106,16 +103,15 @@ build() {
 }
 
 push() {
-	echo -e "$B >> Pushing db image... $W"
+	echo -e "$B >> Pushing $1 image... $W"
 	docker push preprod.softinnov.fr:5000/prod-$1:latest || exit $?
-	echo -e "$G >> db image done. $W"
+	echo -e "$G >> $1 image done. $W"
 }
 
 while getopts "hai:p" opt; do
 	case $opt in
 		a)
 			build db
-			build chey
 			build esc-pdv
 			build esc-adm
 			build esc-caisse
@@ -144,7 +140,6 @@ if [ $PUSH == true ]; then
 		case $opt in
 			a)
 				push db
-				push chey
 				push esc-pdv
 				push esc-adm
 				push esc-caisse
