@@ -18,6 +18,7 @@ ADD consul-template.service /etc/service/consul-template/run
 ADD nginx.conf /etc/consul-templates/nginx.conf
 
 ADD client /client
+ADD index.html /etc/nginx/html/index.html
 
 VOLUME /var/log/nginx
 VOLUME /etc/ssl/private

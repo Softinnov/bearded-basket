@@ -1,5 +1,10 @@
 #!/bin/bash
 
+####
+#  This script installs docker via the script from his website (ubuntu).
+#  Then test everything works. Finally install the new database from scratch.
+####
+
 G="\x1b[32m"
 B="\x1b[34m"
 W="\x1b[0m"

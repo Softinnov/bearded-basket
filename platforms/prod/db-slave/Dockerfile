@@ -1,6 +1,8 @@
 FROM softinnov/prod-db
 MAINTAINER Ghislain Guiot
 
+RUN apt-get update && apt-get install -y openssh-client
+
 ADD run.sh /
 
 # Add MySQL configuration

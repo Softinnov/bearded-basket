@@ -1,5 +1,18 @@
 #!/bin/bash
 
+####
+#  This script builds all images.
+#    - softinnov/prod-db
+#
+#    - softinnov/prod-esc-pdv
+#    - softinnov/prod-esc-adm      (it makes a git archive to pull the projects)
+#    - softinnov/prod-esc-caisse
+#
+#    - softinnov/prod-back         (calls compile.sh to compile the last release of the server)
+#
+#    - softinnov/prod-client       (copies the client project here [docker build doesn't support symbolic links])
+####
+
 G="\x1b[32m"
 B="\x1b[34m"
 W="\x1b[0m"

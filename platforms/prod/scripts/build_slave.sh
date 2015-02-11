@@ -1,5 +1,11 @@
 #!/bin/bash
 
+####
+#  This script build the following image:
+#
+#    - softinnov/prod-db-slave
+####
+
 G="\x1b[32m"
 B="\x1b[34m"
 W="\x1b[0m"

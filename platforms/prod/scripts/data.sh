@@ -1,5 +1,11 @@
 #!/bin/bash
 
+####
+#  This script sends the data and docker-db folder to the server
+#  in order to have .txt and .sql files in the server and initialize
+#  the database with it.
+####
+
 R="\x1b[31m"
 G="\x1b[32m"
 B="\x1b[34m"
