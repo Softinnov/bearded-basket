@@ -27,9 +27,9 @@ PROD[3]="docker run -d -e SERVICE_80_NAME=${OLD[3]} --link consul:consul -v $(pw
 OLD[4]="esc-caisse"
 PROD[4]="docker run -d -e SERVICE_80_NAME=${OLD[4]} --link consul:consul -v $(pwd)/logs/caisse:/var/log -P --name ${OLD[4]} preprod.softinnov.fr:5000/prod-${OLD[4]}"
 OLD[5]="esc-adm"
-PROD[5]="docker run -d -e SERVICE_80_NAME=${OLD[5]} --link consul:consul -v $(pwd)/logs/adm:/var/log    -p 127.0.0.1::80 --name ${OLD[5]} preprod.softinnov.fr:5000/prod-${OLD[5]}"
+PROD[5]="docker run -d -e SERVICE_80_NAME=${OLD[5]} --link consul:consul -v $(pwd)/logs/adm:/var/log    -P --name ${OLD[5]} preprod.softinnov.fr:5000/prod-${OLD[5]}"
 OLD[6]="back"
-PROD[6]="docker run -d -e SERVICE_NAME=${OLD[6]}    --link consul:consul -v $(pwd)/logs:/logs           -p 127.0.0.1::8002 --name ${OLD[6]} preprod.softinnov.fr:5000/prod-${OLD[6]}"
+PROD[6]="docker run -d -e SERVICE_NAME=${OLD[6]}    --link consul:consul -v $(pwd)/logs:/logs           -P --name ${OLD[6]} preprod.softinnov.fr:5000/prod-${OLD[6]}"
 OLD[7]="client"
 PROD[7]="docker run -d -e SERVICE_80_NAME=${OLD[7]} --link consul:consul -v $(pwd)/logs:/var/log/nginx -v /etc/ssl/private:/etc/ssl/private -p 80:80 -p 443:443 --name ${OLD[7]} preprod.softinnov.fr:5000/prod-${OLD[7]}"
 
