@@ -2,4 +2,4 @@
 
 cd /exe
 
-exec /exe/bearded-basket -dbuspw "admin:admin" -dbname "prod" > logs/go.log 2>&1
+exec /exe/bearded-basket -dbuspw "admin:admin" -dbname "prod" > /logs/go.log 2>&1
