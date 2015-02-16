@@ -31,7 +31,7 @@ fi
 PUSH=false
 
 build_esc() {
-	cd chey || exit $?
+	cd esc || exit $?
 
 	ESC=esc-$1
 	echo -e "$B >> Fetching "$ESC"... $W"
