@@ -13,6 +13,6 @@ ENV GOPATH /gopath
 ENV PATH $PATH:$GOROOT/bin:$GOPATH/bin
 #-
 
-WORKDIR /gopath/src/github.com/softinnov/bearded-basket/
+WORKDIR /gopath/src/github.com/Softinnov/bearded-basket/
 
 CMD ["bash"]
