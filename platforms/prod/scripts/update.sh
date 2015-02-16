@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 ####
 #  This script runs all the docker containers by doing the following steps:
@@ -20,9 +20,9 @@ cd /home/bearded-basket
 OLD[0]="prod-db"
 PROD[0]="docker run -d --volumes-from dbdata -v $(pwd)/data:/data -p 127.0.0.1:3306:3306 --name ${OLD[0]} softinnov/${OLD[0]}"
 OLD[1]="prod-smtp"
-PROD[1]="docker run -d -p 25:25 -e user=notification@escarcelle.net -e pass=notif512si --name smtp softinnov/${OLD[1]}"
+PROD[1]="docker run -d -p 25:25 -e user=notification@escarcelle.net -e pass=notif512si --name prod-smtp softinnov/${OLD[1]}"
 OLD[2]="prod-esc-pdv"
-PROD[2]="docker run -d --link prod-db:db --link smtp:smtp -v $(pwd)/logs/pdv:/var/log --name ${OLD[2]} softinnov/${OLD[2]}"
+PROD[2]="docker run -d --link prod-db:db --link prod-smtp:smtp -v $(pwd)/logs/pdv:/var/log --name ${OLD[2]} softinnov/${OLD[2]}"
 OLD[3]="prod-esc-caisse"
 PROD[3]="docker run -d --link prod-db:db -v $(pwd)/logs/caisse:/var/log --name ${OLD[3]} softinnov/${OLD[3]}"
 OLD[4]="prod-esc-adm"
