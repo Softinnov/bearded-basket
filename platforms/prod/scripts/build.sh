@@ -8,6 +8,8 @@
 #    - softinnov/prod-esc-adm      (it makes a git archive to pull the projects)
 #    - softinnov/prod-esc-caisse
 #
+#    - softinnov/prod-smtp
+#
 #    - softinnov/prod-back         (calls compile.sh to compile the last release of the server)
 #
 #    - softinnov/prod-client       (copies the client project here [docker build doesn't support symbolic links])
@@ -22,6 +24,12 @@ cd db || exit $?
 docker build -t softinnov/prod-db . || exit $?
 cd ..
 echo -e "$G >> db image done. $W"
+
+echo -e "$B >> Building smtp image... $W"
+cd smtp || exit $?
+docker build -t softinnov/prod-smtp . || exit $?
+cd ..
+echo -e "$G >> smtp image done. $W"
 
 echo -e "$B >> Building esc images... $W"
 cd chey || exit $?
