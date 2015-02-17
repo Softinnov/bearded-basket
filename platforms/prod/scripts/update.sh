@@ -32,7 +32,8 @@ PROD[5]="docker run -d --link prod-db:db -v $(pwd)/logs:/logs --name ${OLD[5]} s
 OLD[6]="prod-client"
 PROD[6]="docker run -d --link prod-esc-pdv:esc-pdv --link prod-esc-adm:esc-adm --link prod-esc-caisse:esc-caisse --link prod-back:back -v $(pwd)/logs:/var/log/nginx -v /etc/ssl/private:/etc/ssl/private -p 80:80 -p 443:443 --name ${OLD[6]} softinnov/${OLD[6]}"
 
-for i in {0..6}; do
+# /!\ Begins with 1 in order to avoid update of db (causes troubles) for now.
+for i in {1..6}; do
 	ARG=${PROD[$i]}
 	CNT=${OLD[$i]}
 
