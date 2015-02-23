@@ -115,8 +115,14 @@ func GetUser(c *utils.Context, id int64) (*User, *utils.SError) {
 			fmt.Errorf("GetUser: %s\n", e),
 		}
 	}
+	log.Printf("%v\n", res.Data)
 	if len(res.Data) == 1 {
 		u.Scan(res.Data[0], res.Columns)
+	} else {
+		return nil, &utils.SError{StatusBadRequest,
+			fmt.Errorf("utilisateur incorrect"),
+			fmt.Errorf("GetUser: User not found\n", e),
+		}
 	}
 	return &u, nil
 }
