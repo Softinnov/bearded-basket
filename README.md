@@ -6,12 +6,6 @@ bearded-basket
 PREREQUISITE
 ============
 
-### Production
-
- - docker 1.2 (add modification on /etc/hosts)
-
-### Developement
-
  - git
  - bash >= 4.0 (declare -A)
  - golang >= 1.3 (+godep)
