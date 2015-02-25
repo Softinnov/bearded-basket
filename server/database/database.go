@@ -12,7 +12,8 @@ import (
 
 type Db struct {
 	Host     string
-	UsPwd    string
+	User     string
+	Password string
 	Database string
 }
 
@@ -25,8 +26,16 @@ type QueryResult struct {
 
 func (db *Db) fetch(query string) (*QueryResult, error) {
 
+	c := http.Client{}
+
+	req, e := http.NewRequest("POST", query, nil)
+	if e != nil {
+		return nil, e
+	}
+	req.SetBasicAuth(db.User, db.Password)
+
 	log.Printf("%s\n", query)
-	r, e := http.Post(query, "", nil)
+	r, e := c.Do(req)
 	if e != nil {
 		return nil, e
 	}

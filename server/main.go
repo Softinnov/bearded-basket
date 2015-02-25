@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -39,6 +40,11 @@ func main() {
 
 	flag.Parse()
 
+	up := strings.Split(*dbuspw, ":")
+	if len(up) != 2 {
+		log.Fatal("Invalid user:password format")
+	}
+
 	context := &utils.Context{
 		Store:   sessions.NewCookieStore(encrypt),
 		HTTPdb:  &httpDB,
@@ -68,7 +74,8 @@ func main() {
 
 			*hdb = database.Db{
 				Host:     d.HttpDB[0],
-				UsPwd:    *dbuspw,
+				User:     up[0],
+				Password: up[1],
 				Database: *dbname,
 			}
 			log.Printf("New database configuration %s\n", hdb.Host)
