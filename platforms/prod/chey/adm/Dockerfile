@@ -4,7 +4,11 @@ RUN echo Europe/Paris > /etc/timezone && dpkg-reconfigure --frontend noninteract
 
 ADD httpd.adm.cfg /httpd.cfg
 
+RUN mv /cheyenne /chey_adm
+
 ADD esc-adm/src /esc-adm
 VOLUME /var/log
 
 EXPOSE 80
+
+CMD ["/chey_adm"]
