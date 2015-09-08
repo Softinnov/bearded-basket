@@ -25,7 +25,7 @@ func cookieAuth(c *utils.Context, w http.ResponseWriter, r *http.Request) bool {
 		LogHTTP(&utils.SError{http.StatusUnauthorized, nil, err}, w, r)
 		return false
 	}
-	req, err := http.NewRequest("GET", *c.Chey+URL+URL_WS, nil)
+	req, err := http.NewRequest("GET", "http://"+c.Client+URL+URL_WS, nil)
 	if err != nil {
 		LogHTTP(&utils.SError{http.StatusInternalServerError, nil, err}, w, r)
 		return false

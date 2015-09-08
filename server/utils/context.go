@@ -1,17 +1,17 @@
 package utils
 
 import (
-	"database/sql"
 	"net/http"
 
+	"github.com/Softinnov/bearded-basket/server/database"
 	"github.com/gorilla/sessions"
 	"github.com/mitchellh/mapstructure"
 )
 
 type Context struct {
 	Store   *sessions.CookieStore
-	DB      *sql.DB
-	Chey    *string
+	HTTPdb  *database.Db
+	Client  string
 	Session *Session
 }
 

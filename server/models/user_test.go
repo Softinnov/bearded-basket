@@ -3,13 +3,11 @@ package models
 import (
 	"testing"
 
-	"github.com/Softinnov/bearded-basket/server/database"
 	"github.com/Softinnov/bearded-basket/server/utils"
 )
 
 func TestGetUser(t *testing.T) {
 	c := newTestContext(t)
-	defer database.Close(c.DB)
 
 	tes := []struct {
 		name  string
@@ -61,7 +59,6 @@ func TestGetUser(t *testing.T) {
 
 func TestGetCurrentUser(t *testing.T) {
 	c := newTestContext(t)
-	defer database.Close(c.DB)
 
 	tes := []struct {
 		name    string
@@ -117,7 +114,6 @@ func TestGetCurrentUser(t *testing.T) {
 
 func TestGetUsersFromSession(t *testing.T) {
 	c := newTestContext(t)
-	defer database.Close(c.DB)
 
 	tes := []struct {
 		name    string
@@ -157,7 +153,6 @@ func TestGetUsersFromSession(t *testing.T) {
 
 func TestCreateUser(t *testing.T) {
 	c := newTestContext(t)
-	defer database.Close(c.DB)
 
 	tes := []struct {
 		name    string
@@ -283,7 +278,6 @@ func TestCreateUser(t *testing.T) {
 
 func TestUpdateUser(t *testing.T) {
 	c := newTestContext(t)
-	defer database.Close(c.DB)
 
 	tes := []struct {
 		name    string
@@ -392,7 +386,6 @@ func TestUpdateUser(t *testing.T) {
 
 func TestRemoveUser(t *testing.T) {
 	c := newTestContext(t)
-	defer database.Close(c.DB)
 
 	tes := []struct {
 		name    string

@@ -2,6 +2,8 @@ package models
 
 import (
 	"fmt"
+	"log"
+	"strconv"
 
 	"github.com/Softinnov/bearded-basket/server/utils"
 )
@@ -11,41 +13,39 @@ type Role struct {
 	Libelle string `json:"r_libelle"`
 }
 
-func GetRole(c *utils.Context, id int) (*Role, *utils.SError) {
-	r := Role{}
-
-	e := c.DB.QueryRow("SELECT r_id, r_libelle FROM role WHERE r_id=?", id).
-		Scan(&r.Id, &r.Libelle)
-	if e != nil {
-		return nil, &utils.SError{StatusInternalServerError,
-			nil,
-			fmt.Errorf("GetRole: %s", e),
+func (r *Role) Scan(v []*string, c []string) {
+	for k, val := range v {
+		switch c[k] {
+		case "r_id":
+			i, e := strconv.Atoi(*val)
+			if e != nil {
+				log.Printf("%s\n", e)
+				continue
+			}
+			r.Id = i
+		case "r_libelle":
+			if val != nil {
+				r.Libelle = *val
+			}
 		}
 	}
-	return &r, nil
 }
 
 func GetRoles(c *utils.Context) ([]*Role, *utils.SError) {
 	rs := make([]*Role, 0)
 
-	rows, e := c.DB.Query("SELECT r_id, r_libelle FROM role")
+	res, e := c.HTTPdb.Query("SELECT r_id, r_libelle FROM role")
 	if e != nil {
 		return nil, &utils.SError{StatusInternalServerError,
 			nil,
 			fmt.Errorf("GetRoles: %s", e),
 		}
 	}
-	defer rows.Close()
-	for rows.Next() {
+	for _, re := range res.Data {
 		var r Role
 
-		e := rows.Scan(&r.Id, &r.Libelle)
-		if e != nil {
-			return nil, &utils.SError{StatusInternalServerError,
-				nil,
-				fmt.Errorf("GetRoles: %s", e),
-			}
-		}
+		r.Scan(re, res.Columns)
+
 		rs = append(rs, &r)
 	}
 	return rs, nil
