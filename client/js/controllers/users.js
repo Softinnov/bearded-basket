@@ -30,6 +30,12 @@ app.controller('UsersCtrl', ['$scope', '$http', '$window', function($scope, $htt
 		$window.location.href = '../';
 	})
 
+	$http({method: 'GET', url: 'api/version'}).success(function(data) {
+		$scope.version = data;
+	}).error(function() {
+		$window.location.href = '../';
+	})
+
 	$scope.newUser = function() {
 		$scope.showCreateUser = true;
 		$scope.showEditUser = false;
